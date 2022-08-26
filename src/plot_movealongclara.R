@@ -21,16 +21,17 @@ ggplot(temp, aes ()) +
   geom_line (aes (x=time, y=Tmax, colour = condition), size =1) +
   geom_ribbon (data = temp, aes (x=time, ymin =Tmin, ymax=Tmax, colour = condition, fill = condition), alpha =0.5) +
   labs (title = "Move-along temperature regimes", y= "Temperature ºC", x = "Time (days)") + 
-  theme (axis.title.y = element_text (size=12), 
-         axis.title.x = element_text (size=12), 
-         plot.title = element_text (size =14), 
-         legend.title = element_text(size = 12)) +
+  theme (axis.title.y = element_text (size=14), 
+         axis.title.x = element_text (size=14), 
+         plot.title = element_text (size =16), 
+         legend.title = element_text(size = 14),
+         legend.text = element_text (size =12)) +
   geom_vline(xintercept = 122, linetype = "dashed", size =1) +
-  annotate (geom ="text", x= 155, y = 22, label ="winter begins", colour = "black", size = 3,  fontface ="bold") +
-  geom_vline(xintercept = 241, linetype = "dashed", size =1, color = "red") +
-  annotate (geom ="text", x= 265, y = 22, label ="fellfield\nwinter ends", colour = "red", size = 3,  fontface ="bold") +
-  geom_vline(xintercept = 290, linetype = "dashed", size =1,color = "turquoise") +
-  annotate (geom ="text", x= 315, y = 22, label ="snowbed\nwinter ends", colour = "turquoise", size = 3,  fontface ="bold") 
+  annotate (geom ="text", x= 155, y = 22, label ="winter begins", colour = "black", size = 3.5,  fontface ="bold") +
+  geom_vline(xintercept = 240, linetype = "dashed", size =1, color = "red") +
+  annotate (geom ="text", x= 265, y = 22, label ="fellfield\nwinter ends", colour = "red", size = 3.5,  fontface ="bold") +
+  geom_vline(xintercept = 291, linetype = "dashed", size =1,color = "turquoise") +
+  annotate (geom ="text", x= 317, y = 22, label ="snowbed\nwinter ends", colour = "turquoise", size = 3.5,  fontface ="bold") 
   
 # visualization 2
 # all area shaded below x temperature (PROBLEM: don't know why but all values are higher than what appear in data)
@@ -65,19 +66,21 @@ read.csv("data/R long data.csv", sep = ";") %>%
   mutate(germinated = cumsum(germinated)) %>%
   merge(viables) %>%
   mutate(germination = germinated/viable) %>%
-  filter(species == "Agrostis tileni") %>%
+  filter(species == "Phalacrocarpum oppositifolium") %>%
   ggplot(aes(time, germination, color = condition, fill = condition)) +
   geom_line(size = 1) +
   scale_color_manual (name= "Condition", values = c ("Fellfield"= "red", "Snowbed" ="turquoise")) +
-  facet_wrap( ~ species, scales = "free_x", ncol = 2) +
+  facet_wrap(~ species, scales = "free_x", ncol = 2) +
   coord_cartesian(ylim = c(0, 1)) +
   labs(x = "Time (days)", y = "Germination proportion") +
-  theme(strip.text = element_text(face = "italic", size = 14), 
-        legend.title = element_text(size=14), 
-        legend.text = element_text(size=10)) + 
-  geom_vline(xintercept = 70, linetype = "dashed", size= 0.75) +
-  geom_vline(xintercept = 126, linetype = "dashed", size= 0.75, color = "red") +
-  geom_vline(xintercept = 168, linetype = "dashed", size= 0.75, color = "turquoise") 
+  theme(strip.text = element_text(face = "italic", size = 16), 
+        legend.title = element_text(size=16), 
+        legend.text = element_text(size=12),
+        axis.title.y = element_text (size=14), 
+        axis.title.x = element_text (size=14)) + 
+  geom_vline(xintercept = 122, linetype = "dashed", size= 1) +
+  geom_vline(xintercept = 248, linetype = "dashed", size= 1, color = "red") +
+  geom_vline(xintercept = 290, linetype = "dashed", size= 1, color = "turquoise") 
   
 # Save the plots
 

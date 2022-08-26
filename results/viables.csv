@@ -1,111 +1,111 @@
-species;condition;total seeds;viable;% viable;germinated; %germination
-Agrostis tileni;Fellfield;91;11;12%;9;82%
-Agrostis tileni;Snowbed;100;12;12%;4;33%
-Androsace villosa;Fellfield;200;188;94%;0;0%
-Androsace villosa;Snowbed;200;186;93%;2;1%
-Anthyllis vulneraria;Fellfield;200;38;19%;3;8%
-Anthyllis vulneraria;Snowbed;200;77;39%;2;3%
-Arenaria erinacea;Fellfield;99;99;100%;22;22%
-Arenaria erinacea;Snowbed;100;99;99%;2;2%
-Arenaria moehringioides;Fellfield;60;60;100%;24;40%
-Arenaria moehringioides;Snowbed;60;60;100%;15;25%
-Armeria cantabrica;Fellfield;102;75;74%;65;87%
-Armeria cantabrica;Snowbed;108;87;81%;69;79%
-Armeria duriaei;Fellfield;199;170;85%;170;100%
-Armeria duriaei;Snowbed;199;176;88%;165;94%
-Carex sempervirens;Fellfield;200;170;85%;155;91%
-Carex sempervirens;Snowbed;190;182;96%;158;87%
-Cerastium sp;Fellfield;200;188;94%;93;49%
-Cerastium sp;Snowbed;200;184;92%;95;52%
-Conopodium majus;Fellfield;199;84;42%;83;99%
-Conopodium majus;Snowbed;200;117;59%;116;99%
-Dethawia splendens;Fellfield;79;59;75%;56;95%
-Dethawia splendens;Snowbed;76;52;68%;49;94%
-Dianthus langeanus;Fellfield;200;198;99%;198;100%
-Dianthus langeanus;Snowbed;200;194;97%;192;99%
-Erigeron alpinus;Fellfield;100;98;98%;98;100%
-Erigeron alpinus;Snowbed;100;99;99%;99;100%
-Euphrasia salisburgensis;Fellfield;200;200;100%;1;1%
-Euphrasia salisburgensis;Snowbed;200;199;100%;1;1%
-Festuca hystrix;Fellfield;34;25;74%;25;100%
-Festuca hystrix;Snowbed;34;25;74%;18;72%
-Festuca rubra;Fellfield;100;45;45%;1;2%
-Festuca rubra;Snowbed;100;51;51%;0;0%
-Festuca summilusitana;Fellfield;200;101;51%;101;100%
-Festuca summilusitana;Snowbed;197;115;58%;107;93%
-Gentiana verna;Fellfield;199;149;75%;10;7%
-Gentiana verna;Snowbed;198;163;82%;12;7%
-Gentianella campestris;Fellfield;100;97;97%;0;0%
-Gentianella campestris;Snowbed;100;100;100%;0;0%
-Gypsophila repens;Fellfield;198;151;76%;144;95%
-Gypsophila repens;Snowbed;198;175;88%;164;94%
-Helianthemum canum;Fellfield;200;170;85%;47;28%
-Helianthemum canum;Snowbed;200;159;80%;34;21%
-Helianthemum urrielense;Fellfield;198;37;19%;14;38%
-Helianthemum urrielense;Snowbed;199;34;17%;12;35%
-Helictochloa marginata;Fellfield;30;4;13%;4;100%
-Helictochloa marginata;Snowbed;30;5;17%;5;100%
-Helictrotichon sedenense;Fellfield;93;14;15%;14;100%
-Helictrotichon sedenense;Snowbed;94;21;22%;20;95%
-Iberis carnosa;Fellfield;100;94;94%;83;88%
-Iberis carnosa;Snowbed;100;91;91%;63;69%
-Jasione cavanillesii;Fellfield;105;71;68%;19;27%
-Jasione cavanillesii;Snowbed;105;75;71%;16;21%
-Jurinea humilis;Fellfield;323;41;13%;41;100%
-Jurinea humilis;Snowbed;323;41;13%;41;100%
-Kobresia myosuroides;Fellfield;100;79;79%;41;52%
-Kobresia myosuroides;Snowbed;100;79;79%;48;61%
-Koeleria vallesiana;Fellfield;199;146;73%;146;100%
-Koeleria vallesiana;Snowbed;199;120;60%;116;97%
-Luzula caespitosa;Fellfield;200;64;32%;53;83%
-Luzula caespitosa;Snowbed;200;72;36%;70;97%
-Minuartia recurva;Fellfield;200;195;98%;189;97%
-Minuartia recurva;Snowbed;200;188;94%;182;97%
-Minuartia verna;Fellfield;100;96;96%;39;41%
-Minuartia verna;Snowbed;100;96;96%;9;9%
-MinuartiaCF;Fellfield;100;99;99%;42;42%
-MinuartiaCF;Snowbed;100;100;100%;10;10%
-Neochischkinia truncatula;Fellfield;200;186;93%;170;91%
-Neochischkinia truncatula;Snowbed;197;178;90%;157;88%
-Pedicularis pyrenaica;Fellfield;200;120;60%;45;38%
-Pedicularis pyrenaica;Snowbed;200;148;74%;45;30%
-Phalacrocarpum oppossitofolium;Fellfield;124;75;60%;74;99%
-Phalacrocarpum oppossitofolium;Snowbed;124;79;64%;78;99%
-Phyteuma hemisphaericum;Fellfield;199;183;92%;50;27%
-Phyteuma hemisphaericum;Snowbed;192;167;87%;55;33%
-Phyteuma orbiculare;Fellfield;51;40;78%;7;18%
-Phyteuma orbiculare;Snowbed;47;32;68%;10;31%
-Plantago alpina;Fellfield;160;145;91%;144;99%
-Plantago alpina;Snowbed;160;145;91%;141;97%
-Plantago holosteum;Fellfield;200;200;100%;199;100%
-Plantago holosteum;Snowbed;200;200;100%;198;99%
-Ranunculus carianthiacus;Fellfield;15;15;100%;4;27%
-Ranunculus carianthiacus;Snowbed;15;15;100%;0;0%
-Salix fontqueri;Fellfield;5;5;100%;0;0%
-Salix fontqueri;Snowbed;5;5;100%;0;0%
-Saxifraga conifera;Fellfield;157;138;88%;83;60%
-Saxifraga conifera;Snowbed;160;153;96%;40;26%
-Saxifraga paniculata;Fellfield;100;100;100%;94;94%
-Saxifraga paniculata;Snowbed;100;99;99%;53;54%
-Scilla verna;Fellfield;100;96;96%;0;0%
-Scilla verna;Snowbed;100;98;98%;0;0%
-Sedum anglicum;Fellfield;200;180;90%;129;72%
-Sedum anglicum;Snowbed;200;194;97%;97;50%
-Sedum brevifolium;Fellfield;200;198;99%;92;46%
-Sedum brevifolium;Snowbed;195;193;99%;80;41%
-Sedum sp (album cf);Fellfield;100;99;99%;0;0%
-Sedum sp (album cf);Snowbed;100;94;94%;0;0%
-Sempervivum arachnoideo;Fellfield;199;187;94%;172;92%
-Sempervivum arachnoideo;Snowbed;200;188;94%;139;74%
-Sesleria caerula;Fellfield;100;79;79%;74;94%
-Sesleria caerula;Snowbed;99;76;77%;66;87%
-Silene acaulis;Fellfield;199;183;92%;70;38%
-Silene acaulis;Snowbed;200;188;94%;53;28%
-Silene ciliata;Fellfield;400;389;97%;344;88%
-Silene ciliata;Snowbed;400;377;94%;335;89%
-Solidago virgaurea;Fellfield;198;167;84%;167;100%
-Solidago virgaurea;Snowbed;192;138;72%;134;97%
-Spergula morisonii;Fellfield;168;143;85%;73;51%
-Spergula morisonii;Snowbed;168;156;93%;98;63%
-Thymus praecox;Fellfield;400;348;87%;308;89%
-Thymus praecox;Snowbed;393;347;88%;303;87%
+species;condition;total seeds;viable;% viable;germinated; %germination;Fellfield >Snowbed;Snowbed >Fellfield;Fellfield =Snowbed;only before winter;only after winter;before + after winter;Notes
+Agrostis tileni;Fellfield;91;11;12%;9;82%;1;;;;1;;Low N, need cold stratification?
+Agrostis tileni;Snowbed;100;12;12%;4;33%;;;;;;;
+Androsace villosa;Fellfield;200;188;94%;0;0%;;;1;;1;;only 1% germination, no dormancy breaking?
+Androsace villosa;Snowbed;200;186;93%;2;1%;;;;;;;
+Anthyllis vulneraria;Fellfield;200;38;19%;3;8%;;;1;;;1;below 8% germination, probably due to no scarification OR overripped seeds
+Anthyllis vulneraria;Snowbed;200;77;39%;2;3%;;;;;;;
+Arenaria erinacea;Fellfield;99;99;100%;22;22%;1;;;1;;;low germination, specially in snowbed
+Arenaria erinacea;Snowbed;100;99;99%;2;2%;;;;;;;
+Arenaria moehringioides;Fellfield;60;60;100%;24;40%;1;;;;;1;good germination mainly after winter, cold estratrification?
+Arenaria moehringioides;Snowbed;60;60;100%;15;25%;;;;;;;
+Armeria cantabrica;Fellfield;102;75;74%;65;87%;;;1;;;1;good germination in both
+Armeria cantabrica;Snowbed;108;87;81%;69;79%;;;;;;;
+Armeria duriaei;Fellfield;199;170;85%;170;100%;;;1;1;;1;good germination in both, fast germination with water available CHECK 2ND SOW
+Armeria duriaei;Snowbed;199;176;88%;165;94%;;;;;;;
+Carex sempervirens;Fellfield;200;170;85%;155;91%;;;1;;1;;good germiantion in both, needs cold stratification
+Carex sempervirens;Snowbed;190;182;96%;158;87%;;;;;;;
+Cerastium sp;Fellfield;200;188;94%;93;49%;;;1;1;;;good germination in both, fast germination with water available
+Cerastium sp;Snowbed;200;184;92%;95;52%;;;;;;;
+Conopodium majus;Fellfield;199;84;42%;83;99%;;;1;;1;;good germination in both, needs cold to grow embryo, then fast germination
+Conopodium majus;Snowbed;200;117;59%;116;99%;;;;;;;
+Dethawia splendens;Fellfield;79;59;75%;56;95%;;;1;;1;;good germination in both, needs cold to grow embryo, then fast germination
+Dethawia splendens;Snowbed;76;52;68%;49;94%;;;;;;;
+Dianthus langeanus;Fellfield;200;198;99%;198;100%;;;1;1;;1;good germination in both, fast germination with water available CHECK 2ND SOW
+Dianthus langeanus;Snowbed;200;194;97%;192;99%;;;;;;;
+Erigeron alpinus;Fellfield;100;98;98%;98;100%;;;1;;1;;good germiantion in both, needs cold stratification
+Erigeron alpinus;Snowbed;100;99;99%;99;100%;;;;;;;
+Euphrasia salisburgensis;Fellfield;200;200;100%;1;1%;;;1;;;;very low germination
+Euphrasia salisburgensis;Snowbed;200;199;100%;1;1%;;;;;;;
+Festuca hystrix;Fellfield;34;25;74%;25;100%;1;;;;;1;very different behaviour between microsites
+Festuca hystrix;Snowbed;34;25;74%;18;72%;;;;;;;
+Festuca rubra;Fellfield;100;45;45%;1;2%;;;1;;1;;very low germination
+Festuca rubra;Snowbed;100;51;51%;0;0%;;;;;;;
+Festuca summilusitana;Fellfield;200;101;51%;101;100%;1;;;;;1;good germination in both, fast germination with water available CHECK 2ND SOW
+Festuca summilusitana;Snowbed;197;115;58%;107;93%;;;;;;;
+Gentiana verna;Fellfield;199;149;75%;10;7%;;;1;;1;;very low germination
+Gentiana verna;Snowbed;198;163;82%;12;7%;;;;;;;
+Gentianella campestris;Fellfield;100;97;97%;0;0%;;;;;;;no germination
+Gentianella campestris;Snowbed;100;100;100%;0;0%;;;;;;;
+Gypsophila repens;Fellfield;198;151;76%;144;95%;;;1;;;1;good germination in both mainly after winter
+Gypsophila repens;Snowbed;198;175;88%;164;94%;;;;;;;
+Helianthemum canum;Fellfield;200;170;85%;47;28%;;;1;;;1;low germination in both
+Helianthemum canum;Snowbed;200;159;80%;34;21%;;;;;;;
+Helianthemum urrielense;Fellfield;198;37;19%;14;38%;;;1;1;;;similar germination, only before winter
+Helianthemum urrielense;Snowbed;199;34;17%;12;35%;;;;;;;
+Helictochloa marginata;Fellfield;30;4;13%;4;100%;;;1;;;1;low N 
+Helictochloa marginata;Snowbed;30;5;17%;5;100%;;;;;;;
+Helictotrichon sedenense;Fellfield;93;14;15%;14;100%;;;1;;;1;good germination in both mainly after winter
+Helictotrichon sedenense;Snowbed;94;21;22%;20;95%;;;;;;;
+Iberis carnosa;Fellfield;100;94;94%;83;88%;1;;;;;1;very different behaviour between microsites
+Iberis carnosa;Snowbed;100;91;91%;63;69%;;;;;;;
+Jasione cavanillesii;Fellfield;105;71;68%;19;27%;;;1;;1;;similar germination in both, needs cold stratification
+Jasione cavanillesii;Snowbed;105;75;71%;16;21%;;;;;;;
+Jurinea humilis;Fellfield;323;41;13%;41;100%;;;1;;;1;good germination in both, fast germination with water available CHECK 2ND SOW
+Jurinea humilis;Snowbed;323;41;13%;41;100%;;;;;;;
+Kobresia myosuroides;Fellfield;100;79;79%;41;52%;;;;;;;wrong germination check?, no germination
+Kobresia myosuroides;Snowbed;100;79;79%;48;61%;;;;;;;
+Koeleria vallesiana;Fellfield;199;146;73%;146;100%;;;1;;;1;good germination in both, fast germination with water available CHECK 2ND SOW
+Koeleria vallesiana;Snowbed;199;120;60%;116;97%;;;;;;;
+Luzula caespitosa;Fellfield;200;64;32%;53;83%;;1;;;;1;
+Luzula caespitosa;Snowbed;200;72;36%;70;97%;;;;;;;
+Minuartia recurva;Fellfield;200;195;98%;189;97%;;;1;;;1;good germination in both, fast germination with water available CHECK 2ND SOW
+Minuartia recurva;Snowbed;200;188;94%;182;97%;;;;;;;
+Minuartia verna;Fellfield;100;96;96%;39;41%;1;;;;;1;very different behaviour between microsites
+Minuartia verna;Snowbed;100;96;96%;9;9%;;;;;;;
+MinuartiaCF;Fellfield;100;99;99%;42;42%;1;;;;;1;very different behaviour between microsites
+MinuartiaCF;Snowbed;100;100;100%;10;10%;;;;;;;
+Neochischkinia truncatula;Fellfield;200;186;93%;170;91%;;;1;;;1;good germination in both, fast germination with water available CHECK 2ND SOW
+Neochischkinia truncatula;Snowbed;197;178;90%;157;88%;;;;;;;
+Pedicularis pyrenaica;Fellfield;200;120;60%;45;38%;;;1;;1;;similar germination in both, needs cold stratification
+Pedicularis pyrenaica;Snowbed;200;148;74%;45;30%;;;;;;;
+Phalacrocarpum oppositifolium;Fellfield;124;75;60%;74;99%;;;1;;;1;good germination in both, fast germination with water available CHECK 2ND SOW
+Phalacrocarpum oppositifolium;Snowbed;124;79;64%;78;99%;;;;;;;
+Phyteuma hemisphaericum;Fellfield;199;183;92%;50;27%;;1;;;1;;slightly higher germination in snowbed, needs cold stratification
+Phyteuma hemisphaericum;Snowbed;192;167;87%;55;33%;;;;;;;
+Phyteuma orbiculare;Fellfield;51;40;78%;7;18%;;1;;;1;;slightly higher germination in snowbed, needs cold stratification
+Phyteuma orbiculare;Snowbed;47;32;68%;10;31%;;;;;;;
+Plantago alpina;Fellfield;160;145;91%;144;99%;;;1;;;1;good germination in both mainly after winter
+Plantago alpina;Snowbed;160;145;91%;141;97%;;;;;;;
+Plantago holosteum;Fellfield;200;200;100%;199;100%;;;1;;;1;good germination in both, fast germination with water available CHECK 2ND SOW
+Plantago holosteum;Snowbed;200;200;100%;198;99%;;;;;;;
+Ranunculus carianthiacus;Fellfield;15;15;100%;4;27%;1;;;;1;;low N
+Ranunculus carianthiacus;Snowbed;15;15;100%;0;0%;;;;;;;
+Salix fontqueri;Fellfield;5;5;100%;0;0%;;;;;;;no germination, seeds overripped?
+Salix fontqueri;Snowbed;5;5;100%;0;0%;;;;;;;
+Saxifraga conifera;Fellfield;157;138;88%;83;60%;1;;;;;1;very different behaviour between microsites
+Saxifraga conifera;Snowbed;160;153;96%;40;26%;;;;;;;
+Saxifraga paniculata;Fellfield;100;100;100%;94;94%;1;;;;1;;higher germination in fellfield, needs cold stratification
+Saxifraga paniculata;Snowbed;100;99;99%;53;54%;;;;;;;
+Scilla verna;Fellfield;100;96;96%;0;0%;;;;;;;no germination, seeds overripped?
+Scilla verna;Snowbed;100;98;98%;0;0%;;;;;;;
+Sedum anglicum;Fellfield;200;180;90%;129;72%;1;;;;;1;very different behaviour between microsites
+Sedum anglicum;Snowbed;200;194;97%;97;50%;;;;;;;
+Sedum brevifolium;Fellfield;200;198;99%;92;46%;;;1;;;1;good germination in both conditions, mainly before winter
+Sedum brevifolium;Snowbed;195;193;99%;80;41%;;;;;;;
+Sedum sp (album cf);Fellfield;100;99;99%;0;0%;;;;;;;no germination, seeds overripped?
+Sedum sp (album cf);Snowbed;100;94;94%;0;0%;;;;;;;
+Sempervivum arachnoideo;Fellfield;199;187;94%;172;92%;1;;;;1;;higher germination in fellfield, needs cold stratification
+Sempervivum arachnoideo;Snowbed;200;188;94%;139;74%;;;;;;;
+Sesleria caerula;Fellfield;100;79;79%;74;94%;;;1;;;1;good germination in both conditions, mainly before winter
+Sesleria caerula;Snowbed;99;76;77%;66;87%;;;;;;;
+Silene acaulis;Fellfield;199;183;92%;70;38%;1;;;;1;;higher germination in fellfield, needs cold stratification
+Silene acaulis;Snowbed;200;188;94%;53;28%;;;;;;;
+Silene ciliata;Fellfield;400;389;97%;344;88%;;;1;;1;;similar germination, needs cold stratification
+Silene ciliata;Snowbed;400;377;94%;335;89%;;;;;;;
+Solidago virgaurea;Fellfield;198;167;84%;167;100%;;;1;;;1;good germination in both conditions, mainly before winter
+Solidago virgaurea;Snowbed;192;138;72%;134;97%;;;;;;;
+Spergula morisonii;Fellfield;168;143;85%;73;51%;;1;;1;;;better germination in snowbed, only before winter
+Spergula morisonii;Snowbed;168;156;93%;98;63%;;;;;;;
+Thymus praecox;Fellfield;400;348;87%;308;89%;;;1;;;1;good germination in both conditions 
+Thymus praecox;Snowbed;393;347;88%;303;87%;;;;;;;
