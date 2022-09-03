@@ -6,7 +6,7 @@ theme_set(theme_cowplot(font_size = 10))
 
 # Read and prepare the germination data
 
-# dataframe for temperature programs
+#### dataframe for temperature programs ####
 temp <- read.csv("data/date_temp.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y")) %>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
@@ -20,6 +20,8 @@ ggplot(temp, aes ()) +
   geom_line (aes (x=time, y=Tmin, colour =condition), size =1) +
   geom_line (aes (x=time, y=Tmax, colour = condition), size =1) +
   geom_ribbon (data = temp, aes (x=time, ymin =Tmin, ymax=Tmax, colour = condition, fill = condition), alpha =0.5) +
+  scale_fill_manual (values =c("chocolate2", "deepskyblue3")) +
+  scale_color_manual (values =c("chocolate2", "deepskyblue3")) +
   labs (title = "Move-along temperature regimes", y= "Temperature ºC", x = "Time (days)") + 
   theme (axis.title.y = element_text (size=14), 
          axis.title.x = element_text (size=14), 
@@ -28,10 +30,10 @@ ggplot(temp, aes ()) +
          legend.text = element_text (size =12)) +
   geom_vline(xintercept = 122, linetype = "dashed", size =1) +
   annotate (geom ="text", x= 155, y = 22, label ="winter begins", colour = "black", size = 3.5,  fontface ="bold") +
-  geom_vline(xintercept = 240, linetype = "dashed", size =1, color = "red") +
-  annotate (geom ="text", x= 265, y = 22, label ="fellfield\nwinter ends", colour = "red", size = 3.5,  fontface ="bold") +
-  geom_vline(xintercept = 291, linetype = "dashed", size =1,color = "turquoise") +
-  annotate (geom ="text", x= 317, y = 22, label ="snowbed\nwinter ends", colour = "turquoise", size = 3.5,  fontface ="bold") 
+  geom_vline(xintercept = 240, linetype = "dashed", size =1, color = "chocolate2") +
+  annotate (geom ="text", x= 265, y = 22, label ="fellfield\nwinter ends", colour = "chocolate2", size = 3.5,  fontface ="bold") +
+  geom_vline(xintercept = 291, linetype = "dashed", size =1,color = "deepskyblue3") +
+  annotate (geom ="text", x= 317, y = 22, label ="snowbed\nwinter ends", colour = "deepskyblue3", size = 3.5,  fontface ="bold") 
   
 # visualization 2
 # all area shaded below x temperature (PROBLEM: don't know why but all values are higher than what appear in data)
@@ -44,6 +46,7 @@ geom_area(aes(time,  Tmean, colour = condition, fill = condition), size = 1, alp
   geom_vline(xintercept = 290, linetype = "dashed", size =1,color = "turquoise") +
   annotate (geom ="text", x= 312, y = 20, label ="snowbed", colour = "turquoise", size = 4,  fontface ="bold")
 
+#### main data transformation and visualization ####
 # tidyverse transformation to account for the number of viable seeds per each specie and condition
 # summing up petridishes and accesions/populations of the same species (not taking into account weekly germination)
 read.csv("data/R long data.csv", sep = ";") %>%
@@ -55,7 +58,7 @@ read.csv("data/R long data.csv", sep = ";") %>%
   group_by(species, condition) %>%
   summarise(viable = sum(viable)) -> viables
  
-write.csv (viables,"results/viables.csv", row.names = FALSE )
+# write.csv (viables,"results/viables.csv", row.names = FALSE )
 
 # tidyverse modification to have the accumulated germination along the whole experiment + ggplot
 read.csv("data/R long data.csv", sep = ";") %>%
@@ -66,7 +69,49 @@ read.csv("data/R long data.csv", sep = ";") %>%
   mutate(germinated = cumsum(germinated)) %>%
   merge(viables) %>%
   mutate(germination = germinated/viable) %>%
-  filter(species == "Phalacrocarpum oppositifolium") %>%
+  filter(species == "Gypsophila repens") %>%
+  ggplot(aes(time, germination, color = condition, fill = condition)) +
+  geom_line(size = 1.5) +
+  scale_color_manual (name= "Microhabitat", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
+  facet_wrap(~ species, scales = "free_x", ncol = 2) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(x = "Time (days)", y = "Germination proportion") +
+  theme(strip.text = element_text(face = "italic", size = 20), 
+        legend.title = element_text(size=18), 
+        legend.text = element_text(size=14),
+        axis.title.y = element_text (size=16), 
+        axis.title.x = element_text (size=16)) + 
+  geom_vline(xintercept = 122, linetype = "dashed", size= 1.5) +
+  geom_vline(xintercept = 248, linetype = "dashed", size= 1.5, color = "chocolate2") +
+  geom_vline(xintercept = 290, linetype = "dashed", size= 1.5, color = "deepskyblue3") 
+  
+# Save the plots
+
+ggsave(filename = "results/FigAgrostistileni.png", Agrostistileni, path = NULL, 
+       scale = 1, width = 180, height = 180, units = "mm", dpi = 600)
+
+
+#### 2nd sow data transformation and graph####
+# tidyverse transformation to account for the number of viable seeds per each specie and condition
+# summing up petridishes and accesions/populations of the same species (not taking into account weekly germination)
+read.csv("data/Second_sow.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
+  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date)))) %>%
+  group_by(species, condition, code, petridish) %>%
+  filter(date == max(date)) %>%
+  select(species, condition, code, petridish, viable) %>%
+  group_by(species, condition) %>%
+  summarise(viable = sum(viable)) -> secondsowviables
+
+read.csv("data/Second_sow.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
+  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date)))) %>%
+  group_by(species, condition, time) %>%
+  summarise(germinated = sum(germinated)) %>%
+  mutate(germinated = cumsum(germinated)) %>%
+  merge(viables) %>%
+  mutate(germination = germinated/viable) %>%
+  filter(species == "Thymus praecox") %>%
   ggplot(aes(time, germination, color = condition, fill = condition)) +
   geom_line(size = 1) +
   scale_color_manual (name= "Condition", values = c ("Fellfield"= "red", "Snowbed" ="turquoise")) +
@@ -78,33 +123,112 @@ read.csv("data/R long data.csv", sep = ";") %>%
         legend.text = element_text(size=12),
         axis.title.y = element_text (size=14), 
         axis.title.x = element_text (size=14)) + 
+  geom_vline(xintercept = 39, linetype = "dashed", size= 1) +
+  geom_vline(xintercept = 165, linetype = "dashed", size= 1, color = "red") +
+  geom_vline(xintercept = 207, linetype = "dashed", size= 1, color = "turquoise") 
+
+
+#####germination peaks identification #####
+read.csv("data/R long data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
+  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date)))) %>%
+  group_by(mountain, species, condition, code, petridish) %>%
+  filter(date == max(date)) %>%
+  select(mountain, species, condition, code, petridish, viable) %>%
+  group_by(mountain, condition) %>%
+  summarise(viable = sum(viable)) -> viables_peak
+
+read.csv("data/R long data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
+  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date)))) %>%
+  group_by(mountain, condition, time) %>%
+  summarise(germinated = sum(germinated)) %>%
+ # mutate(germinated = cumsum(germinated)) %>%
+  merge(viables_peak) %>%
+  mutate(germination = germinated/viable) %>%
+  ggplot(aes(time, germinated, color = condition, fill = condition)) +
+  geom_line(size = 1) +
+  scale_color_manual (name= "Condition", values = c ("Fellfield"= "red", "Snowbed" ="turquoise")) +
+  facet_wrap(~ mountain, scales = "free_x", ncol = 2) +
+  labs(x = "Time (days)", y = "Germinated seeds") +
+  theme(strip.text = element_text(face = "italic", size = 16), 
+        legend.title = element_text(size=16), 
+        legend.text = element_text(size=12),
+        axis.title.y = element_text (size=14), 
+        axis.title.x = element_text (size=14)) + 
   geom_vline(xintercept = 122, linetype = "dashed", size= 1) +
   geom_vline(xintercept = 248, linetype = "dashed", size= 1, color = "red") +
-  geom_vline(xintercept = 290, linetype = "dashed", size= 1, color = "turquoise") 
-  
-# Save the plots
-
-ggsave(filename = "results/FigAgrostistileni.png", Agrostistileni, path = NULL, 
-       scale = 1, width = 180, height = 180, units = "mm", dpi = 600)
-
-# option to aggrupate species per mountain??
+  geom_vline(xintercept = 290, linetype = "dashed", size= 1, color = "turquoise")
 
 
-# Create the plots, divided for 4 pages
+#### intraespecific variation (filter each species with 2 populations) ####
+read.csv("data/R long data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
+  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date)))) %>%
+  group_by(species, condition, code, petridish) %>%
+  filter(date == max(date)) %>%
+  select(species, condition, code, petridish, viable) %>%
+  group_by(species, condition) %>%
+  summarise(viable = sum(viable)) -> viables
 
-dfg %>%
-  filter(species %in% unique(dfg$species)[4:8]) %>% # 12 species
-  fg -> FigGerminationA
+# write.csv (viables,"results/viables.csv", row.names = FALSE )
 
-dfg %>%
-  filter(species %in% unique(dfg$species)[13:26]) %>%
-  fg -> FigGerminationB
+# tidyverse modification to have the accumulated germination along the whole experiment + ggplot
+read.csv("data/R long data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
+  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date)))) %>%
+  group_by(species, condition, code, time) %>%
+  summarise(germinated = sum(germinated)) %>%
+  mutate(germinated = cumsum(germinated)) %>%
+  merge(viables) %>%
+  mutate(germination = germinated/viable) %>%
+  filter(species == "Silene ciliata") %>%
+  ggplot(aes(time, germination, color = condition, fill = condition)) +
+  geom_line(size = 1.5) +
+  scale_color_manual (name= "Microhabitat", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
+  facet_wrap(~ code, scales = "free_x", ncol = 2) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = "Silene ciliata", x = "Time (days)", y = "Germination proportion") +
+  theme(title = element_text(face ="italic", size =16),
+        legend.title = element_text(size=18), 
+        legend.text = element_text(size=14),
+        axis.title.y = element_text (size=16), 
+        axis.title.x = element_text (size=16)) + 
+  geom_vline(xintercept = 122, linetype = "dashed", size= 1.5) +
+  geom_vline(xintercept = 248, linetype = "dashed", size= 1.5, color = "chocolate2") +
+  geom_vline(xintercept = 290, linetype = "dashed", size= 1.5, color = "deepskyblue3") 
 
-dfg %>%
-  filter(species %in% unique(dfg$species)[27:40]) %>%
-  fg -> FigGerminationC
+#### all species together compare conditions only ####
+read.csv("data/R long data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
+  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date)))) %>%
+  group_by(species, condition, code, petridish) %>%
+  filter(date == max(date)) %>%
+  select(species, mountain, condition, code, petridish, viable) %>%
+  group_by(condition, mountain) %>%
+  summarise(viable = sum(viable)) -> viables
 
-dfg %>%
-  filter(species %in% unique(dfg$species)[41:55]) %>%
-  fg -> FigGerminationD
+# write.csv (viables,"results/viables.csv", row.names = FALSE )
 
+# tidyverse modification to have the accumulated germination along the whole experiment + ggplot
+read.csv("data/R long data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
+  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date)))) %>%
+  group_by(mountain, condition, time) %>%
+  summarise(germinated = sum(germinated)) %>%
+  #mutate(germinated = cumsum(germinated)) %>%
+  merge(viables) %>%
+  mutate(germination = germinated/viable) %>%
+  ggplot(aes(time, germination, color = condition, fill = condition)) +
+  geom_line(size = 1.5) +
+  scale_color_manual (name= "Microhabitat", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
+  facet_wrap(~ mountain, scales = "free_x", ncol = 2) +
+  labs(title = "", x = "Time (days)", y = "Germination proportion") +
+  theme(strip.text = element_text(face = "italic", size = 20), 
+             legend.title = element_text(size=18), 
+             legend.text = element_text(size=14),
+             axis.title.y = element_text (size=16), 
+             axis.title.x = element_text (size=16)) + 
+  geom_vline(xintercept = 122, linetype = "dashed", size= 1.5) +
+  geom_vline(xintercept = 248, linetype = "dashed", size= 1.5, color = "chocolate2") +
+  geom_vline(xintercept = 290, linetype = "dashed", size= 1.5, color = "deepskyblue3") 
