@@ -69,7 +69,7 @@ read.csv("data/R long data.csv", sep = ";") %>%
   mutate(germinated = cumsum(germinated)) %>%
   merge(viables) %>%
   mutate(germination = germinated/viable) %>%
-  filter(species == "Gypsophila repens") %>%
+  filter(species == "Phyteuma hemisphaericum") %>%
   ggplot(aes(time, germination, color = incubator, fill = incubator)) +
   geom_line(size = 1.5) +
   scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
