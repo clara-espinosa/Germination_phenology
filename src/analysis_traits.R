@@ -10,8 +10,6 @@ temp <- read.csv("data/date_temp.csv", sep = ";") %>%
   mutate(incubator = as.factor(incubator)) 
   #mutate(heatsum = cumsum(Tmean))
 temp <- as.data.frame(temp)
-str(temp)
-summary(temp)
 
 # viable seeds calculation ####
 # summing up petridishes and accesions/populations of the same species (not taking into account weekly germination)
@@ -21,13 +19,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
   group_by(species, code, incubator, petridish) %>%
   filter(date == max(date)) %>%
   select(species, code, incubator, petridish, viable) %>%
-  #group_by(species, incubator) %>%
-  arrange (species, code, incubator, petridish)%>%
   summarise(viable = sum(viable)) -> viables
-
-ggplot (viables, aes(viable, incubator, fill = incubator)) +
-  geom_boxplot () +
-  theme_bw()
 
 # final germination percentage calculation ####
 read.csv("data/clean data.csv", sep = ";") %>%
@@ -38,10 +30,6 @@ read.csv("data/clean data.csv", sep = ";") %>%
   merge(viables) %>%
   mutate(germPER = (seeds_germ/viable) *100, # 
          germPER = round (germPER, digit =2)) -> finalgerm 
-
-ggplot (finalgerm, aes(germination, incubator, fill= incubator))+
-  geom_boxplot ()+
-  theme_bw ()
 
 # tidyverse modification to have time to reach 50% germination according to germ checks  ####
 read.csv("data/clean data.csv", sep = ";") %>%
@@ -62,9 +50,6 @@ read.csv("data/clean data.csv", sep = ";") %>%
   summarise(t50check = min (t50check)) %>%
   ungroup()-> time50 # values discrete bc count t50 according to germination check days
 
-ggplot (time50, aes(t50check, incubator, fill= incubator)) +
-  geom_boxplot () +
-  theme_bw()
 
 ### modeling t50 from raw data ####
 
@@ -97,8 +82,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
   rename(#FG = fg, 
          t50lm = `(0.5 - as.numeric(mf1$coefficients[1]))/as.numeric(mf1$coefficients[2])`) ->t50model
 
-t50comparison <- full_join(time50, t50model, by = c("species", "code", "incubator", "petridish")) 
-t50_trait <- t50comparison %>%
+t50_trait <- full_join(time50, t50model, by = c("species", "code", "incubator", "petridish")) %>%
   mutate (t50lm1 = t50lm) %>%
   mutate_at(vars(t50lm1), ~ as.integer(round(.x))) %>% # round decimals to integer numbers
   rename (t50lm_days = t50lm1) 
@@ -145,10 +129,7 @@ traits_FS%>%
 ## traits Fellfield-Snowbed dataframe version 2 ####
 traits_FS <- full_join(traits_FS, heat_sum, by= c("species", "code", "incubator", "petridish")) 
 
-ggplot (traits_df, aes(HS, incubator, fill=HS)) +
-  geom_boxplot () +
-  theme_bw()
-
+#################################CONTINUE CHECKING FROM HERE #################################################
 # undersnow germination (nÂº of seeds) ####
 snow <- read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y")) 
