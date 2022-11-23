@@ -112,46 +112,34 @@ ggplot (traits_df, aes(HS, incubator, fill=HS)) +
   geom_boxplot () +
   theme_bw()
 ### how to model exact p50 from our data points?? lm? non linear model? 
-#FUNCION de EDUARDO
+
+### t50
 
 f1 <- function(df0) {
-  df0 %>% # Data frame with germination scoring
-    mutate(t = T / PG) %>% # Calculate cumulative germination proportion
-    mutate(Timeframe = ifelse(t > 0.5, "Upper", "Lower")) %>% # New column that divides dataset in germination < 0.5 or > 0.5
-    group_by(Accession, Treatment, Timeframe) -> dff1 # Group by accession, treatment, timeframe
-  rbind(
-    filter(dff1, Timeframe == "Lower") %>% do(tail(., n = 1)), # Scoring time just before t50
-    filter(dff1, Timeframe == "Upper") %>% do(head(., n = 1)) # Scoring time just after t50
-  ) -> dff2
-  lm(t ~ Time, data = dff2) -> mf1 # Linear model between time before and time after
-  (0.5 - as.numeric(mf1$`coefficients`[1])) / as.numeric(mf1$`coefficients`[2]) # Use linear model to interpolate t50
-}
-
-f1 <- function(df0) {
-    read.csv("data/clean data.csv", sep = ";") %>% # Data frame with germination scoring
-    mutate(t = germinated / viable) %>% # Calculate cumulative germination proportion
-    mutate(Timeframe = ifelse(t > 0.5, "Upper", "Lower")) %>% # New column that divides dataset in germination < 0.5 or > 0.5
-    group_by(species, incubator, Timeframe)-> dff1 # Group by accession, treatment, timeframe
-  rbind(
-    filter(dff1, Timeframe == "Lower") %>% do(tail(., n = 1)), # Scoring time just before t50
-    filter(dff1, Timeframe == "Upper") %>% do(head(., n = 1)) # Scoring time just after t50
-  ) -> dff2
-  lm(t ~ Timeframe, data = dff2) -> mf1 # Linear model between time before and time after
+  lm(t50g ~ t50times, data = df0) -> mf1 # Linear model between time before and time after
   as.data.frame((0.5 - as.numeric(mf1$`coefficients`[1])) / as.numeric(mf1$`coefficients`[2])) # Use linear model to interpolate t50
 }
 
-read.csv("data/clean data.csv", sep = ";") %>% # Data frame with germination scoring
-  mutate(t = germinated / viable) %>% # Calculate cumulative germination proportion
-  mutate(Timeframe = ifelse(t > 0.5, "Upper", "Lower")) %>% # New column that divides dataset in germination < 0.5 or > 0.5
-  group_by(species, incubator, Timeframe)-> dff1 # Group by accession, treatment, timeframe
-rbind(
-  filter(dff1, Timeframe == "Lower") %>% do(tail(., n = 1)), # Scoring time just before t50
-  filter(dff1, Timeframe == "Upper") %>% do(head(., n = 1)) # Scoring time just after t50
-) -> dff2
-lm(t ~ Timeframe, data = dff2) -> mf1 # Linear model between time before and time after
-(0.5 - as.numeric(mf1$`coefficients`[1])) / as.numeric(mf1$`coefficients`[2]) # Use linear model to interpolate t50
-
 read.csv("data/clean data.csv", sep = ";") %>%
-  group_by (species, incubator) %>%
-  do (f1(.)) %>% # punto significa que el objeto al que aplicar la funcion heat sum es el de la linea de arriba
-  data.frame -> time50lm
+  mutate(date = strptime(as.character(date), "%d/%m/%Y")) %>%
+  group_by(species, code, incubator, petridish) %>%
+  mutate(days = difftime(date, min(date), units = "days")) %>%
+  arrange(species, code, incubator, petridish, days) %>%
+  group_by (species, code, incubator, petridish) %>% 
+  mutate(cs = cumsum(germinated), 
+         fg = max(cs) / viable,
+         g = cs / viable,
+         Timeframe = ifelse(g > 0.5, "Upper", "Lower")) %>%
+  group_by(species, code, incubator, petridish, Timeframe) %>%
+  mutate(t50times = ifelse(Timeframe == "Lower", max(days), min(days)),
+         t50g = ifelse(days == t50times, g, NA)) %>%
+  na.omit %>%
+  select(species, code, incubator, petridish, petricode, Timeframe, fg, t50times, t50g) %>%
+  unique %>%
+  group_by(species, code, incubator, petridish, petricode) %>%
+  filter(fg >= .50) %>%
+  filter(length(petricode) > 1) %>%
+  group_by(species, code, incubator, petridish, petricode, fg) %>%
+  do(f1(.)) %>%
+  rename(FG = fg, 
+         t50 = `(0.5 - as.numeric(mf1$coefficients[1]))/as.numeric(mf1$coefficients[2])`)
