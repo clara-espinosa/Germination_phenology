@@ -156,6 +156,34 @@ read.csv("data/clean data.csv", sep = ";") %>%
   do (f1(.)) %>% # punto significa que el objeto al que aplicar la funcion heat sum es el de la linea de arriba
   data.frame -> time50lm
 # seguimos teniendo el problema de aquellas especies que no han llegado al 50% de germinación. 
+f1 <- function(df0) {
+  lm(t50g ~ t50times, data = df0) -> mf1 # Linear model between time before and time after
+  as.data.frame((0.5 - as.numeric(mf1$`coefficients`[1])) / as.numeric(mf1$`coefficients`[2])) # Use linear model to interpolate t50
+}
+
+read.csv("data/clean data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y")) %>%
+  group_by(species, code, incubator, petridish) %>%
+  mutate(days = difftime(date, min(date), units = "days")) %>%
+  arrange(species, code, incubator, petridish, days) %>%
+  group_by (species, code, incubator, petridish) %>% 
+  mutate(cs = cumsum(germinated), 
+         fg = max(cs) / viable,
+         g = cs / viable,
+         Timeframe = ifelse(g > 0.5, "Upper", "Lower")) %>%
+  group_by(species, code, incubator, petridish, Timeframe) %>%
+  mutate(t50times = ifelse(Timeframe == "Lower", max(days), min(days)),
+         t50g = ifelse(days == t50times, g, NA)) %>%
+  na.omit %>%
+  select(species, code, incubator, petridish, petricode, Timeframe, fg, t50times, t50g) %>%
+  unique %>%
+  group_by(species, code, incubator, petridish, petricode) %>%
+  filter(fg >= .50) %>%
+  filter(length(petricode) > 1) %>%
+  group_by(species, code, incubator, petridish, petricode, fg) %>%
+  do(f1(.)) %>%
+  rename(FG = fg, 
+         t50 = `(0.5 - as.numeric(mf1$coefficients[1]))/as.numeric(mf1$coefficients[2])`)
 
 # undersnow germination (nº of seeds) ####
 snow <- read.csv("data/clean data.csv", sep = ";") %>%
