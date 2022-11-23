@@ -3,7 +3,7 @@ library(tidyverse); library(ggrepel); library(cowplot); library (ggplot2);
 library (lubridate)
 theme_set(theme_cowplot(font_size = 10)) 
 
-## dataframe for temperature programs ##
+####dataframe with temperature programs x incubator####
 temp <- read.csv("data/date_temp.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y")) %>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
@@ -13,8 +13,8 @@ temp <- as.data.frame(temp)
 str(temp)
 summary(temp)
 
-## main data transformation and visualization ####
-# tidyverse transformation to account for the number of viable seeds per each specie and incubator
+
+# viable seeds calculation ####
 # summing up petridishes and accesions/populations of the same species (not taking into account weekly germination)
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
@@ -29,7 +29,7 @@ ggplot (viables, aes(viable, incubator, fill = incubator)) +
   geom_boxplot () +
   theme_bw()
 
-# tidyverse modification to have the accumulated germination along the whole experiment
+# final germination percentage calculation ####
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date)))) %>%
@@ -42,7 +42,7 @@ ggplot (finalgerm, aes(germination, incubator, fill= incubator))+
   geom_boxplot ()+
   theme_bw ()
 
-# tidyverse modification to have time to reach 50% germination
+# tidyverse modification to have time to reach 50% germination according to germ checks  ####
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   group_by (species) %>%
@@ -65,7 +65,7 @@ ggplot (time50, aes(t50check, incubator, fill= incubator)) +
   geom_boxplot () +
   theme_bw()
 
-# sowing date + t50 date
+# sowing date + t50 date or final date check ####
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   group_by (species, incubator) %>%
@@ -78,21 +78,18 @@ read.csv("data/clean data.csv", sep = ";") %>%
   mutate (date50 = as.Date(datesow) + t50check) %>%
   mutate (date50 = replace_na (date50, as.character(datelast))) -> time50dates
 
-traits_df <- full_join(finalgerm, time50dates, by= c("species", "incubator")) 
+## traits Fellfield-Snowbed dataframe version 1 ####
+traits_FS <- full_join(finalgerm, time50dates, by= c("species", "incubator")) 
 
-### FUNCION FUNCIONA ####
-# FUNCION BUENA
-heatsum_bis <-function (traits_df) {
-  traits_df %>%
+### Heat:sum function####
+heatsum <-function (traits_FS) {
+  traits_FS %>%
     pull (incubator)%>%
     unique() -> inc
-  
-  traits_df %>%
+  traits_FS %>%
     pull(datesow) -> date1 #convierte columna en vector
-  
-  traits_df%>%
+  traits_FS%>%
     pull(date50) -> date2
-  
   temp %>% 
     mutate (date = as.Date(date)) %>%
     filter(incubator == inc) %>%
@@ -100,18 +97,19 @@ heatsum_bis <-function (traits_df) {
     summarise (HS =sum(Tmean)) 
 }
 
-
-traits_df %>%
+traits_FS%>%
   group_by (species, incubator) %>%
-  do (heatsum_bis(.)) %>% # punto significa que el objeto al que aplicar la funcion heat sum es el de la linea de arriba
+  do (heatsum(.)) %>% # punto significa que el objeto al que aplicar la funcion heat sum es el de la linea de arriba
   data.frame -> heat_sum
 
-traits_df <- full_join(traits_df, heat_sum, by= c("species", "incubator")) 
+## traits Fellfield-Snowbed dataframe version 2 ####
+traits_FS <- full_join(traits_FS, heat_sum, by= c("species", "incubator")) 
 
 ggplot (traits_df, aes(HS, incubator, fill=HS)) +
   geom_boxplot () +
   theme_bw()
-### how to model exact p50 from our data points?? lm? non linear model? 
+
+### modeling t50 from raw data ####
 #FUNCION de EDUARDO
 
 f1 <- function(df0) {
@@ -136,7 +134,7 @@ f1 <- function(df0) {
     filter(dff1, Timeframe == "Lower") %>% do(tail(., n = 1)), # Scoring time just before t50
     filter(dff1, Timeframe == "Upper") %>% do(head(., n = 1)) # Scoring time just after t50
   ) -> dff2
-  lm(t ~ Timeframe, data = dff2) -> mf1 # Linear model between time before and time after
+  lm(t ~ date, data = dff2) -> mf1 # Linear model between time before and time after
   as.data.frame((0.5 - as.numeric(mf1$`coefficients`[1])) / as.numeric(mf1$`coefficients`[2])) # Use linear model to interpolate t50
 }
 
@@ -148,10 +146,51 @@ rbind(
   filter(dff1, Timeframe == "Lower") %>% do(tail(., n = 1)), # Scoring time just before t50
   filter(dff1, Timeframe == "Upper") %>% do(head(., n = 1)) # Scoring time just after t50
 ) -> dff2
-lm(t ~ Timeframe, data = dff2) -> mf1 # Linear model between time before and time after
+dff2 %>%
+  arrange (species, incubator, Timeframe)
+lm(t ~ date, data = dff2) -> mf1 # Linear model between time before and time after
 (0.5 - as.numeric(mf1$`coefficients`[1])) / as.numeric(mf1$`coefficients`[2]) # Use linear model to interpolate t50
 
 read.csv("data/clean data.csv", sep = ";") %>%
   group_by (species, incubator) %>%
   do (f1(.)) %>% # punto significa que el objeto al que aplicar la funcion heat sum es el de la linea de arriba
   data.frame -> time50lm
+# seguimos teniendo el problema de aquellas especies que no han llegado al 50% de germinación. 
+
+# undersnow germination (nº of seeds) ####
+snow <- read.csv("data/clean data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y")) 
+snow <- filter (snow, incubator=="Snowbed") # only able to determine in the snowbed incubator (due to env conditions)
+snow %>%
+  group_by (species, incubator, date)%>% 
+  summarise(germinated = sum(germinated)) %>%
+  mutate(germination = cumsum(germinated)) %>%
+  inner_join (viables) %>%
+  filter (date %in% c("2022-05-11","2022-05-12")) %>% # date of germination check right before end of winter conditions (dark + 0ºC)
+  mutate (snowgerm = germinated) %>%
+  group_by(species) %>%
+  select (species, incubator, snowgerm)  %>%
+  merge (finalgerm) %>%
+  select(species, snowgerm, germinated) %>%
+  mutate (snowPER = (snowgerm/germinated)*100)-> snow_trait # percentage of germinated under snow 
+snow_trait <- rename (snow_trait, germinated_snowbed = germinated)  
+#### traits sp dataframe  (average/combination Fellfield + Snowbed)####
+traits_FS %>%
+  group_by (species)%>%
+  summarise (germinated =sum(germinated),
+             viable = sum (viable),
+             germination = mean (germination),
+             t50check= mean (t50check),
+             Heatsum= mean (HS)) -> traits_sp
+traits_sp <- full_join(traits_sp, snow_trait, by= "species")
+  
+# delay to reach t50 check days between incubators ####
+traits_FS %>%
+  select(species, incubator, t50check)-> delaytime
+spread(delaytime, incubator, t50check)-> delaytime 
+delaytime %>% 
+  mutate(delayF_S = Snowbed - Fellfield) %>% 
+  select (species, delayF_S)-> delaytime
+
+traits_sp <- full_join(traits_sp, delaytime, by= "species") 
+# dormancy/cold stratification needed + warm cues?####
