@@ -13,7 +13,6 @@ temp <- as.data.frame(temp)
 str(temp)
 summary(temp)
 
-
 # viable seeds calculation ####
 # summing up petridishes and accesions/populations of the same species (not taking into account weekly germination)
 read.csv("data/clean data.csv", sep = ";") %>%
@@ -110,54 +109,73 @@ ggplot (traits_df, aes(HS, incubator, fill=HS)) +
   theme_bw()
 
 ### modeling t50 from raw data ####
-#FUNCION de EDUARDO
 
-f1 <- function(df0) {
-  df0 %>% # Data frame with germination scoring
-    mutate(t = T / PG) %>% # Calculate cumulative germination proportion
-    mutate(Timeframe = ifelse(t > 0.5, "Upper", "Lower")) %>% # New column that divides dataset in germination < 0.5 or > 0.5
-    group_by(Accession, Treatment, Timeframe) -> dff1 # Group by accession, treatment, timeframe
-  rbind(
-    filter(dff1, Timeframe == "Lower") %>% do(tail(., n = 1)), # Scoring time just before t50
-    filter(dff1, Timeframe == "Upper") %>% do(head(., n = 1)) # Scoring time just after t50
-  ) -> dff2
-  lm(t ~ Time, data = dff2) -> mf1 # Linear model between time before and time after
-  (0.5 - as.numeric(mf1$`coefficients`[1])) / as.numeric(mf1$`coefficients`[2]) # Use linear model to interpolate t50
-}
-
-f1 <- function(df0) {
-    read.csv("data/clean data.csv", sep = ";") %>% # Data frame with germination scoring
-    mutate(t = germinated / viable) %>% # Calculate cumulative germination proportion
-    mutate(Timeframe = ifelse(t > 0.5, "Upper", "Lower")) %>% # New column that divides dataset in germination < 0.5 or > 0.5
-    group_by(species, incubator, Timeframe)-> dff1 # Group by accession, treatment, timeframe
-  rbind(
-    filter(dff1, Timeframe == "Lower") %>% do(tail(., n = 1)), # Scoring time just before t50
-    filter(dff1, Timeframe == "Upper") %>% do(head(., n = 1)) # Scoring time just after t50
-  ) -> dff2
-  lm(t ~ date, data = dff2) -> mf1 # Linear model between time before and time after
-  as.data.frame((0.5 - as.numeric(mf1$`coefficients`[1])) / as.numeric(mf1$`coefficients`[2])) # Use linear model to interpolate t50
-}
-
-read.csv("data/clean data.csv", sep = ";") %>% # Data frame with germination scoring
-  mutate(t = germinated / viable) %>% # Calculate cumulative germination proportion
-  mutate(Timeframe = ifelse(t > 0.5, "Upper", "Lower")) %>% # New column that divides dataset in germination < 0.5 or > 0.5
-  group_by(species, incubator, Timeframe)-> dff1 # Group by accession, treatment, timeframe
-rbind(
-  filter(dff1, Timeframe == "Lower") %>% do(tail(., n = 1)), # Scoring time just before t50
-  filter(dff1, Timeframe == "Upper") %>% do(head(., n = 1)) # Scoring time just after t50
-) -> dff2
-dff2 %>%
-  arrange (species, incubator, Timeframe)
-lm(t ~ date, data = dff2) -> mf1 # Linear model between time before and time after
-(0.5 - as.numeric(mf1$`coefficients`[1])) / as.numeric(mf1$`coefficients`[2]) # Use linear model to interpolate t50
-
-read.csv("data/clean data.csv", sep = ";") %>%
-  group_by (species, incubator) %>%
-  do (f1(.)) %>% # punto significa que el objeto al que aplicar la funcion heat sum es el de la linea de arriba
-  data.frame -> time50lm
-# seguimos teniendo el problema de aquellas especies que no han llegado al 50% de germinación. 
 f1 <- function(df0) {
   lm(t50g ~ t50times, data = df0) -> mf1 # Linear model between time before and time after
   as.data.frame((0.5 - as.numeric(mf1$`coefficients`[1])) / as.numeric(mf1$`coefficients`[2])) # Use linear model to interpolate t50
 }
 
+read.csv("data/clean data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y")) %>%
+  group_by(species, code, incubator, petridish) %>%
+  mutate(days = difftime(date, min(date), units = "days")) %>% # calculate time from sowing to x date!
+  arrange(species, code, incubator, petridish, days) %>%
+  group_by (species, code, incubator, petridish) %>% 
+  mutate(cs = cumsum(germinated), # cumulative sum of germinated seeds 
+         fg = max(cs) / viable, # max germinated (final germination) divided by viable seeds (proportion)
+         g = cs / viable, # proportion of germination at each date
+         Timeframe = ifelse(g > 0.5, "Upper", "Lower")) %>% # # New column that divides dataset in germination < 0.5 or > 0.5
+  group_by(species, code, incubator, petridish, Timeframe) %>%
+  mutate(t50times = ifelse(Timeframe == "Lower", max(days), min(days)), # keep only the number of days just before and after reaching t50
+         t50g = ifelse(days == t50times, g, NA)) %>% # copy of germination proportion the days just before and after t50
+  na.omit %>%
+  select(species, code, incubator, petridish, petricode, Timeframe, fg, t50times, t50g) %>%
+  unique %>%
+  group_by(species, code, incubator, petridish, petricode) %>%
+  filter(fg >= .50) %>% # filter to keep only the species that reach more than 0.5 in max final germination
+  filter(length(petricode) > 1) %>% # not sure why this comand about lenght of petricode variable, to fix some strange error?
+  #group_by(species, code, incubator, petridish, petricode, fg) %>%
+  group_by (species, incubator) %>%
+  do(f1(.)) %>%
+  rename(#FG = fg, 
+         t50lm = `(0.5 - as.numeric(mf1$coefficients[1]))/as.numeric(mf1$coefficients[2])`) ->t50model
+
+t50comparison <- full_join(time50, t50model, by = c ("species", "incubator"))
+
+# undersnow germination (nÂº of seeds) ####
+snow <- read.csv("data/clean data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y")) 
+snow <- filter (snow, incubator=="Snowbed") # only able to determine in the snowbed incubator (due to env conditions)
+snow %>%
+  group_by (species, incubator, date)%>% 
+  summarise(germinated = sum(germinated)) %>%
+  mutate(germination = cumsum(germinated)) %>%
+  inner_join (viables) %>%
+  filter (date %in% c("2022-05-11","2022-05-12")) %>% # date of germination check right before end of winter conditions (dark + 0ÂºC)
+  mutate (snowgerm = germinated) %>%
+  group_by(species) %>%
+  select (species, incubator, snowgerm)  %>%
+  merge (finalgerm) %>%
+  select(species, snowgerm, germinated) %>%
+  mutate (snowPER = (snowgerm/germinated)*100)-> snow_trait # percentage of germinated under snow 
+snow_trait <- rename (snow_trait, germinated_snowbed = germinated)  
+#### traits sp dataframe  (average/combination Fellfield + Snowbed)####
+traits_FS %>%
+  group_by (species)%>%
+  summarise (germinated =sum(germinated),
+             viable = sum (viable),
+             germination = mean (germination),
+             t50check= mean (t50check),
+             Heatsum= mean (HS)) -> traits_sp
+traits_sp <- full_join(traits_sp, snow_trait, by= "species")
+
+# delay to reach t50 check days between incubators ####
+traits_FS %>%
+  select(species, incubator, t50check)-> delaytime
+spread(delaytime, incubator, t50check)-> delaytime 
+delaytime %>% 
+  mutate(delayF_S = Snowbed - Fellfield) %>% 
+  select (species, delayF_S)-> delaytime
+
+traits_sp <- full_join(traits_sp, delaytime, by= "species") 
+# dormancy/cold stratification needed + warm cues?####
