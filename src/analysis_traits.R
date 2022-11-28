@@ -8,7 +8,6 @@ temp <- read.csv("data/date_temp.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y")) %>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
   mutate(incubator = as.factor(incubator)) 
-  #mutate(heatsum = cumsum(Tmean))
 temp <- as.data.frame(temp)
 
 # viable seeds calculation ####
@@ -103,16 +102,16 @@ read.csv("data/clean data.csv", sep = ";") %>%
 
 
 ## traits Fellfield-Snowbed dataframe version 1 ####
-traits_FS <- full_join(t50_dates, finalgerm,  by= c("species", "code", "incubator", "petridish")) 
+traits_FS1 <- full_join(t50_dates, finalgerm,  by= c("species", "code", "incubator", "petridish")) 
 
 ### Heat:sum function####
-heatsum <-function (traits_FS) {
-  traits_FS %>%
+heatsum <-function (traits_FS1) {
+  traits_FS1 %>%
     pull (incubator)%>%
     unique() -> inc
-  traits_FS %>%
+  traits_FS1 %>%
     pull(datesow) -> date1 #convierte columna en vector
-  traits_FS%>%
+  traits_FS1%>%
     pull(date50) -> date2
   temp %>% 
     mutate (date = as.Date(date)) %>%
@@ -121,49 +120,68 @@ heatsum <-function (traits_FS) {
     summarise (HS =sum(Tmean)) 
 }
 
-traits_FS%>%
+traits_FS1%>%
   group_by (species, code, incubator, petridish) %>%
   do (heatsum(.)) %>% # punto significa que el objeto al que aplicar la funcion heat sum es el de la linea de arriba
   data.frame -> heat_sum
 
 ## traits Fellfield-Snowbed dataframe version 2 ####
-traits_FS <- full_join(traits_FS, heat_sum, by= c("species", "code", "incubator", "petridish")) 
+traits_FS2 <- full_join(traits_FS1, heat_sum, by= c("species", "code", "incubator", "petridish")) %>%
+  ungroup()
 
-#################################CONTINUE CHECKING FROM HERE #################################################
-# undersnow germination (nÂº of seeds) ####
-snow <- read.csv("data/clean data.csv", sep = ";") %>%
-  mutate(date = strptime(as.character(date), "%d/%m/%Y")) 
-snow <- filter (snow, incubator=="Snowbed") # only able to determine in the snowbed incubator (due to env conditions)
-snow %>%
-  group_by (species, incubator, date)%>% 
-  summarise(germinated = sum(germinated)) %>%
-  mutate(germination = cumsum(germinated)) %>%
-  inner_join (viables) %>%
+# undersnow germination (nº of seeds) ####
+read.csv("data/clean data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
+  filter (incubator=="Snowbed") %>%# only able to determine in the snowbed incubator (due to env conditions)
+  group_by (species, code, incubator, petridish, date)%>% 
   filter (date %in% c("2022-05-11","2022-05-12")) %>% # date of germination check right before end of winter conditions (dark + 0ÂºC)
   mutate (snowgerm = germinated) %>%
-  group_by(species) %>%
-  select (species, incubator, snowgerm)  %>%
   merge (finalgerm) %>%
-  select(species, snowgerm, germinated) %>%
-  mutate (snowPER = (snowgerm/germinated)*100)-> snow_trait # percentage of germinated under snow 
-snow_trait <- rename (snow_trait, germinated_snowbed = germinated)  
-#### traits sp dataframe  (average/combination Fellfield + Snowbed)####
-traits_FS %>%
-  group_by (species)%>%
-  summarise (germinated =sum(germinated),
-             viable = sum (viable),
-             germination = mean (germination),
-             t50check= mean (t50check),
-             Heatsum= mean (HS)) -> traits_sp
-traits_sp <- full_join(traits_sp, snow_trait, by= "species")
+  select(species, code, incubator, petridish, viable, seeds_germ, germPER, snowgerm) %>%
+  mutate (snowPER = (snowgerm/seeds_germ)*100) %>% 
+  select (species, code, incubator, petridish, snowgerm, snowPER) -> snow_trait  # percentage of germinated under snow 
+## traits Fellfield-Snowbed dataframe version 3 ####
+traits_FS3 <- full_join(traits_FS2, snow_trait, by= c("species", "code", "incubator", "petridish")) %>%
+  select(species, code, incubator, petridish, viable, seeds_germ, germPER, snowgerm, snowPER, t50lm_days,t50check, HS)
 
 # delay to reach t50 check days between incubators ####
-traits_FS %>%
-  select(species, incubator, t50check)-> delaytime
-spread(delaytime, incubator, t50check)-> delaytime 
-delaytime %>% 
-  mutate(delayF_S = Snowbed - Fellfield) %>% 
-  select (species, delayF_S)-> delaytime
+traits_FS3 %>%
+  ungroup()%>%
+  select(species, code, incubator, t50lm_days) %>%# only posible if we join data by species and incubator, addind petridish produce an error
+  group_by (species, code, incubator) %>%
+  summarise(t50lm = mean(t50lm_days)) %>%
+  spread(incubator, t50lm) %>% 
+  mutate(delayS_F = Snowbed - Fellfield) %>% 
+  select (species, code, delayS_F)-> delaytime 
 
-traits_sp <- full_join(traits_sp, delaytime, by= "species") 
-# dormancy/cold stratification needed + warm cues?####
+##### weighted mean of germination timing ####
+read.csv("data/clean data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y")) %>%
+  filter (species == "Minuartia recurva") %>%
+  select (species, code, incubator, petridish, viable, germinated, date)%>%
+  group_by(species, code, incubator, petridish) %>%
+  mutate(days = difftime(date, min(date), units = "days")) %>% # calculate time from sowing to x date!
+  mutate(cs = cumsum(germinated), # cumulative sum of germinated seeds 
+         fg = max(cs) / viable, # max germinated (final germination) divided by viable seeds (proportion)
+         g = cs / viable)%>%
+  ungroup()%>%
+  group_by (species, code, incubator, petridish) %>%
+  mutate (weightmean = weighted.mean (as.numeric (days), germinated)) %>%
+  summarise (germinated = sum(germinated),
+             cs = max (cs),
+             fg = fg,
+             weightmean = weightmean) -> weightmean
+             
+#### sintesis table ####
+traits_FS3 %>%
+  ungroup () %>%
+  group_by(species, code, incubator) %>%
+  summarise(viable = sum(viable), 
+            seeds_germ= sum(seeds_germ),
+            germPER = mean(germPER),
+            snowgerm= sum(snowgerm), 
+            snowPER= mean(snowPER),
+            t50lm = mean(t50lm_days),
+            t50check = mean (t50check), 
+            Hs = mean(HS)) %>%
+write.csv("results/traits_sintesis.csv")
