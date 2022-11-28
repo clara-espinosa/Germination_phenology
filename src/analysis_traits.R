@@ -146,13 +146,28 @@ traits_FS3 <- full_join(traits_FS2, snow_trait, by= c("species", "code", "incuba
 
 # delay to reach t50 check days between incubators ####
 traits_FS3 %>%
-  ungroup()%>%
+  ungroup() %>%
   select(species, code, incubator, t50lm_days) %>%# only posible if we join data by species and incubator, addind petridish produce an error
   group_by (species, code, incubator) %>%
   summarise(t50lm = mean(t50lm_days)) %>%
   spread(incubator, t50lm) %>% 
   mutate(delayS_F = Snowbed - Fellfield) %>% 
   select (species, code, delayS_F)-> delaytime 
+ 
+snow_trait %>%
+  group_by (species, code)%>%
+  summarise(snowgerm = sum(snowgerm), 
+            snowPER = mean(snowPER))  %>%
+  merge(delaytime) -> traits_sp
+
+finalgerm %>%
+  group_by (species, code) %>%
+  summarise(viable = sum(viable), 
+            seeds_germ= sum(seeds_germ),
+            germPER = mean(germPER))%>%
+  merge(traits_sp) %>%
+  write.csv("results/traits_sintesis_sp.csv")
+
 
 ##### weighted mean of germination timing ####
 read.csv("data/clean data.csv", sep = ";") %>%
@@ -184,4 +199,4 @@ traits_FS3 %>%
             t50lm = mean(t50lm_days),
             t50check = mean (t50check), 
             Hs = mean(HS)) %>%
-write.csv("results/traits_sintesis.csv")
+write.csv("results/traits_sintesis_incubator.csv")
