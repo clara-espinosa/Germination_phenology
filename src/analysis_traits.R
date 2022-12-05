@@ -1,6 +1,6 @@
 library(FD); library(vegan); library(FactoMineR); library(emmeans);
 library(tidyverse); library(ggrepel); library(cowplot); library (ggplot2);
-library (lubridate); library(binom)
+library (lubridate); library(binom); library (GerminaR)
 theme_set(theme_cowplot(font_size = 10)) 
 
 ####dataframe with temperature programs x incubator####
@@ -62,7 +62,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
 
 ### modeling t50 from raw data ####
 
-f1 <- function(df0) {
+f50 <- function(df0) {
   lm(t50g ~ t50times, data = df0) -> mf1 # Linear model between time before and time after
   as.data.frame((0.5 - as.numeric(mf1$`coefficients`[1])) / as.numeric(mf1$`coefficients`[2])) # Use linear model to interpolate t50
 }
@@ -87,7 +87,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
   filter(fg >= .50) %>% # filter to keep only the species that reach more than 0.5 in max final germination
   filter(length(petricode) > 1) %>% # not sure why this comand about lenght of petricode variable, to fix some strange error?
   group_by(species, code, incubator, petridish) %>%
-  do(f1(.)) %>%
+  do(f50(.)) %>%
   rename(#FG = fg, 
          t50lm = `(0.5 - as.numeric(mf1$coefficients[1]))/as.numeric(mf1$coefficients[2])`) ->t50model
 
@@ -169,7 +169,9 @@ read.csv("data/clean data.csv", sep = ";") %>%
   merge (t10model) %>%
   group_by (species, code, incubator, petridish, datesow, t10lm)%>% 
   summarise(t10lm = min (t10lm)) %>% 
-  mutate (date10 = as.Date(datesow) + t10lm) -> t10_dates
+  mutate (date10 = as.Date(datesow) + t10lm) %>% 
+  ungroup () %>% 
+  select (species,code, incubator, petridish, t10lm, date10)-> t10_dates
 
 
 ## germination onset, first check date with seeds germinated (NOT USED)####
@@ -301,32 +303,6 @@ germ_timing %>%
              Summergerm = mean (Summergerm))%>%
   write.csv ("results/germination_timing.csv")
 
-# work  in visualization further!!!!!
-germ_timing %>% 
-  gather("Timing", "Germination", 9:12)-> germ_timing_long 
-
-ggplot(germ_timing_long, aes (x = incubator, y= Germination, fill = incubator)) + 
-    geom_boxplot () + 
-    facet_grid (.~Timing)
-
-# delay to reach t50 check days between incubators ####
-t50_trait %>%
-  ungroup() %>%
-  select(species, code, incubator, t50lm) %>%# only possible if we join data by species and incubator, adding petridish produce an error
-  group_by (species, code, incubator) %>%
-  summarise(t50lm = mean(t50lm)) %>%
-  spread(incubator, t50lm) %>% 
-  mutate(delayS_F = Snowbed - Fellfield) %>% 
-  select (species, code, delayS_F)-> delaytime # NAs appear when species don't reach 50% germination (t50lm_days =Na)
-
-
-#############################  DORMANCY ##############################
-## Response to cold stratification ##
-# compare autumn germination to after winter germination (winter+spring+summer)
-germ_timing %>%
-  mutate (coldstratgerm = germPER - Autumngerm)%>%
-  select (species, code, incubator, petridish, germPER, Autumngerm, coldstratgerm)
-
 ### visualization germination timing following Edu's instructions #####
 # autumn
 read.csv("data/clean data.csv", sep = ";") %>%
@@ -398,12 +374,104 @@ graph_season <- rbind(Autumn, Winter, Spring, Summer) %>%
   geom_point(data=graph_season, aes(season, mean, color=incubator), size =2) +
   facet_grid (.~mountain) +
   geom_errorbar(data= graph_season, aes(season, mean, ymin = lower, ymax = upper, color = incubator), size =1) +
-  geom_line(data= graph_season, aes(season, mean, color = incubator)) +
+  geom_line(data= graph_season, aes(as.numeric(season), mean, color = incubator), size =1) +
   theme_bw()
-  #scale_x_continuous (breaks = c(0,2,10,15,30))+
-  #labs(x = "Ageing days", y="Germination success")+ 
-  #theme_classic(base_size = 16)+
- # theme(legend.position = c(0.8,0.85), 
-  # legend.title = element_text(size=14), #change legend title font size
-  # legend.text = element_text(size=10),
-  # legend.background = element_rect(fill="transparent",colour=NA)) #change legend text font size
+
+
+# delay to reach t50 check days between incubators ####
+t50_trait %>%
+  ungroup() %>%
+  select(species, code, incubator, t50lm) %>%# only possible if we join data by species and incubator, adding petridish produce an error
+  group_by (species, code, incubator) %>%
+  summarise(t50lm = mean(t50lm)) %>%
+  spread(incubator, t50lm) %>% 
+  mutate(delayS_F = Snowbed - Fellfield) %>% 
+  select (species, code, delayS_F)-> delaytime # NAs appear when species don't reach 50% germination (t50lm_days =Na)
+
+
+#############################  DORMANCY ##############################
+## Response to cold stratification ##
+# compare autumn germination to after winter germination (winter+spring+summer)
+germ_timing %>%
+  mutate (coldstratgerm = ((germPER - Autumngerm)/germPER)*100, 
+          coldstratgerm = round (coldstratgerm, digit=2)) %>%
+  mutate (coldstratgerm = replace_na(coldstratgerm, 0)) %>%
+  select (species, code, incubator, petridish, coldstratgerm) -> cold_strat
+  
+
+######## MOVE-ALONG TRAITS #########
+germ_traits_list = list (germ_timing, t50_dates, t10_dates, heat_sum, cold_strat) # date sow repeated in t10_dates
+germ_traits_list %>% 
+  reduce(full_join, by = c("species", "code", "incubator", "petridish")) %>% 
+  write.csv ("results/move_along_traits.csv")
+############################ GERMINAR ###############################
+# Germination indices:
+  # (1) Germination percentage
+  # GRS - number of germinated seeds
+  # GRP - germination percentage (from 0 to 100%)
+  
+  # (2) Germination speed
+  # MGT - mean germination time (time units)
+  # MGR - mean germination rate (time units)
+  # GSP - germination speed (%)
+  # NB! MGT, MGR and GSP tightly correlate to each other, since they express the very same process
+  
+  # (3) Germination synchrony 
+  # UNC - uncertanity index (bits)
+  # SYN - syncronization index (from 0 to 1)
+  # NB! UNC and SYN tightly correlate to each other, since they express the very same process
+  
+  # 'auxiliary' indices - additional indices of germination process
+  # VGT - germination variance
+  # SDG - germination standard deviation
+  # CVG - coefficient of variation
+
+#  We will focus on uncertainty index, we need to create a function to do the same procedure for each species #  
+  
+UNC <- function (germ_ind) {
+  read.csv("data/clean data.csv", sep = ";") %>%
+    mutate(date = strptime(as.character(date), "%d/%m/%Y")) %>%
+    pull(species) %>%
+    unique() -> sp
+  
+  read.csv("data/clean data.csv", sep = ";") %>%
+    mutate(date = strptime(as.character(date), "%d/%m/%Y")) %>% 
+    filter (species == sp) %>% 
+    group_by (mountain, species, code, incubator, petridish) %>%
+    mutate(days = difftime(date, min(date), units = "days"), 
+           days = round (days,digit =0)) %>% # calculate time from sowing to x date!
+    select (mountain, species, code, incubator, petridish, total, viable, germinated, days) %>%
+    rename (seeds = viable) %>%
+    mutate (days = paste("D", days, sep = "")) %>%
+    spread(days, germinated) %>%
+    data.frame () %>%
+    replace(is.na(.),0) -> dat
+
+ ger_summary(SeedN = "seeds", evalName = "D", data=dat[,1: ncol(dat)])%>%
+      select(mountain, species, code, incubator, petridish, unc)  
+    
+}
+
+  read.csv("data/clean data.csv", sep = ";") %>%
+    #mutate(date = strptime(as.character(date), "%d/%m/%Y")) %>%
+    #group_by (species, code, incubator, petridish) %>%
+    do (UNC(.))-> uncertainty
+    
+read.csv("data/clean data.csv", sep = ";") %>%
+    mutate(date = strptime(as.character(date), "%d/%m/%Y")) %>%
+    filter (species == "Sedum anglicum") %>% ## error en row id 250 y 254 info repetida ARREGLAR
+    mutate(days = difftime(date, min(date), units = "days"), 
+           days = round (days,digit =0)) %>% # calculate time from sowing to x date!
+    select (species, mountain, code, incubator, petridish, total, viable, germinated, days) %>%
+    group_by (mountain, species, code, incubator, petridish) %>%
+    rename (seeds = viable) %>%
+    mutate (days = paste("D", days, sep = "")) %>%
+    spread(days, germinated)%>%
+    data.frame () %>%
+    replace(is.na(.),0) -> dat
+ger_summary(SeedN = "seeds", evalName = "D", data=dat[,1: ncol(dat)])%>%
+  mutate (unc = round(unc, digit=3))%>%
+   select(mountain, species, code, incubator, petridish, unc) 
+    
+# calculate seed germination indices, SeedN - total number of VIABLE seeds in a replicate; D - columns with time units ('days')
+
