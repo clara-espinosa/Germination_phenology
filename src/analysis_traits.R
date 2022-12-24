@@ -369,7 +369,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
 
 graph_season <- rbind(Autumn, Winter, Spring, Summer) %>% 
   mutate (season = factor(season, levels = c( "Autumn", "Winter", "Spring", "Summer"))) #reorder levels
-
+x11()
   ggplot()+
   geom_point(data=graph_season, aes(season, mean, color=incubator), size =2) +
   facet_grid (.~mountain) +
