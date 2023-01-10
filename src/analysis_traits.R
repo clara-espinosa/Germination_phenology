@@ -101,7 +101,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
   mutate (datesow= first (date)) %>% 
   mutate (datelast= last (date)) %>% 
   select(species, code, incubator, petridish, viable, germinated, datesow, datelast) %>%
-  merge (t50_trait) %>%
+  merge (t50model) %>%
   group_by (species, code, incubator, petridish, datesow, datelast, t50lm)%>% 
   summarise(t50lm = min (t50lm)) %>% 
   mutate (date50 = as.Date(datesow) + t50lm) %>%  
@@ -206,7 +206,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
   select (species, code, incubator, petridish, firstgerm_days, onset_date) -> germ_onset
 
 ############################# GERMINATION TIMING TRAITS ########################### 
-## Autumn germination (germination before winter) last check 11/11/2021 ####
+## MID-NOVEMBER GERM (proxy of Autumn germination = germination before winter) last check 11/11/2021 ####
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   group_by(species, code, incubator, petridish, date) %>%
@@ -215,12 +215,12 @@ read.csv("data/clean data.csv", sep = ";") %>%
   ungroup () %>%
   merge(viables) %>%
   filter (date %in% c("2021-11-05","2021-11-08","2021-11-09","2021-11-10", "2021-11-11" )) %>% # select date with any of these values
-  mutate(Autumngerm= (cum_seeds_germ/viable) *100,  
-         Autumngerm= round (Autumngerm, digit =2)) %>%
-  select(species, code, incubator, petridish, Autumngerm) -> Autumngerm # missing petridish data reach 100% germ before
+  mutate(Mid_nov= (cum_seeds_germ/viable) *100,  
+         Mid_nov= round (Mid_nov, digit =2)) %>%
+  select(species, code, incubator, petridish, Mid_nov) -> Mid_november # missing petridish data reach 100% germ before 11/11/21
 
 
-## Winter germination  considering first checks after winter until T>2ºC#####
+## Winter germination  considering first checks after winter until Tmean>2ºC#####
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
   group_by (species, code, incubator, petridish, date)%>% 
@@ -230,9 +230,9 @@ read.csv("data/clean data.csv", sep = ";") %>%
   summarise(seeds_germ = sum(germinated))%>%
   merge (viables) %>%
   select(species, code, incubator, petridish, seeds_germ, viable) %>%
-  mutate (Wintergerm = (seeds_germ/viable) *100,
-          Wintergerm = round (Wintergerm, digit=2)) %>%
-  select (species, code, incubator, petridish, Wintergerm) -> Wintergerm
+  mutate (Winter_germ = (seeds_germ/viable) *100,
+          Winter_germ = round (Winter_germ, digit=2)) %>%
+  select (species, code, incubator, petridish, Winter_germ) -> Wintergerm
 
 # SNOWBED:  undersnow germination (nº of seeds) +  
 read.csv("data/clean data.csv", sep = ";") %>%
@@ -249,7 +249,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
   select (species, code, incubator, petridish, snowPER) -> snow_trait  # percentage of germinated under snow 
   
 
-## Spring germination (germination in mid-June)#####
+## MID-JUNE germination #####
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
@@ -263,10 +263,71 @@ read.csv("data/clean data.csv", sep = ";") %>%
           WSgerm = round (WSgerm, digit=2)) %>%
   select (species, code, incubator, petridish, WSgerm) %>%
   merge (Wintergerm)%>%
-  mutate (Springgerm = WSgerm-Wintergerm) %>%
-  select (species, code, incubator, petridish, Springgerm)-> Springgerm
+  mutate (Mid_june = WSgerm-Wintergerm) %>%
+  select (species, code, incubator, petridish, Mid_june)-> Mid_june
+## SPRING GERMINATION (when Tmean >10 for 1 week) ####
+read.csv("data/clean data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
+  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
+  group_by (species, code, incubator, petridish, time) %>% 
+  filter (incubator == "Fellfield") %>% 
+  filter (between(time, 262, 305)) %>% ## amount of days calculated from the dates 262 = 18/5 and 305 = 31/05
+  group_by (species, code, incubator, petridish) %>%
+  summarise(seeds_germ = sum(germinated)) %>%
+  merge (viables) %>%
+  select(species, code, incubator, petridish, seeds_germ, viable) %>%
+  mutate (spring_germ = (seeds_germ/viable) *100,
+          spring_germ = round (spring_germ, digit=2)) %>%
+  select (species, code, incubator, petridish, spring_germ) -> Springgerm_F
 
-## Summer germination (germination in mid-September, end of experiment) ####
+read.csv("data/clean data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
+  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
+  group_by (species, code, incubator, petridish, time) %>% 
+  filter (incubator == "Snowbed") %>% 
+  filter (between(time, 301, 335)) %>% ## amount of days calculated from the dates 301 = 27/5 and 355 = 30/06
+  group_by (species, code, incubator, petridish) %>%
+  summarise(seeds_germ = sum(germinated)) %>%
+  merge (viables) %>%
+  select(species, code, incubator, petridish, seeds_germ, viable) %>%
+  mutate (spring_germ = (seeds_germ/viable) *100,
+          spring_germ = round (spring_germ, digit=2)) %>%
+  select (species, code, incubator, petridish, spring_germ) -> Springgerm_S
+
+Springgerm <- full_join(Springgerm_F, Springgerm_S, by = c("species", "code", "incubator", "petridish", "spring_germ"))
+
+## SUMMER GERMINATION (check after 1 week with max T)####
+read.csv("data/clean data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
+  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
+  group_by (species, code, incubator, petridish, time) %>% 
+  filter (incubator == "Fellfield") %>% 
+  filter (between(time, 305, 395)) %>% ## amount of days calculated from the dates 305 = 31/05 and 395 = 29/08
+  group_by (species, code, incubator, petridish) %>%
+  summarise(seeds_germ = sum(germinated)) %>%
+  merge (viables) %>%
+  select(species, code, incubator, petridish, seeds_germ, viable) %>%
+  mutate (summer_germ = (seeds_germ/viable) *100,
+          summer_germ = round (summer_germ, digit=2)) %>%
+  select (species, code, incubator, petridish, summer_germ) -> summergerm_F
+
+read.csv("data/clean data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
+  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
+  group_by (species, code, incubator, petridish, time) %>% 
+  filter (incubator == "Snowbed") %>% 
+  filter (between(time, 335, 395)) %>% ## amount of days calculated from the dates 355 = 30/06 and 395 = 29/08
+  group_by (species, code, incubator, petridish) %>%
+  summarise(seeds_germ = sum(germinated)) %>%
+  merge (viables) %>%
+  select(species, code, incubator, petridish, seeds_germ, viable) %>%
+  mutate (summer_germ = (seeds_germ/viable) *100,
+          summer_germ = round (summer_germ, digit=2)) %>%
+  select (species, code, incubator, petridish, summer_germ) -> summergerm_S
+
+Summergerm <- full_join(summergerm_F, summergerm_S, by = c("species", "code", "incubator", "petridish", "summer_germ"))
+
+## MID-SEPTEMBER germination (end of experiment) ####
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
@@ -276,20 +337,22 @@ read.csv("data/clean data.csv", sep = ";") %>%
   summarise(seeds_germ = sum(germinated)) %>%
   merge (viables) %>%
   select(species, code, incubator, petridish, seeds_germ, viable) %>%
-  mutate (Summergerm = (seeds_germ/viable) *100,
-          Summergerm = round (Summergerm, digit=2)) %>%
-  select (species, code, incubator, petridish, Summergerm) -> Summergerm
+  mutate (Mid_sep = (seeds_germ/viable) *100,
+          Mid_sep = round (Mid_sep, digit=2)) %>%
+  select (species, code, incubator, petridish, Mid_sep) -> Mid_september
 
 ## Germination timing table traits ####
-germ_timing_list = list (viables, finalgerm, Autumngerm, Wintergerm, Springgerm, Summergerm)
+germ_timing_list = list (viables, finalgerm, Mid_november, Wintergerm, Springgerm, Summergerm, Mid_june,  Mid_september)
 germ_timing_list %>% 
   reduce(full_join, by = c("species", "code", "incubator", "petridish")) %>% 
-  select(species, code, incubator, petridish, total, viable, viablePER, germPER, 
-         Autumngerm, Wintergerm, Springgerm, Summergerm)%>%
-  mutate (Autumngerm = replace_na(Autumngerm, 100)) %>%
-  mutate (Wintergerm = replace_na(Wintergerm, 0)) %>% 
-  mutate (Springgerm = replace_na(Springgerm, 0)) %>% 
-  mutate (Summergerm = replace_na(Summergerm, 0)) -> germ_timing 
+#  select(species, code, incubator, petridish, total, viable, viablePER, germPER, 
+#         Mid_nov, Wintergerm, Spring_germ, Mid_june, Summer_germ, Mid_sep)%>%
+  mutate (Mid_nov = replace_na(Mid_nov, 100)) %>%
+  mutate (Winter_germ = replace_na(Winter_germ, 0)) %>% 
+  mutate (Mid_june= replace_na(Mid_june, 0)) %>% 
+  mutate (Mid_sep = replace_na(Mid_sep, 0)) %>% 
+  mutate (spring_germ= replace_na(spring_germ, 0))%>% 
+  mutate (summer_germ = replace_na(summer_germ, 0))-> germ_timing 
 
 germ_timing %>% 
   group_by (species, code, incubator) %>%
@@ -297,14 +360,16 @@ germ_timing %>%
              viable = sum (viable), 
              viablePER = mean(viablePER), 
              germPER = mean(germPER),
-             Autumngerm = mean (Autumngerm), 
-             Wintergerm = mean (Wintergerm), 
-             Springgerm = mean (Springgerm), 
-             Summergerm = mean (Summergerm))%>%
-  write.csv ("results/germination_timing.csv")
+             Mid_nov = mean (Mid_nov), 
+             Winter_germ = mean (Winter_germ), 
+             spring_germ = mean (spring_germ), 
+             summer_germ  = mean (summer_germ),
+             Mid_june = mean (Mid_june),
+             Mid_sep = mean (Mid_sep))%>%
+  write.csv ("results/germination_timing2.csv")
 
 ### visualization germination timing following Edu's instructions #####
-# autumn
+# mid-november
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   group_by(mountain, species, code, incubator, petridish, date) %>%
@@ -316,8 +381,8 @@ read.csv("data/clean data.csv", sep = ";") %>%
   summarise (cum_seeds_germ = sum(cum_seeds_germ)) %>%
   merge(viables_mountain) %>%
   mutate (binom.confint(cum_seeds_germ, viable, methods = "wilson")) %>% 
-  mutate (season = "Autumn") %>% 
-  select (mountain, incubator, cum_seeds_germ, viable, mean, lower, upper, season) -> Autumn
+  mutate (season = "Mid-November") %>% 
+  select (mountain, incubator, cum_seeds_germ, viable, mean, lower, upper, season) -> Mid_november_graph
 # winter
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
@@ -329,7 +394,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
   merge (viables_mountain) %>%
   mutate (binom.confint(cum_seeds_germ, viable, methods = "wilson")) %>% 
   mutate (season = "Winter") %>% 
-  select (mountain, incubator, cum_seeds_germ, viable, mean, lower, upper, season) -> Winter
+  select (mountain, incubator, cum_seeds_germ, viable, mean, lower, upper, season) -> Winter_graph
 
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
@@ -337,8 +402,9 @@ read.csv("data/clean data.csv", sep = ";") %>%
   filter (date %in% c("2022-04-04","2022-04-11", "2022-04-12", # # first check after winter with T>2ºC
                       "2022-05-11","2022-05-12", "2022-05-18", "2022-05-19", "2022-05-25", "2022-05-26" )) %>% #undersnow + first checks T>2ºC
   group_by (mountain, species, code, incubator, petridish) %>% 
-  summarise(winter_seeds = sum(germinated)) -> winter_seeds
-# spring
+  summarise(winter_seeds = sum(germinated)) -> winter_seeds ### necesary for mid-june graph calculation
+
+# Mid_june
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
@@ -352,9 +418,9 @@ read.csv("data/clean data.csv", sep = ";") %>%
   summarise (cum_seeds_germ = sum(spring_germ)) %>%
   merge(viables_mountain)  %>%
   mutate (binom.confint(cum_seeds_germ, viable, methods = "wilson")) %>% 
-  mutate (season = "Spring") %>% 
-  select (mountain, incubator, cum_seeds_germ, viable, mean, lower, upper, season) -> Spring
-# summer
+  mutate (season = "Mid-June") %>% 
+  select (mountain, incubator, cum_seeds_germ, viable, mean, lower, upper, season) -> Mid_june_graph
+# Mid-september
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
@@ -364,25 +430,92 @@ read.csv("data/clean data.csv", sep = ";") %>%
   summarise(cum_seeds_germ = sum(germinated)) %>%
   merge (viables_mountain) %>%
   mutate (binom.confint(cum_seeds_germ, viable, methods = "wilson")) %>% 
-  mutate (season = "Summer") %>% 
-  select (mountain, incubator, cum_seeds_germ, viable, mean, lower, upper, season) -> Summer
+  mutate (season = "Mid-September") %>% 
+  select (mountain, incubator, cum_seeds_germ, viable, mean, lower, upper, season) -> Mid_september_graph
 
-graph_season <- rbind(Autumn, Winter, Spring, Summer) %>% 
-  mutate (season = factor(season, levels = c( "Autumn", "Winter", "Spring", "Summer"))) #reorder levels
+# Spring
+read.csv("data/clean data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
+  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
+  group_by (species, code, incubator, petridish, time) %>% 
+  filter (incubator == "Fellfield") %>% 
+  filter (between(time, 262, 305)) %>% ## amount of days calculated from the dates 262 = 18/5 and 305 = 31/05
+  group_by (mountain, incubator) %>%
+  summarise(cum_seeds_germ = sum(germinated)) %>%
+  merge (viables_mountain) %>%
+  mutate (binom.confint(cum_seeds_germ, viable, methods = "wilson")) %>% 
+  mutate (season = "Spring") %>% 
+  select (mountain, incubator, cum_seeds_germ, viable, mean, lower, upper, season) -> Springgraph_F
+
+read.csv("data/clean data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
+  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
+  group_by (species, code, incubator, petridish, time) %>% 
+  filter (incubator == "Snowbed") %>% 
+  filter (between(time, 301, 335)) %>% ## amount of days calculated from the dates 301 = 27/5 and 355 = 30/06
+  group_by (mountain, incubator) %>%
+  summarise(cum_seeds_germ = sum(germinated)) %>%
+  merge (viables_mountain) %>%
+  mutate (binom.confint(cum_seeds_germ, viable, methods = "wilson")) %>% 
+  mutate (season = "Spring") %>% 
+  select (mountain, incubator, cum_seeds_germ, viable, mean, lower, upper, season) -> Springgraph_S
+
+Spring_graph <- rbind(Springgraph_F, Springgraph_S)
+# summer
+read.csv("data/clean data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
+  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
+  group_by (species, code, incubator, petridish, time) %>% 
+  filter (incubator == "Fellfield") %>% 
+  filter (between(time, 305, 395)) %>% ## amount of days calculated from the dates 305 = 31/05 and 395 = 29/08
+  group_by (mountain, incubator) %>%
+  summarise(cum_seeds_germ = sum(germinated)) %>%
+  merge (viables_mountain) %>%
+  mutate (binom.confint(cum_seeds_germ, viable, methods = "wilson")) %>% 
+  mutate (season = "Summer") %>% 
+  select (mountain, incubator, cum_seeds_germ, viable, mean, lower, upper, season) -> Summergraph_F
+
+read.csv("data/clean data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
+  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
+  group_by (species, code, incubator, petridish, time) %>% 
+  filter (incubator == "Snowbed") %>% 
+  filter (between(time, 335, 395)) %>% ## amount of days calculated from the dates 355 = 30/06 and 395 = 29/08
+  group_by (mountain, incubator) %>%
+  summarise(cum_seeds_germ = sum(germinated)) %>%
+  merge (viables_mountain) %>%
+  mutate (binom.confint(cum_seeds_germ, viable, methods = "wilson")) %>% 
+  mutate (season = "Summer") %>% 
+  select (mountain, incubator, cum_seeds_germ, viable, mean, lower, upper, season)  -> Summergraph_S
+
+Summer_graph <- rbind(Summergraph_F, Summergraph_S)
+
+# date_graph put together
+graph_date <- rbind(Mid_november_graph, Winter_graph, Mid_june_graph, Mid_september_graph) %>% 
+  mutate (season = factor(season, levels = c( "Mid-November", "Winter", "Mid-June", "Mid-September"))) #reorder levels
 x11()
-  ggplot()+
-  geom_point(data=graph_season, aes(season, mean, color=incubator), size =2) +
+ggplot()+
+  geom_point(data=graph_date, aes(season, mean, color=incubator), size =2) +
   facet_grid (.~mountain) +
-  geom_errorbar(data= graph_season, aes(season, mean, ymin = lower, ymax = upper, color = incubator), size =1) +
-  geom_line(data= graph_season, aes(as.numeric(season), mean, color = incubator), size =1) +
+  geom_errorbar(data= graph_date, aes(season, mean, ymin = lower, ymax = upper, color = incubator), size =1) +
+  geom_line(data= graph_date, aes(as.numeric(season), mean, color = incubator), size =1) +
   theme_bw()
 
-
+# season_graph put together
+season_date <- rbind(Mid_november_graph, Winter_graph, Spring_graph, Summer_graph) %>% 
+    mutate (season = factor(season, levels = c( "Mid-November", "Winter", "Spring", "Summer"))) #reorder levels
+  x11()
+ggplot()+
+    geom_point(data=season_date, aes(season, mean, color=incubator), size =2) +
+    facet_grid (.~mountain) +
+    geom_errorbar(data= season_date, aes(season, mean, ymin = lower, ymax = upper, color = incubator), size =1) +
+    geom_line(data= season_date, aes(as.numeric(season), mean, color = incubator), size =1) +
+    theme_bw()
 # delay to reach t50 check days between incubators ####
-t50_trait %>%
+t50model %>%
   ungroup() %>%
-  select(species, code, incubator, t50lm) %>%# only possible if we join data by species and incubator, adding petridish produce an error
-  group_by (species, code, incubator) %>%
+  #select(species, code, incubator, t50lm) %>% 
+  group_by (species, code, incubator) %>%# only possible if we join data by species and incubator, adding petridish produce an error
   summarise(t50lm = mean(t50lm)) %>%
   spread(incubator, t50lm) %>% 
   mutate(delayS_F = Snowbed - Fellfield) %>% 
@@ -393,17 +526,17 @@ t50_trait %>%
 ## Response to cold stratification ##
 # compare autumn germination to after winter germination (winter+spring+summer)
 germ_timing %>%
-  mutate (coldstratgerm = ((germPER - Autumngerm)/germPER)*100, 
+  mutate (coldstratgerm = ((germPER - Mid_nov)/germPER)*100, 
           coldstratgerm = round (coldstratgerm, digit=2)) %>%
   mutate (coldstratgerm = replace_na(coldstratgerm, 0)) %>%
   select (species, code, incubator, petridish, coldstratgerm) -> cold_strat
   
 
 ######## MOVE-ALONG TRAITS #########
-germ_traits_list = list (germ_timing, t50_dates, t10_dates, heat_sum, cold_strat) # date sow repeated in t10_dates
+germ_traits_list = list (germ_timing, t50_dates, heat_sum, cold_strat) 
 germ_traits_list %>% 
   reduce(full_join, by = c("species", "code", "incubator", "petridish")) %>% 
-  write.csv ("results/move_along_traits.csv")
+  write.csv ("results/move_along_traits2.csv")
 ############################ GERMINAR ###############################
 # Germination indices:
   # (1) Germination percentage
