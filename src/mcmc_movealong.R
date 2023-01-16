@@ -14,11 +14,12 @@ species %>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) -> species
 
-
+# data as traits in percentatges %
 dataframe %>%
   mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>%
+  mutate (spring_germ= replace_na(spring_germ, 0)) %>%
   merge(species, by = c("code", "species")) %>%
   mutate(code=factor(code)) %>%
   mutate(species=factor(species)) %>%
@@ -29,15 +30,23 @@ dataframe %>%
   mutate(germ_strategy=factor(germ_strategy)) %>%
   arrange(species, code, accession, incubator, petridish)  %>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
-  na.omit ()-> df 
+  select(!family) %>%  
+  na.omit ()-> df ## Need to add filters for low viable and 0 germ
 
 str (df)
 df <- as.data.frame(df)
 df
+# unique(df$species) # to check the use of the same names
+# unique(species$species)
+# unique(nnls_orig$tip.label)
+# setdiff(nnls_orig$tip.label,df$animal)
 
+df %>% 
+  filter(! animal %in% nnls_orig$tip.label) %>% 
+  select(animal) %>% 
+  unique
  ### Read tree
-  
-  phangorn::nnls.tree(cophenetic(ape::read.tree("results/tree.tree")), 
+phangorn::nnls.tree(cophenetic(ape::read.tree("results/tree.tree")), 
                       ape::read.tree("results/tree.tree"), rooted = TRUE) -> 
     nnls_orig
   
@@ -53,7 +62,6 @@ df
   nthi = 10
   nbur = 100
 
-   
 ### Set priors for germination models (as many prior as random factors)
    
 priors <- list(R = list(V = 1, nu = 50), 
@@ -62,11 +70,11 @@ priors <- list(R = list(V = 1, nu = 50),
                            G3 = list(V = 1, nu = 1, alpha.mu = 0, alpha.V = 500), 
                            G4 = list(V = 1, nu = 1, alpha.mu = 0, alpha.V = 500)))   
 
-### All species model
+### TEST 1: compare germination before winter between regions
 
 MCMCglmm::MCMCglmm(Mid_nov ~ region,
                    random = ~ animal + ID + incubator + species + code:species,
-                   family = "multinomial2", pedigree = nnls_orig, prior = priors, data = df,
+                   family = "multinomial", pedigree = nnls_orig, prior = priors, data = df,
                    nitt = nite, thin = nthi, burnin = nbur,
                    verbose = FALSE, saveX = FALSE, saveZ = FALSE, saveXL = FALSE, pr = FALSE, pl = FALSE) -> m1
 
@@ -106,3 +114,36 @@ summary(m1)$Gcovariances[3, 3] %>% round(2)
 summary(m1)$Gcovariances[4, 1] %>% round(2)
 summary(m1)$Gcovariances[4, 2] %>% round(2) 
 summary(m1)$Gcovariances[4, 3] %>% round(2)
+
+
+# try with raw data instead of percentatges!
+read.csv("data/all_data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
+  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
+  group_by (species, code, incubator, petridish, time)%>%
+  filter (between(time, 1, 105)) %>%
+  group_by (species, code, incubator, petridish) %>%
+  summarise(seeds_germ = sum(germinated))%>%
+  merge(viables) %>%
+  select(species, code, incubator, petridish, seeds_germ, viable) %>%
+  mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
+  mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
+  mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
+  merge(species, by = c("code", "species")) %>%
+  mutate(code=factor(code)) %>%
+  mutate(species=factor(species)) %>%
+  mutate(incubator=factor(incubator)) %>%
+  mutate(family=factor(family)) %>%
+  mutate(region=factor(region)) %>%
+  mutate(habitat=factor(habitat)) %>%
+  mutate(germ_strategy=factor(germ_strategy)) %>%
+  arrange(species, code, accession, incubator, petridish)  %>%
+  mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
+  select(!family) %>%  
+  na.omit ()-> df
+
+MCMCglmm::MCMCglmm(cbind(seeds_germ, viable - seeds_germ) ~ region,
+                   random = ~ animal + ID + incubator + species + code:species,
+                   family = "multinomial", pedigree = nnls_orig, prior = priors, data = df,
+                   nitt = nite, thin = nthi, burnin = nbur,
+                   verbose = FALSE, saveX = FALSE, saveZ = FALSE, saveXL = FALSE, pr = FALSE, pl = FALSE) -> m1
