@@ -3,7 +3,7 @@ Agrostis tileni;Poaceae;Mediterranean;Specialist;Late_season
 Androsace villosa;Primulaceae;Temperate;Specialist;Sporadic_low
 Anthyllis vulneraria;Fabaceae;Temperate;Not_specialist;Sporadic_low
 Arenaria erinacea;Caryophyllaceae;Temperate;Specialist;Sporadic_low
-Arenaria moehringioides;Caryophyllaceae;Temperate;;Early_season
+Arenaria moehringioides;Caryophyllaceae;Temperate;Specialist;Early_season
 Armeria cantabrica;Plumbaginaceae;Temperate;Specialist;Late_season
 Armeria duriaei;Plumbaginaceae;Mediterranean;Specialist;Early_fall
 Carex sempervirens;Cyperaceae;Temperate;Specialist;Late_season
@@ -14,7 +14,7 @@ Dianthus langeanus;Caryophyllaceae;Mediterranean;Not_specialist;Early_fall
 Erigeron alpinus;Asteraceae;Temperate;Specialist;Late_season
 Euphrasia salisburgensis;Orobanchaceae;Temperate;Specialist;Sporadic_low
 Festuca hystrix;Poaceae;Temperate;Not_specialist;Biphasic
-Festuca rubra;Poaceae;Temperate;;Late_season
+Festuca rubra;Poaceae;Temperate;Not_specialist;Late_season
 Festuca summilusitana;Poaceae;Mediterranean;Specialist;Early_fall
 Gentiana verna;Gentianaceae;Temperate;Specialist;Sporadic_low
 Gentianella campestris;Gentianaceae;Temperate;Not_specialist;Sporadic_low
@@ -22,7 +22,7 @@ Gypsophila repens;Caryophyllaceae;Temperate;Not_specialist;Early_season
 Helianthemum canum;Cistaceae;Temperate;Not_specialist;Sporadic_low
 Helianthemum urrielense;Cistaceae;Temperate;Not_specialist;Early_fall
 Helictochloa marginata;Poaceae;Mediterranean;Not_specialist;Biphasic
-Helictrotrichon sedenense;Poaceae;Temperate;Specialist;After_winter
+Helictotrichon sedenense;Poaceae;Temperate;Specialist;After_winter
 Iberis carnosa;Brassicaceae;Temperate;Not_specialist;Biphasic
 Jasione cavanillesii;Campanulaceae;Temperate;Specialist;Sporadic_low
 Jurinea humilis;Asteraceae;Temperate;Not_specialist;Biphasic
@@ -32,10 +32,10 @@ Koeleria vallesiana;Poaceae;Temperate;Specialist;Biphasic
 Luzula caespitosa;Juncaceae;Mediterranean;Specialist;Biphasic
 Minuartia recurva;Caryophyllaceae;Mediterranean;Specialist;Biphasic
 Minuartia verna;Caryophyllaceae;Temperate;Specialist;Sporadic_low
-MinuartiaCF;Caryophyllaceae;Temperate;;Sporadic_low
+Minuartia CF;Caryophyllaceae;Temperate;Specialist;Sporadic_low
 Neochischkinia truncatula;Poaceae;Mediterranean;Not_specialist;Early_fall
 Pedicularis pirenaica;Orobanchaceae;Temperate;Specialist;Early_season
-Phalacrocarpum oppossitifolium;Asteraceae;Mediterranean;Not_specialist;Biphasic
+Phalacrocarpum oppositifolium;Asteraceae;Mediterranean;Not_specialist;Biphasic
 Phyteuma hemisphaericum;Campanulaceae;Mediterranean;Specialist;Sporadic_low
 Phyteuma orbiculare;Campanulaceae;Temperate;Not_specialist;Sporadic_low
 Plantago alpina;Plantaginaceae;Temperate;Specialist;Biphasic
@@ -47,7 +47,7 @@ Saxifraga paniculata;Saxifragaceae;Temperate;Not_specialist;Late_season
 Scilla verna;Asparagaceae;Temperate;Not_specialist;Sporadic_low
 Sedum anglicum;Crassulaceae;Mediterranean;Specialist;Biphasic
 Sedum brevifolium;Crassulaceae;Mediterranean;Not_specialist;Biphasic
-Sedum sp (album cf);Crassulaceae;Temperate;Not_specialist;Sporadic_low
+Sedum album cf;Crassulaceae;Temperate;Not_specialist;Sporadic_low
 Sempervivum arachnoideo;Crassulaceae;Mediterranean;Not_specialist;Late_season
 Sesleria caerula;Poaceae;Temperate;Not_specialist;Biphasic
 Silene acaulis;Caryophyllaceae;Temperate;Specialist;Late_season

@@ -118,4 +118,5 @@ rbind(Earlyseason_F, Earlyseason_S) %>%
 table_analisis_list = list (viables, finalgerm, Mid_november, Earlyseasongerm)
 table_analisis_list %>% 
   reduce(full_join, by = c("species", "code", "incubator", "petridish"))%>% 
-  select(species, code, incubator, petridish, viable, viablePER, germPER, Mid_nov, spring_germ)-> dataframe
+  select(species, code, incubator, petridish, viable, viablePER, germPER, Mid_nov, spring_germ) %>% 
+  mutate (spring_germ= replace_na(spring_germ, 0)) -> dataframe # not sure about this line... what to do with species with no germ
