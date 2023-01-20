@@ -79,13 +79,12 @@ phangorn::nnls.tree(cophenetic(ape::read.tree("results/tree.tree")),
 priors <- list(R = list(V = 1, nu = 50), 
                   G = list(G1 = list(V = 1, nu = 1, alpha.mu = 0, alpha.V = 500), 
                            G2 = list(V = 1, nu = 1, alpha.mu = 0, alpha.V = 500),
-                           G3 = list(V = 1, nu = 1, alpha.mu = 0, alpha.V = 500), 
-                           G4 = list(V = 1, nu = 1, alpha.mu = 0, alpha.V = 500)))   
+                           G3 = list(V = 1, nu = 1, alpha.mu = 0, alpha.V = 500)))   
 
 ### TEST 1: compare germination before winter between regions
 MCMCglmm::MCMCglmm(cbind(seeds_germ, viable - seeds_germ) ~ region,
-                   random = ~ animal + ID + incubator + species,
-                   family = "multinomial", pedigree = nnls_orig, prior = priors, data = df,
+                   random = ~ animal + ID + incubator,
+                   family = "multinomial2", pedigree = nnls_orig, prior = priors, data = df,
                    nitt = nite, thin = nthi, burnin = nbur,
                    verbose = FALSE, saveX = FALSE, saveZ = FALSE, saveXL = FALSE, pr = FALSE, pl = FALSE) -> m1
 
