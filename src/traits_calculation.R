@@ -18,8 +18,6 @@ read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   group_by(species, code, incubator, petridish) %>%
   filter(date == max(date)) %>%
-  summarise(viable = sum(viable),
-            total = sum(total)) %>%
   mutate (viablePER = (viable/total)*100,
           viablePER = round (viablePER, digit = 2)) -> viables
 
@@ -42,7 +40,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
   mutate(germPER = (seeds_germ/viable) *100, # 
          germPER = round (germPER, digit =2)) %>%
   select (species, code, incubator, petridish, seeds_germ, germPER)-> finalgerm 
-# seed germinated in spring + summer (needed for early sesason geerm calculation) ####
+# seed germinated in spring + summer (needed for early sesason germ calculation) ####
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>% 
@@ -243,12 +241,13 @@ read.csv("data/clean data.csv", sep = ";") %>%
   select(species, code, incubator, petridish, Mid_nov) -> Mid_november 
 
 
-## Winter germination  considering first checks after winter until Tmean>2ºC#####
-read.csv("data/clean data.csv", sep = ";") %>%
+## Winter germination  considering until Tmin<3ºC#####
+read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
   group_by (species, code, incubator, petridish, date)%>% 
-  filter (date %in% c("2022-04-04","2022-04-11", "2022-04-12", # # first check after winter with T>2ºC
-                      "2022-05-11","2022-05-12", "2022-05-18", "2022-05-19", "2022-05-25", "2022-05-26" )) %>% #undersnow + first checks T>2ºC
+  filter (date %in% c("2022-04-04","2022-04-11", "2022-04-12", # # first check after winter before Tmin<3ºC
+                      "2022-05-11","2022-05-12", "2022-05-18", "2022-05-19", 
+                      "2022-05-25", "2022-05-26", "2022-06-01", "2022-06-02" )) %>% #undersnow + first checks Tmin>2ºC
   group_by (species, code, incubator, petridish) %>% 
   summarise(seeds_germ = sum(germinated))%>%
   merge (viables) %>%
@@ -273,8 +272,9 @@ read.csv("data/clean data.csv", sep = ";") %>%
   
 
 ## MID-JUNE germination #####
-read.csv("data/clean data.csv", sep = ",") %>%
-  mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
+read.csv("data/clean data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
+  filter(species == "Gypsophila repens") %>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
   group_by (species, code, incubator, petridish, time)%>% 
   filter (between(time, 106, 322)) %>% # amount of days calculated from the dates 106 = 13/11 and 322 = 16/6
@@ -422,7 +422,7 @@ germ_timing %>%
              Mid_sep = mean (Mid_sep))%>%
   write.csv ("results/germination_timing2.csv")
 
-### visualization germination timing following Edu's instructions #####
+### VISUALIZATION germination timing following Edu's instructions #####
 # mid-november
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
