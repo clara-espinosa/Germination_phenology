@@ -1,7 +1,6 @@
 library(FD); library(vegan); library(FactoMineR); library(emmeans);
 library(tidyverse); library(ggrepel); library(cowplot); library (ggplot2);
 library (lubridate); library(binom); library (GerminaR)
-theme_set(theme_cowplot(font_size = 10)) 
 
 # AUTUMN (test representation) ####
 read.csv("data/all_data.csv", sep = ";") %>%
@@ -45,7 +44,7 @@ read.csv("data/all_data.csv", sep = ";") %>%
   mutate (binom.confint(cumulative, viable, methods = "wilson")) %>% 
   mutate (Season = "Winter")-> winter_graph  
 
-# EARLY SEASON  (test representation) ####
+# COLD GERM  (test representation) ####
 read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>% 
@@ -81,7 +80,7 @@ rbind(Earlyseason_F, Earlyseason_S) %>%
   mutate (binom.confint(cumulative, viable, methods = "wilson")) %>% 
   mutate (Season = "Early season")-> Earlyseason_graph  
 
-# LATE SEASON (test representation) ####
+# WARM germ (test representation) ####
 read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>% 

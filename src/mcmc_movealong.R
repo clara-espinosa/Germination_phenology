@@ -127,6 +127,11 @@ viables_germ %>%
   select(!family) %>%  
   na.omit ()-> df
 summary(df)
+df %>%
+  select (code, species, incubator, petridish, total_germ, viable, macroclimate)%>%
+  group_by (macroclimate, incubator) %>%
+  summarise (germ = (total_germ/viable)*100) %>%
+  get_summary_stats(type ="full")
 #### AUTUMN (Mid November) ####
 read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
@@ -158,7 +163,11 @@ read.csv("data/all_data.csv", sep = ";") %>%
   select(!family) %>%  
   na.omit ()-> df 
 summary (df)
-
+df %>%
+  select (code, species, incubator, petridish, seeds_germ, viable, macroclimate)%>%
+  group_by (macroclimate, incubator) %>%
+  summarise (germ = (seeds_germ/viable)*100) %>%
+  get_summary_stats(type ="full")
 #### SPRING (Mid-June) ####
 read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
@@ -193,9 +202,13 @@ read.csv("data/all_data.csv", sep = ";") %>%
   arrange(species, code, accession, incubator, petridish)  %>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
   select(!family) %>%  
-  na.omit ()-> df   # START HERE TOMORROW #
+  na.omit ()-> df   
 summary (df)
-
+df %>%
+  select (code, species, incubator, petridish, seeds_germ, viable, macroclimate)%>%
+  group_by (macroclimate, incubator) %>%
+  summarise (germ = (seeds_germ/viable)*100) %>%
+  get_summary_stats(type ="full")
 #### END-SUMMER (Mid- September) ####
 read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
@@ -231,6 +244,11 @@ read.csv("data/all_data.csv", sep = ";") %>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
   select(!family) %>%  
   na.omit ()-> df
+df %>%
+  select (code, species, incubator, petridish, seeds_germ, viable, macroclimate)%>%
+  group_by (macroclimate, incubator) %>%
+  summarise (germ = (seeds_germ/viable)*100) %>%
+  get_summary_stats(type ="full")
 ######################################## GERMINATION RESPONSE TO TEMPERATURE ###################################
 ## Winter germination  considering first checks after winter until Tmin>2ºC#####
 read.csv("data/all_data.csv", sep = ";") %>%
@@ -270,7 +288,12 @@ read.csv("data/all_data.csv", sep = ";") %>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
   select(!family) %>%  
   na.omit ()-> df
-
+summary(df)
+df %>%
+  select (code, species, incubator, petridish, seeds_germ, viable, macroclimate)%>%
+  group_by (macroclimate, incubator) %>%
+  summarise (germ = (seeds_germ/viable)*100) %>%
+  get_summary_stats(type ="full")
 #### seed germinated in spring + summer (needed for cold/hot germ calculation)####
 read.csv("data/all_data.csv", sep = ";") %>%
   spread(date, germinated, fill = 0) %>% # wide format for dates, and fill Na with 0
@@ -356,7 +379,12 @@ rbind(coldgerm_F, coldgerm_S) %>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
   select(!family) %>%  
   na.omit ()-> df
-
+summary(df)
+df %>%
+  select (code, species, incubator, petridish, seeds_germ, viable, macroclimate)%>%
+  group_by (macroclimate, incubator) %>%
+  summarise (germ = (seeds_germ/viable)*100) %>%
+  get_summary_stats(type ="full")
 #### WARM GERMINATION (BETWEEN Tmean>10 until end of experiment!) ####
 read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
@@ -412,7 +440,12 @@ rbind(warmgerm_F, warmgerm_S) %>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
   select(!family) %>%  
   na.omit ()-> df
-
+summary(df)
+df %>%
+  select (code, species, incubator, petridish, seeds_germ, viable, macroclimate)%>%
+  group_by (macroclimate, incubator) %>%
+  summarise (germ = (seeds_germ/viable)*100) %>%
+  get_summary_stats(type ="full")
 #### PHYLO TREE AND MODEL SPECIFICATION FOR MULTINOMIAL####
  ### Read tree
 phangorn::nnls.tree(cophenetic(ape::read.tree("results/tree.tree")), 
@@ -436,11 +469,11 @@ phangorn::nnls.tree(cophenetic(ape::read.tree("results/tree.tree")),
 priors <- list(R = list(V = 1, nu = 50), 
                   G = list(G1 = list(V = 1, nu = 1, alpha.mu = 0, alpha.V = 500), 
                            G2 = list(V = 1, nu = 1, alpha.mu = 0, alpha.V = 500),
-                           G3 = list(V = 1, nu = 1, alpha.mu = 0, alpha.V = 500)))  
-                           #G4 = list(V = 1, nu = 1, alpha.mu = 0, alpha.V = 500)))   
+                           G3 = list(V = 1, nu = 1, alpha.mu = 0, alpha.V = 500), 
+                           G4 = list(V = 1, nu = 1, alpha.mu = 0, alpha.V = 500)))   
 ### TEST
-MCMCglmm::MCMCglmm(cbind(seeds_germ, germ_AW - seeds_germ) ~ incubator * macroclimate,
-                   random = ~ animal + ID + code:ID,
+MCMCglmm::MCMCglmm(cbind(total_germ, viable - total_germ) ~ macroclimate,
+                   random = ~ animal + ID + incubator + code:ID,
                    family = "multinomial2", pedigree = nnls_orig, prior = priors, data = df,
                    nitt = nite, thin = nthi, burnin = nbur,
                    verbose = FALSE, saveX = FALSE, saveZ = FALSE, saveXL = FALSE, pr = FALSE, pl = FALSE) -> m1
@@ -532,7 +565,13 @@ t50model %>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
   select(!family) %>%  
   na.omit () -> df
-### Heat_sum function, ##########  START FROM HERE TOMORROW   ####
+summary(df)
+df %>%
+  select (code, species, incubator, petridish, t50lm, macroclimate)%>%
+  group_by (macroclimate, incubator) %>%
+  summarise (t50 = t50lm) %>%
+  get_summary_stats(type ="full")
+### Heat_sum function, ##########    ####
 read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   group_by (species, code, incubator, petridish) %>%
@@ -576,7 +615,12 @@ t50_dates%>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
   select(!family) %>%  
   na.omit () -> df # punto significa que el objeto al que aplicar la funcion heat sum es el de la linea de arriba
-
+summary(df)
+df %>%
+  select (code, species, incubator, petridish, HS, macroclimate)%>%
+  group_by (macroclimate, incubator) %>%
+  summarise (Env_heat_sum = HS) %>%
+  get_summary_stats(type ="full")
 ### delay to reach t50 check days between incubators ####
 t50model %>%
   merge (viables_germ)%>%
@@ -599,6 +643,12 @@ t50model %>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
   select(!family) %>%  
   na.omit () -> df 
+summary(df)
+df %>%
+  select (code, species,delayS_F, macroclimate)%>%
+  group_by (macroclimate) %>%
+  summarise (Delay = delayS_F) %>%
+  get_summary_stats(type ="full")
 #### PHYLO AND MODEL SPECIFICATION FOR GAUSSIAN ####
 ### Read tree
 phangorn::nnls.tree(cophenetic(ape::read.tree("results/tree.tree")), 
