@@ -116,7 +116,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
 t50_trait <- full_join(time50, t50model, by = c("species", "code", "incubator", "petridish"))
 
 # sowing date + t50 date or final date check, NECESARY FOR ENV HEAT FUNCTION ####
-read.csv("data/clean data.csv", sep = ";") %>%
+read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   group_by (species, code, incubator, petridish) %>%
   mutate (datesow= first (date)) %>% 

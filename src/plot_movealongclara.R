@@ -21,19 +21,23 @@ ggplot(temp, aes ()) +
   geom_ribbon (data = temp, aes (x=time, ymin =Tmin, ymax=Tmax, colour = incubator, fill = incubator), alpha =0.5) +
   scale_fill_manual (values =c("chocolate2", "deepskyblue3")) +
   scale_color_manual (values =c("chocolate2", "deepskyblue3")) +
+  scale_y_continuous (limits = c(-5,35), breaks = seq (-5, 35, by= 5)) +
   labs (title = "Move-along temperature regimes", y= "Temperature ºC", x = "Time (days)") + 
-  theme (axis.title.y = element_text (size=14), 
-         axis.title.x = element_text (size=14), 
-         plot.title = element_text (size =16), 
-         legend.title = element_text(size = 14),
-         legend.text = element_text (size =12)) +
+  theme_classic(base_size = 16) +
+  theme (plot.title = element_text ( size = 30), #hjust = 0.5,
+        axis.title.y = element_text (size=18), 
+         axis.title.x = element_text (size=18), 
+         legend.title = element_text(size = 20),
+         legend.text = element_text (size =16)) +
   geom_vline(xintercept = 122, linetype = "dashed", size =1.25) +
-  annotate (geom ="text", x= 137, y = 22, label ="Winter begins", colour = "black", size = 4,  fontface ="bold") +
+  annotate (geom ="text", x= 143, y = 30, label ="Winter begins", colour = "black", size = 5,  fontface ="bold") +
   geom_vline(xintercept = 240, linetype = "dashed", size =1.25, color = "chocolate2") +
-  annotate (geom ="text", x= 255, y = 22, label ="Fellfield\nwinter ends", colour = "chocolate2", size = 4,  fontface ="bold") +
+  annotate (geom ="text", x= 258, y = 30, label ="Fellfield\nwinter ends", colour = "chocolate2", size = 5,  fontface ="bold") +
   geom_vline(xintercept = 291, linetype = "dashed", size =1.25,color = "deepskyblue3") +
-  annotate (geom ="text", x= 307, y = 22, label ="Snowbed\nwinter ends", colour = "deepskyblue3", size = 4,  fontface ="bold") +
+  annotate (geom ="text", x= 309, y = 30, label ="Snowbed\nwinter ends", colour = "deepskyblue3", size = 5,  fontface ="bold") +
   geom_hline(yintercept=0, linetype ="dashed", size =1, colour = "red")
+
+ 
   
 ########### GERMINATION RATE ###################################################
 #### germination peaks  #####
@@ -107,25 +111,25 @@ read.csv("data/all_data.csv", sep = ";") %>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
   merge(species) %>%  
-  group_by (macroclimate, incubator) %>%
+  group_by ( incubator) %>%
   summarise (total_germ = sum(total_germ),
              viable = sum (viable))%>%
   mutate (binom.confint(total_germ, viable, methods = "wilson")) -> totalgerm_graph
 
 x11()
-ggplot(data=totalgerm_graph, aes(incubator, mean, color=macroclimate))+
+ggplot(data=totalgerm_graph, aes(incubator, mean, color=incubator))+
   geom_point(size =2) +
   #facet_grid (.~macroclimate) +
   geom_signif(comparisons = list(c("Fellfield", "Snowbed")),annotations = "***", y_position = 0.95, tip_length = 0.05, color = "black", size = 1, textsize = 9) +
   #geom_signif(comparisons = list(c("Mediterranean", "Temperate")),annotations = "***", y_position = 0.85, tip_length = 0.2, color = "black", size = 1, textsize = 9) +
   geom_errorbar(data= totalgerm_graph, aes(incubator, mean, ymin = lower, ymax = upper,
-                                      color = macroclimate),width = 0.3, size =1.2) +
-  geom_segment (aes(x=1.5, y =0.72, xend=1.5, yend =0.82), color = "black", size = 1)+
-  geom_segment (aes(x=1.45, y = 0.72, xend =1.55, yend =0.72), color = "black", size = 1) +
-  geom_segment (aes(x=1.45, y = 0.82, xend =1.55, yend =0.82), color = "black", size = 1) +
-  annotate (geom ="text", x= 1.60, y = 0.79, label =".", colour = "black", size = 9) +
-  #scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
-  scale_color_manual (name = "Macroclimate", values = c ("Mediterranean"= "darkgoldenrod1" , "Temperate" = "forestgreen")) +
+                                      color = incubator),width = 0.3, size =1.2) +
+  # geom_segment (aes(x=1.5, y =0.72, xend=1.5, yend =0.82), color = "black", size = 1)+
+  # geom_segment (aes(x=1.45, y = 0.72, xend =1.55, yend =0.72), color = "black", size = 1) +
+ # geom_segment (aes(x=1.45, y = 0.82, xend =1.55, yend =0.82), color = "black", size = 1) +
+ # annotate (geom ="text", x= 1.60, y = 0.79, label =".", colour = "black", size = 9) +
+  scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
+  #scale_color_manual (name = "Macroclimate", values = c ("Mediterranean"= "darkgoldenrod1" , "Temperate" = "forestgreen")) +
   scale_y_continuous (limits = c(0,1), breaks = seq (0, 1, by= 0.2)) +
   labs(title = "Total germination", x = "Incubator", y = "Germination proportion") +
   theme_classic(base_size = 16)+
@@ -588,18 +592,18 @@ t50_dates%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
   merge(species, by = c("code", "species")) -> heatsum_graph
-
+x11()
 ggplot(data=heatsum_graph, aes(macroclimate, HS, fill=macroclimate))+
   geom_boxplot() +
-  facet_grid (.~incubator) +
-  geom_signif(comparisons = list(c("Mediterranean", "Temperate")),annotations = "***", y_position = 3000, tip_length = 0.04, color = "black", size = 1, textsize = 9) +
+  #facet_grid (.~incubator) +
+  geom_signif(comparisons = list(c("Mediterranean", "Temperate")),annotations = "*", y_position = 3000, tip_length = 0.04, color = "black", size = 1, textsize = 9) +
   #geom_segment (aes(x=0.81, y = 2500, xend =1.20, yend =2500), color = "black", size = 1) +
-  #annotate (geom ="text", x= 1, y = 2550, label ="***", colour = "black", size = 9) +
+  #annotate (geom ="text", x= 1, y = 2550, label ="*", colour = "black", size = 9) +
   #geom_segment (aes(x=1.81, y = 2500, xend =2.20, yend =2500), color = "black", size = 1) +
-  #annotate (geom ="text", x= 2, y = 2550, label ="***", colour = "black", size = 9) +
+  #annotate (geom ="text", x= 2, y = 2550, label ="*", colour = "black", size = 9) +
   #scale_fill_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
   scale_fill_manual (name = "Macroclimate",values = c ("Mediterranean"= "darkgoldenrod1" , "Temperate" = "forestgreen")) +
-  labs(title = "Environmental heat sum to t50", x = "Macroclimate", y = "Time (days)") +
+  labs(title = "Environmental heat sum to t50", x = "Macroclimate", y = "Degrees ºC") +
   theme_classic(base_size = 16)+
   theme(plot.title = element_text (hjust = 0.5, size = 30),
         strip.text = element_text(face = "italic", size = 24), 
