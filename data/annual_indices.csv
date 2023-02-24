@@ -1,4 +1,4 @@
-Macroclimate;Site;Period (years);bio1;bio2;bio7;Snw;FDD;GDD;;;;
+Community;Site;Period (years);bio1;bio2;bio7;Snw;FDD;GDD;;;;
 Temperate;Hou Sin Tierri;10;5.034990914;3.265106185;22.60923032;100.5;89.18066691;1368.596258;;;bio1;Annual mean temperature
 Temperate;Hoyo Sin Tierra;10;6.164219355;3.042808811;23.96475221;70.7;99.65444491;1711.947109;;;bio2;Mean diurnal range (Mean of monthly (max temp - min temp)
 Temperate;Los Boches;10;3.846432355;2.176882967;19.56196629;192.7;25.59719685;930.4334498;;;bio7;Temperature Annual range
@@ -8,3 +8,6 @@ Mediterranean;PenautaN;august 20-june 21;4.342738762;2.556636765;20.63355146;108
 Mediterranean;PenautaS;august 20-june 21;6.36231277;5.995527889;22.91207204;123;4.444816674;1619.31018;;;;
 Mediterranean;Rabinalto;1;7.230101054;6.734190167;30.73244838;67;94.03157076;2596.376787;;;;
 Mediterranean;Solana;1;9.174043597;9.873041806;32.86270294;30;30.85647496;3128.375496;;;;
+;;;bio1;bio2;bio7;Snw;FDD;GDD;;;;
+;;Temperate;5.13;2.88;21.77;123.33;54.35;1349.8;;;;
+;;Mediterranean;8.08;7.95;30.66;49.33;61.05;2801.34;;;;

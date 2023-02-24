@@ -1,4 +1,4 @@
-id;species;seeds_germ;viable;viablePER;germPER;autumn_germ;spring_germ;summer_germ;winter_germ;cold_germ;warm_germ;t50;heat_sum;delayS_F;family;macroclimate;habitat;germ_strategy
+id;species;seeds_germ;viable;viablePER;germPER;autumn_germ;spring_germ;summer_germ;winter_germ;cold_germ;warm_germ;t50;heat_sum;delayS_F;family;community;habitat;germ_strategy
 1;Agrostis tileni;14;14;10.15;100;0;0.64;0.05;0;0.5;0.5;263.56;699.33;76.21;Poaceae;Mediterranean;Specialist;Late_season
 2;Androsace villosa;2;374;93.5;0.57;0;0;0;0;0;0.01;NA;NA;NA;Primulaceae;Temperate;Specialist;Sporadic_low
 3;Anthyllis vulneraria;7;275;45.92;4.28;0.01;0.01;0;0;0;0;NA;NA;NA;Fabaceae;Temperate;Not_specialist;Biphasic

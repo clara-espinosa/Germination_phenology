@@ -42,7 +42,7 @@ str(sp_traits)
 #germination traits + t50 traits (remove species with NAs, from 55 to 42)
 read.csv ("data/traits_sp.csv", header = TRUE, sep = ";") %>%
   rename(total_germ = germPER)%>%
-  #select(total_germ, autumn_germ, spring_germ, summer_germ, winter_germ, t50, heat_sum, mass_50) %>% # all traits
+  select(total_germ, autumn_germ, spring_germ, summer_germ, winter_germ, t50, heat_sum, mass_50) %>% # all traits
   #select(total_germ, autumn_germ, spring_germ, summer_germ, winter_germ, t50, heat_sum) %>% #germ + t50/heat
   #select(total_germ, autumn_germ, spring_germ, summer_germ, winter_germ) %>% #germ traits
   na.omit() -> traits
@@ -54,7 +54,8 @@ spe.scores <- scores(PCA_traits, display= "species", scaling = 0)
 spe.scores
 sort(abs(spe.scores[,1]), decreasing = TRUE) # sort variables with highest absolute correlation with 1st axis
 sort(abs(spe.scores[,2]), decreasing = TRUE)# sort variables with highest absolute correlation with 2nd axis
-
+site.scores <- scores(PCA_traits, display= "sites", scaling = 0)
+site.scores
 
 biplot (PCA_traits, display = c("species", "sites"), scaling = "species")
 
@@ -177,3 +178,29 @@ ggplot() +
             aes(x=PC1,y=PC2,label=rownames(traitscores),
                 hjust=0.5*(1-sign(PC1)),vjust=0.5*(1-sign(PC2))), 
             color="black", size=5)
+
+###### seed mass #####
+read.csv("data/seed_mass.csv", sep = ";") %>%
+  group_by(macroclimate) %>%
+  summarise (mass_50 = mean(mass_50))
+
+ggplot()+
+  geom_boxplot(data=seed_mass, aes(macroclimate, mass_50, fill=macroclimate), size =1) +
+  #facet_grid (.~macroclimate) +
+  #scale_fill_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
+  scale_fill_manual (name = "Macroclimate",values = c ("Mediterranean"= "darkgoldenrod1" , "Temperate" = "forestgreen")) +
+  labs(title = "Seed mass", x = "Macroclimate", y = "Mass (mg)") +
+  theme_classic(base_size = 16)+
+  theme(plot.title = element_text (hjust = 0.5, size = 30),
+        strip.text = element_text(face = "italic", size = 24), 
+        legend.position = "right",
+        legend.title = element_text(size=20), 
+        legend.text = element_text(size=16),
+        legend.background = element_rect(fill="transparent",colour=NA),
+        axis.title.y = element_text (size=18), 
+        axis.title.x = element_text (size=18))
+t.test(mass_50~macroclimate, data=seed_mass)         
+
+# seed mass values are notably higher in EMditerraenan but not significantly different
+
+#### species centroid ####

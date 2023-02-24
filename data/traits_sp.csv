@@ -1,4 +1,4 @@
-species;macroclimate;seeds_germ;viable;viablePER;germPER;autumn_germ;spring_germ;summer_germ;winter_germ;t50;heat_sum;mass_50;family;habitat;germ_strategy
+species;community;seeds_germ;viable;viablePER;germPER;autumn_germ;spring_germ;summer_germ;winter_germ;t50;heat_sum;mass_50;family;habitat;germ_strategy
 Agrostis tileni;Mediterranean;14;14;10.15166667;100;0;0.642857143;0.045918367;0;263.5625;699.3333333;4.436;Poaceae;Specialist;Late_season
 Androsace villosa;Temperate;2;374;93.5;0.56875;0;0;0;0;NA;NA;66.6;Primulaceae;Specialist;Sporadic_low
 Anthyllis vulneraria;Temperate;7;275;45.91666667;4.27875;0.014545455;0.007272727;2.64E-05;0.003636364;NA;NA;215.9473684;Fabaceae;Not_specialist;Biphasic

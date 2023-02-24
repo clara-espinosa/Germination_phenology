@@ -1,4 +1,4 @@
-species;macroclimate;incubator;seeds_germ;viable;viablePER;germPER;autumn_germ;spring_germ;summer_germ;winter_germ;t50;heat_sum;mass_50;family;habitat;germ_strategy
+species;community;incubator;seeds_germ;viable;viablePER;germPER;autumn_germ;spring_germ;summer_germ;winter_germ;t50;heat_sum;mass_50;family;habitat;germ_strategy
 Agrostis tileni;Mediterranean;Fellfield;9;9;13.63666667;100;0;1;0.111111111;0;225.4583333;580.5;4.436;Poaceae;Specialist;Late_season
 Agrostis tileni;Mediterranean;Snowbed;5;5;6.666666667;100;0;0;0;0;301.6666667;818.1666667;4.436;Poaceae;Specialist;Late_season
 Androsace villosa;Temperate;Fellfield;0;188;94;0;0;0;0;0;NA;NA;66.6;Primulaceae;Specialist;Sporadic_low
