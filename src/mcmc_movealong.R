@@ -35,13 +35,13 @@ read.csv("data/all_data.csv", sep = ";") %>%
          viablePER = round(viablePER, digit =2)) -> viables 
 ### seeds germ + viables/community filtered ####
 read.csv("data/all_data.csv", sep = ";") %>%
-  mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
+  #mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   group_by(species, code, incubator, petridish) %>%
   summarise(total_germ = sum(germinated)) %>% # 
   merge(viables) %>%
   filter(viablePER>25)%>%
   filter(germPER>0)%>%
-  merge(read.csv("data/all_info.csv", sep =";")) %>% 
+  merge(species) %>% 
   group_by (community, incubator) %>%
   summarise (total_germ = sum(total_germ),
              viable = sum (viable))-> viables_community
@@ -70,36 +70,26 @@ read.csv("data/all_data.csv", sep = ";") %>%
   na.omit () -> df
 summary(df)
 #### TOTAL GERMINATION  ####
-viables_germ %>% 
+viables %>% 
   filter(viablePER>25)%>%
   filter(germPER>0)%>%
   select (species, code, incubator, petridish, viable, total_germ) %>%
+  #filter(str_length (code)<10)%>% ## filter accesions codes shorter than 10 character (all 2nd sow has an extra "b")
+  merge(species, by = c("code", "species")) %>%
+  convert_as_factor(code, species, incubator, family, community, habitat, germ_strategy) %>%
   mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
-  #filter(str_length (code)<10)%>% ## filter accesions codes shorter than 10 character (all 2nd sow has an extra "b")
-  merge(species, by = c("code", "species")) %>%
-  mutate(code=factor(code)) %>%
-  mutate(species=factor(species)) %>%
-  mutate(incubator=factor(incubator)) %>%
-  mutate(family=factor(family)) %>%
-  mutate(community=factor(community)) %>%
-  mutate(habitat=factor(habitat)) %>%
-  mutate(germ_strategy=factor(germ_strategy)) %>%
   arrange(species, code, accession, incubator, petridish)  %>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
   select(!family) %>%  
+  filter(community == "Temperate") %>%
   na.omit ()-> df
 summary(df)
-df %>%
-  select (code, species, incubator, petridish, total_germ, viable, community)%>%
-  group_by (community, incubator) %>%
-  summarise (germ = (total_germ/viable)*100) %>%
-  get_summary_stats(type ="full")
+
 #### AUTUMN (Mid November) ####
 read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
-  #filter (species == "Minuartia verna")%>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
   group_by (species, code, incubator, petridish, time) %>%
   summarise(seeds_germ = sum(germinated)) %>%
@@ -107,35 +97,25 @@ read.csv("data/all_data.csv", sep = ";") %>%
   filter (between(time, 1, 105)) %>% ## 105 = 12/11 last check before winter
   group_by (species, code, incubator, petridish) %>%
   summarise (seeds_germ = sum(seeds_germ)) %>%
-  merge(viables_germ, by = c("code", "species", "incubator", "petridish"))%>%
+  merge(viables, by = c("code", "species", "incubator", "petridish"))%>%
   filter(viablePER>25)%>%
   filter(germPER>0)%>%
   select(species, code, incubator, petridish, seeds_germ, viable) %>%
+  merge(species, by = c("code", "species")) %>%
+  convert_as_factor(code, species, incubator, family, community, habitat, germ_strategy) %>%
   mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
-  merge(species, by = c("code", "species")) %>%
-  mutate(code=factor(code)) %>%
-  mutate(species=factor(species)) %>%
-  mutate(incubator=factor(incubator)) %>%
-  mutate(family=factor(family)) %>%
-  mutate(community=factor(community)) %>%
-  mutate(habitat=factor(habitat)) %>%
-  mutate(germ_strategy=factor(germ_strategy)) %>%
   arrange(species, code, accession, incubator, petridish)  %>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
   select(!family) %>%  
+  filter(community == "Mediterranean") %>%
   na.omit ()-> df 
 summary (df)
-df %>%
-  select (code, species, incubator, petridish, seeds_germ, viable, community)%>%
-  group_by (community, incubator) %>%
-  summarise (germ = (seeds_germ/viable)*100) %>%
-  get_summary_stats(type ="full")
+
 #### SPRING (Mid-June) ####
 read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
-  #filter(species == "Gypsophila repens") %>%
   spread(date, germinated, fill = 0) %>% # wide format for dates, and fill Na with 0
   gather ("date", "germinated", 8: last_col() )%>% # back in long format frrom 8th colum to the last
   arrange (species, accession, code, incubator, petridish, date)%>% # sort row observations this way
@@ -148,35 +128,24 @@ read.csv("data/all_data.csv", sep = ";") %>%
   group_by (species, code, incubator, petridish) %>%
   summarise (seeds_germ = sum(seeds_germ),
              cumulative = last(cumulative)) %>%
-  merge(viables_germ)%>%
+  merge(viables)%>%
   filter(viablePER>25)%>%
   filter(germPER>0)%>%
-  select(species, code, incubator, petridish, seeds_germ, cumulative, viable) %>%
+  select(species, code, incubator, petridish, seeds_germ, viable) %>%
+  merge(species, by = c("code", "species")) %>%
+  convert_as_factor(code, species, incubator, family, community, habitat, germ_strategy) %>%
   mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
-  merge(species, by = c("code", "species")) %>%
-  mutate(code=factor(code)) %>%
-  mutate(species=factor(species)) %>%
-  mutate(incubator=factor(incubator)) %>%
-  mutate(family=factor(family)) %>%
-  mutate(community=factor(community)) %>%
-  mutate(habitat=factor(habitat)) %>%
-  mutate(germ_strategy=factor(germ_strategy)) %>%
   arrange(species, code, accession, incubator, petridish)  %>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
   select(!family) %>%  
-  na.omit ()-> df   
-summary (df)
-df %>%
-  select (code, species, incubator, petridish, seeds_germ, viable, community)%>%
-  group_by (community, incubator) %>%
-  summarise (germ = (seeds_germ/viable)*100) %>%
-  get_summary_stats(type ="full")
+  filter(community == "Temperate") %>%
+  na.omit ()-> df
+summary(df)
 #### END-SUMMER (Mid- September) ####
 read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
-  #filter (species == "Armeria cantabrica") %>%
   spread(date, germinated, fill = 0) %>% # wide format for dates, and fill Na with 0
   gather ("date", "germinated", 8: last_col() )%>% # back in long format frrom 8th colum to the last
   arrange (species, accession, code, incubator, petridish, date)%>% # sort row observations this way
@@ -189,38 +158,28 @@ read.csv("data/all_data.csv", sep = ";") %>%
   group_by (species, code, incubator, petridish) %>%
   summarise (seeds_germ = sum(seeds_germ),
              cumulative = last(cumulative)) %>%
-  merge(viables_germ)%>%
+  merge(viables)%>%
   filter(viablePER>25)%>%
   filter(germPER>0)%>%
-  select(species, code, incubator, petridish, seeds_germ, cumulative, viable) %>%
+  select(species, code, incubator, petridish, seeds_germ, viable) %>%
+  merge(species, by = c("code", "species")) %>%
+  convert_as_factor(code, species, incubator, family, community, habitat, germ_strategy) %>%
   mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
-  merge(species, by = c("code", "species")) %>%
-  mutate(code=factor(code)) %>%
-  mutate(species=factor(species)) %>%
-  mutate(incubator=factor(incubator)) %>%
-  mutate(family=factor(family)) %>%
-  mutate(community=factor(community)) %>%
-  mutate(habitat=factor(habitat)) %>%
-  mutate(germ_strategy=factor(germ_strategy)) %>%
   arrange(species, code, accession, incubator, petridish)  %>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
   select(!family) %>%  
+  filter(community == "Mediterranean") %>%
   na.omit ()-> df
-df %>%
-  select (code, species, incubator, petridish, seeds_germ, viable, community)%>%
-  group_by (community, incubator) %>%
-  summarise (germ = (seeds_germ/viable)*100) %>%
-  get_summary_stats(type ="full")
+summary(df)
+
 ## Winter germination  considering first checks after winter until Tmin>2ºC#####
 read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
-  #filter (species == "Conopodium majus") %>%
   spread(date, germinated, fill = 0) %>% # wide format for dates, and fill Na with 0
   gather ("date", "germinated", 8: last_col()) %>% # back in long format frrom 8th colum to the last
   arrange (species, accession, code, incubator, petridish, date)%>% # sort row observations this way
-  #mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
   group_by (species, code, incubator, petridish, date)%>% 
   summarise(seeds_germ = sum(germinated)) %>%
   mutate(cumulative = cumsum(seeds_germ)) %>%
@@ -231,32 +190,22 @@ read.csv("data/all_data.csv", sep = ";") %>%
   group_by (species, code, incubator, petridish) %>%
   summarise (seeds_germ = sum(seeds_germ),
              cumulative = last(cumulative)) %>%
-  merge (viables_germ) %>%
+  merge(viables)%>%
   filter(viablePER>25)%>%
   filter(germPER>0)%>%
-  select(species, code, incubator, petridish, seeds_germ, viable)%>%
-  arrange(species) %>%
+  select(species, code, incubator, petridish, seeds_germ, viable) %>%
+  merge(species, by = c("code", "species")) %>%
+  convert_as_factor(code, species, incubator, family, community, habitat, germ_strategy) %>%
   mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
-  merge(species, by = c("code", "species")) %>%
-  mutate(code=factor(code)) %>%
-  mutate(species=factor(species)) %>%
-  mutate(incubator=factor(incubator)) %>%
-  mutate(family=factor(family)) %>%
-  mutate(community=factor(community)) %>%
-  mutate(habitat=factor(habitat)) %>%
-  mutate(germ_strategy=factor(germ_strategy)) %>%
   arrange(species, code, accession, incubator, petridish)  %>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
   select(!family) %>%  
+  filter(community == "Temperate") %>%
   na.omit ()-> df
+
 summary(df)
-df %>%
-  select (code, species, incubator, petridish, seeds_germ, viable, community)%>%
-  group_by (community, incubator) %>%
-  summarise (germ = (seeds_germ/viable)*100) %>%
-  get_summary_stats(type ="full")
 ### modeling t50 from raw data ####
 
 f50 <- function(df0) {
@@ -288,36 +237,28 @@ read.csv("data/all_data.csv", sep = ";") %>%
     t50lm = `(0.5 - as.numeric(mf1$coefficients[1]))/as.numeric(mf1$coefficients[2])`) ->t50model
 
 t50model %>%
-  merge(viables_germ) %>%
+  merge(viables)%>%
   filter(viablePER>25)%>%
   filter(germPER>0)%>%
+  select(species, code, incubator, petridish, t50lm) %>%
+  merge(species, by = c("code", "species")) %>%
+  convert_as_factor(code, species, incubator, family, community, habitat, germ_strategy) %>%
   mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
-  merge(species, by = c("code", "species")) %>%
-  mutate(code=factor(code)) %>%
-  mutate(species=factor(species)) %>%
-  mutate(incubator=factor(incubator)) %>%
-  mutate(family=factor(family)) %>%
-  mutate(community=factor(community)) %>%
-  mutate(habitat=factor(habitat)) %>%
-  mutate(germ_strategy=factor(germ_strategy)) %>%
   arrange(species, code, accession, incubator, petridish)  %>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
   select(!family) %>%  
-  na.omit () -> df
+  filter(community == "Temperate") %>%
+  na.omit ()-> df
 summary(df)
-df %>%
-  select (code, species, incubator, petridish, t50lm, community)%>%
-  group_by (community, incubator) %>%
-  summarise (t50 = t50lm) %>%
-  get_summary_stats(type ="full")
+
 ### Heat_sum function, ##########    ####
 read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   group_by (species, code, incubator, petridish) %>%
   summarise (datesow = first (date)) %>% 
-  merge (viables_germ)%>% 
+  merge (viables)%>% 
   filter (germPER>49) %>%
   merge (t50model) %>%
   mutate (date50 = as.Date(datesow) + t50lm) %>% 
@@ -341,27 +282,18 @@ heatsum <-function (t50_dates) {
 t50_dates%>%
   group_by (species, code, incubator, petridish) %>%
   do (heatsum(.)) %>%
+  merge(species, by = c("code", "species")) %>%
+  convert_as_factor(code, species, incubator, family, community, habitat, germ_strategy) %>%
   mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
-  merge(species, by = c("code", "species")) %>%
-  mutate(code=factor(code)) %>%
-  mutate(species=factor(species)) %>%
-  mutate(incubator=factor(incubator)) %>%
-  mutate(family=factor(family)) %>%
-  mutate(community=factor(community)) %>%
-  mutate(habitat=factor(habitat)) %>%
-  mutate(germ_strategy=factor(germ_strategy)) %>%
   arrange(species, code, accession, incubator, petridish)  %>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
   select(!family) %>%  
+  filter (community == "Temperate") %>%
   na.omit () -> df # punto significa que el objeto al que aplicar la funcion heat sum es el de la linea de arriba
 summary(df)
-df %>%
-  select (code, species, incubator, petridish, HS, community)%>%
-  group_by (community, incubator) %>%
-  summarise (Env_heat_sum = HS) %>%
-  get_summary_stats(type ="full")
+
 
 #### PHYLO TREE AND MODEL SPECIFICATION FOR MULTINOMIAL####
  ### Read tree
@@ -388,12 +320,11 @@ priors <- list(R = list(V = 1, nu = 50),
                            G2 = list(V = 1, nu = 1, alpha.mu = 0, alpha.V = 500),
                            G3 = list(V = 1, nu = 1, alpha.mu = 0, alpha.V = 500)))   
 ### TEST
-MCMCglmm::MCMCglmm(cbind(cumulative, viable - cumulative) ~ incubator*time,
+MCMCglmm::MCMCglmm(cbind(seeds_germ, viable - seeds_germ) ~ incubator,
                    random = ~ animal + ID +  code:ID,
                    family = "multinomial2", pedigree = nnls_orig, prior = priors, data = df,
                    nitt = nite, thin = nthi, burnin = nbur,
                    verbose = FALSE, saveX = FALSE, saveZ = FALSE, saveXL = FALSE, pr = FALSE, pl = FALSE) -> m1
-
 
 # save(m1, file = "results/mcmc.Rdata")
 x11()
@@ -426,14 +357,7 @@ summary(m1)$Gcovariances[3, 1] %>% round(2)
 summary(m1)$Gcovariances[3, 2] %>% round(2) 
 summary(m1)$Gcovariances[3, 3] %>% round(2)
 
-# Random effects code:ID
-summary(m1)$Gcovariances[4, 1] %>% round(2)
-summary(m1)$Gcovariances[4, 2] %>% round(2) 
-summary(m1)$Gcovariances[4, 3] %>% round(2)
-
-#### model specification for  gaussian (t50 + env heat)
-
-#### PHYLO AND MODEL SPECIFICATION FOR GAUSSIAN ####
+#### PHYLO AND MODEL SPECIFICATION FOR GAUSSIAN (t50 + env heat)####
 ### Read tree
 phangorn::nnls.tree(cophenetic(ape::read.tree("results/tree.tree")), 
                     ape::read.tree("results/tree.tree"), rooted = TRUE) -> 
@@ -455,10 +379,10 @@ priors <- list(R = list(V = 1, nu = 0.2),
                G = list(G1 = list(V = 1, nu = 0.2, alpha.mu = 0, alpha.V = 1e3),
                         G2 = list(V = 1, nu = 0.2, alpha.mu = 0, alpha.V = 1e3),
                         G3 = list(V = 1, nu = 0.2, alpha.mu = 0, alpha.V = 1e3)))
-                        #G4 = list(V = 1, nu = 0.2, alpha.mu = 0, alpha.V = 1e3)))
+
 
 # Gaussian model
-MCMCglmm::MCMCglmm(delayS_F ~ habitat,
+MCMCglmm::MCMCglmm(HS ~ incubator,
                    random = ~animal + ID + code:ID,
                    family = "gaussian", pedigree = nnls_orig, prior = priors, data = df,
                    nitt = nite, thin = nthi, burnin = nbur,
@@ -493,8 +417,4 @@ summary(g1)$Gcovariances[3, 1] %>% round(2)
 summary(g1)$Gcovariances[3, 2] %>% round(2) 
 summary(g1)$Gcovariances[3, 3] %>% round(2)
 
-# Random effects code:ID
-summary(g1)$Gcovariances[4, 1] %>% round(2)
-summary(g1)$Gcovariances[4, 2] %>% round(2) 
-summary(g1)$Gcovariances[4, 3] %>% round(2)
 

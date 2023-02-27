@@ -1,0 +1,17 @@
+Trait;community;terms;size_effect;L95;U95
+T Germination rate;Mediterranean;Fellfield;-5.602811;-7.332835;-3.982164
+T Germination rate;Mediterranean;Snowbed;-8.872735;-10.960271;-6.906627
+T Germination rate;Mediterranean;Time;-5.587845;-7.318577;-3.966553
+T Germination rate;Mediterranean;Interaction;-5.59711;-7.328212;-3.975379
+T Germination rate;Temperate;Fellfield;-5.606543;-7.323323;-4.089685
+T Germination rate;Temperate;Snowbed;-8.8741;-10.936885;-6.977305
+T Germination rate;Temperate;Time;-8.859129;-10.922571;-6.961662
+T Germination rate;Temperate;Interaction;-8.853437;-10.917986;-6.954892
+Germination rate;Mediterranean;Fellfield;-5.602811;-7.332835;-3.982164
+Germination rate;Mediterranean;Snowbed;-3.269924;-3.627436;-2.924463
+Germination rate;Mediterranean;Time;0.014966;0.014258;0.015611
+Germination rate;Mediterranean;Interaction;0.005701;0.004623;0.006785
+Germination rate;Temperate;Fellfield;-5.606543;-7.323323;-4.089685
+Germination rate;Temperate;Snowbed;-3.267557;-3.613562;-2.88762
+Germination rate;Temperate;Time;0.014971;0.014314;0.015643
+Germination rate;Temperate;Interaction;0.005692;0.004585;0.00677
