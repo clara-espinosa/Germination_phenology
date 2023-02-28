@@ -1,6 +1,7 @@
 library(FD); library(vegan); library(FactoMineR); library(emmeans);
 library(tidyverse); library(ggrepel); library(cowplot); library (ggplot2);
 library (lubridate); library(binom); library (GerminaR); library(rstatix);
+library(MCMCglmm); 
 theme_set(theme_cowplot(font_size = 10)) 
 
 #setdiff () interesting function to id missing value between 2 variables
@@ -326,7 +327,7 @@ MCMCglmm::MCMCglmm(cbind(seeds_germ, viable - seeds_germ) ~ incubator,
                    nitt = nite, thin = nthi, burnin = nbur,
                    verbose = FALSE, saveX = FALSE, saveZ = FALSE, saveXL = FALSE, pr = FALSE, pl = FALSE) -> m1
 
-# save(m1, file = "results/mcmc.Rdata")
+#save(m1, file = "results/mcmc.Rdata")
 x11()
 plot(m1)
 

@@ -2,7 +2,7 @@ library(FD); library(vegan); library(FactoMineR); library(emmeans);
 library(tidyverse); library(ggrepel); library(cowplot);library(ggpubr);
 library (binom);library (ggsignif);library (rstatix);
 theme_set(theme_cowplot(font_size = 10)) 
-
+Sys.setlocale("LC_ALL","English")
 ## GERMINATION EXPERIMENTS
 #### dataframe  AND VISUALIZATION for temperature programs ####
 read.csv("data/date_temp.csv", sep = ";") %>%
@@ -94,13 +94,13 @@ read.csv("data/all_data.csv", sep = ";") %>%
   mutate(germinated = cumsum(germinated)) %>%
   merge(viables_community) %>%
   mutate(germination = germinated/viable) %>%
-  filter (community == "Mediterranean") %>%
+  #filter (community == "Mediterranean") %>%
   ggplot(aes(date, germination, color = incubator, fill = incubator)) +
   geom_line(size = 2) +
   scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
   scale_y_continuous (limits = c(0,1), breaks = seq (0, 1, by= 0.25)) +
-  #facet_wrap(~ community, scales = "free_x", ncol = 2) +
-  labs(title = "Mediterranean", x = "Date", y = "Germination proportion") +
+  facet_wrap(~ community, scales = "free_x", ncol = 2) +
+  labs(title = "", x = "Date", y = "Germination proportion") +
   theme_classic(base_size = 16) +
   theme (plot.title =  element_text ( hjust = 0.5,size = 30), #
          strip.text = element_text(face = "italic", size = 26),
@@ -113,7 +113,7 @@ read.csv("data/all_data.csv", sep = ";") %>%
   #annotate (geom ="text", x= as.POSIXct(as.Date("2021-10-12")), y = 0.8, label ="Autumn", size = 5, fontface ="bold") +
   geom_vline(xintercept = as.POSIXct(as.Date("2022-06-15")), linetype = "dashed", size =1.25) +
   #annotate (geom ="text", x= as.POSIXct(as.Date("2022-05-15")), y = 0.8, label ="Spring", size = 5, fontface ="bold") +
-  geom_vline(xintercept = as.POSIXct(as.Date("2022-09-19")), linetype = "dashed", size =1.25) -> cumulative_Mediterranean
+  geom_vline(xintercept = as.POSIXct(as.Date("2022-09-19")), linetype = "dashed", size =1.25) 
   #annotate (geom ="text", x= as.POSIXct(as.Date("2022-08-17")), y = 0.8, label ="Summer", size = 5, fontface ="bold") +
   #geom_segment (aes(x=as.POSIXct(as.Date("2021-11-25")), y =0.05, xend=as.POSIXct(as.Date("2022-04-04")), yend =0.05), color = "chocolate2", size = 1.25) +
   #geom_segment (aes(x=as.POSIXct(as.Date("2021-11-12")), y = 0.03, xend =as.POSIXct(as.Date("2022-05-26")), yend =0.03), color = "deepskyblue3", size = 1.25) + 
@@ -121,26 +121,8 @@ read.csv("data/all_data.csv", sep = ";") %>%
 
 ggarrange(cumulative_Mediterranean, cumulative_Temperate, ncol =2, nrow= 1,common.legend = TRUE, legend = "right") 
 
-# effect size
-read.csv("data/test_effectsize.csv", sep=";") %>%
-  filter(Trait== "Germination rate")%>%
-  filter(community =="Mediterranean")%>%
-  #convert_as_factor(Trait, community, vterms) %>%
-  ggplot(aes(x= terms, y =  size_effect, color = terms))+
-  geom_point( size = 2) +
-  geom_errorbar(aes(x=terms, y=size_effect, ymin = L95, ymax = U95, color = terms), width = 0.3, size =1.2) +
-  scale_y_continuous (limits = c(-11,1), breaks = seq (-10, 1, by= 2))+
-  geom_hline(yintercept = 0, linetype = "dashed", size =1, color = "black") +
-  labs(title = "Mediterranean", x = "Model terms", y = "Size effect") +
-  theme_classic(base_size = 16)+
-  theme(plot.title = element_text (hjust = 0.5, size = 30),
-        strip.text = element_text(face = "italic", size = 24), 
-        legend.position = "right",
-        legend.title = element_text(size=20), 
-        legend.text = element_text(size=16),
-        legend.background = element_rect(fill="transparent",colour=NA),
-        axis.title.y = element_text (size=18), 
-        axis.title.x = element_text (size=18)) 
+
+  
 ########### TOTAL GERMINATIONv + TIMING  #######################################
 # Total germination (test representation) ####
 read.csv("data/all_data.csv", sep = ";") %>%
@@ -175,7 +157,7 @@ ggplot(data=totalgerm_graph, aes(incubator, mean, fill=incubator))+
   scale_fill_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
   scale_y_continuous (limits = c(0,1), breaks = seq (0, 1, by= 0.2)) +
   labs(title = "Total germination", x = "Incubator", y = "Germination proportion") +
-  theme_classic(base_size = 16)+
+  ggthemes::theme_tufte(base_size = 16) +
   theme(plot.title = element_text (hjust = 0.5, size = 30),
       strip.text = element_text(face = "italic", size = 24), 
       legend.position = "right",
@@ -513,6 +495,69 @@ ggplot(data=heatsum_graph, aes(community, HS, fill=community))+
         legend.background = element_rect(fill="transparent",colour=NA),
         axis.title.y = element_text (size=18), 
         axis.title.x = element_text (size=18))
+
+# effect size(individual traits)
+x11()
+read.csv("data/test_effectsize.csv", sep=";") %>%
+  filter(Trait== "t50")%>%
+  ggplot(aes(x= terms, y = effect_size, ymin = L95, ymax = U95, color = terms))+
+  geom_point(size = 2) +
+  geom_errorbar (width = 0.3, size =1) +
+  facet_grid (.~community) +
+  scale_color_manual (name= "Model terms", 
+                      values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
+  #scale_y_continuous (limits = c(-12,6), breaks = seq (-10, 5, by= 5)) +
+  geom_hline(yintercept = 0, linetype = "dashed", size =1, color = "black") +
+  coord_flip() +
+  labs(title = "t50", y = "Effect size") +
+  ggthemes::theme_tufte(base_size = 14) +
+  theme(plot.title = element_text ( size = 14),
+        strip.text = element_blank(),
+        legend.position = "none",
+        panel.background = element_rect(color = "grey96", fill = "grey96"),
+        axis.title.y = element_blank(),
+        axis.text.y = element_text(size = 12,
+                                   color = c("chocolate2", "deepskyblue3")),
+        axis.title.x = element_blank()) -> fig4f
+
+fig4 <- ggarrange(fig4a, fig4b, fig4c, fig4d, fig4e, fig4f, fig4g, 
+          ncol =1, nrow= 7,  legend = "none")
+annotate_figure(fig4, 
+                top = text_grob ("           MEDITERRANEAN                 TEMPERATE  ", color = "black", face = "bold"))
+#effect size all (not working as I want)
+x11()
+read.csv("data/test_effectsize.csv", sep=";") %>%
+  #filter(!Trait== "Heat sum")%>%
+  #filter(!Trait == "t50") %>%
+  convert_as_factor(Trait, community, terms) -> effect_size
+
+ggplot(effect_size, aes(x= terms, y =post.mean, ymin = L95, ymax = U95, color = terms))+
+  geom_point( size = 4) +
+  geom_errorbar (width = 0.2, size =1.2) +
+  #scale_y_continuous (limits = c(-8,1), breaks = seq (-8, 1, by= 2))+
+  facet_wrap (Trait ~ community, ncol = 2, nrow =7, scales = "free_x") +
+  #facet_grid (Trait ~ community, scales = "free_x") +
+  scale_color_manual (name= "Model terms", 
+                      values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
+  geom_hline(yintercept = 0, linetype = "dashed", size =1, color = "black") +
+  coord_flip() +
+  labs(title = "", x = "Effect size") +
+  ggthemes::theme_tufte(base_size = 16) +
+  theme(plot.title = element_text (hjust = 0.5, size = 30),
+        #strip.text.x = element_text(face = "bold", size = 12),
+        #strip.text.y = element_text(face = "bold", size = 15),
+        #strip.text = element_blank(),
+        legend.position = "none",
+        legend.title = element_text(size=20), 
+        legend.text = element_text(size=16),
+        legend.background = element_rect(fill="transparent",colour=NA),
+        panel.background = element_rect(color = "grey96", fill = "grey96"),
+        #axis.title.y = element_text (size=18),
+        axis.title.y = element_blank(),
+        axis.text.y = element_text(size = 16, color = c("chocolate2", "deepskyblue3")),
+        axis.title.x = element_text (size=18)) 
+
+
 #### SPECIES GERMINATION CURVES ####
 # tidyverse transformation to account for the number of viable seeds per each specie and incubator
 # summing up petridishes and accesions/populations of the same species (not taking into account weekly germination)
