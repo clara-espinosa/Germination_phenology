@@ -146,10 +146,10 @@ read.csv("data/all_data.csv", sep = ";") %>%
 #value graph
 x11()
 ggplot(data=totalgerm_graph, aes(incubator, mean, fill=incubator))+
-  geom_bar(stat ="identity") +
+  geom_bar(stat ="identity", width = 0.8) +
   facet_grid (.~community) +
   #geom_signif(comparisons = list(c("Fellfield", "Snowbed")),annotations = "***", y_position = 0.95, tip_length = 0.05, color = "black", size = 1, textsize = 9) +
-  geom_errorbar(data= totalgerm_graph, aes(incubator, mean, ymin = lower, ymax = upper), color = "black",width = 0.3, size =1.2) +
+  geom_errorbar(data= totalgerm_graph, aes(incubator, mean, ymin = lower, ymax = upper), color = "black",width = 0.2, size =1) +
   # geom_segment (aes(x=1.5, y =0.72, xend=1.5, yend =0.82), color = "black", size = 1)+
   # geom_segment (aes(x=1.45, y = 0.72, xend =1.55, yend =0.72), color = "black", size = 1) +
  # geom_segment (aes(x=1.45, y = 0.82, xend =1.55, yend =0.82), color = "black", size = 1) +
@@ -157,13 +157,14 @@ ggplot(data=totalgerm_graph, aes(incubator, mean, fill=incubator))+
   scale_fill_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
   scale_y_continuous (limits = c(0,1), breaks = seq (0, 1, by= 0.2)) +
   labs(title = "Total germination", x = "Incubator", y = "Germination proportion") +
-  ggthemes::theme_tufte(base_size = 16) +
+  #ggthemes::theme_tufte(base_size = 16) +
+  theme_classic(base_size = 14) +
   theme(plot.title = element_text (hjust = 0.5, size = 30),
-      strip.text = element_text(face = "italic", size = 24), 
-      legend.position = "right",
-      legend.title = element_text(size=20), 
-      legend.text = element_text(size=16),
-      legend.background = element_rect(fill="transparent",colour=NA),
+      strip.text = element_text(face = "italic", size = 24),
+      #strip.text = element_blank(),
+      legend.position = "none",
+      panel.background = element_rect(fill="transparent",colour=NA),
+      #panel.background = element_rect(color = "grey96", fill = "grey96"),
       axis.title.y = element_text (size=18), 
       axis.title.x = element_text (size=18)) 
 
@@ -176,15 +177,15 @@ read.csv("data/all_data.csv", sep = ";") %>%
   filter (between(time, 1, 105)) %>%## 105 = 12/11 last check before winter
   group_by (species, code, incubator, petridish) %>%
   summarise(seeds_germ = sum(seeds_germ))%>%
-  merge(viables_germ)%>%
+  merge(viables)%>%
   filter(viablePER>25)%>%
-  filter(germPER>0)%>%
+  filter(germPER>0)%>% 
+  merge(species, by = c("code", "species")) %>%
   mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
-  merge(species, by = c("code", "species")) %>%
   select (code, species, community, incubator, petridish, seeds_germ, viable)%>%
-  group_by (community, incubator)%>%
+  group_by (incubator, community)%>%
   summarise (seeds_germ = sum (seeds_germ),
              viable = sum(viable)) %>%
   mutate (binom.confint(seeds_germ, viable, methods = "wilson")) %>% 
@@ -231,14 +232,14 @@ read.csv("data/all_data.csv", sep = ";") %>%
   group_by (species, code, incubator, petridish) %>%
   summarise (seeds_germ = sum(seeds_germ),
              cumulative = last(cumulative)) %>%
-  merge(viables_germ)%>%
+  merge(viables)%>%
   filter(viablePER>25)%>%
   filter(germPER>0)%>%
+  merge(species) %>%
   mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
-  merge(species) %>%
-  group_by (community, incubator)%>%
+  group_by (incubator, community)%>%
   summarise (seeds_germ = sum (seeds_germ),
              viable = sum(viable)) %>%
   mutate (binom.confint(seeds_germ, viable, methods = "wilson")) %>% 
@@ -278,15 +279,15 @@ read.csv("data/all_data.csv", sep = ";") %>%
   group_by (species, code, incubator, petridish) %>%
   summarise (seeds_germ = sum(seeds_germ),
              cumulative = last(cumulative)) %>%
-  merge(viables_germ)%>%
+  merge(viables)%>%
   filter(viablePER>25)%>%
   filter(germPER>0)%>%
   select(species, code, incubator, petridish, seeds_germ, cumulative, viable) %>%
+  merge(species, by = c("code", "species")) %>%
   mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
-  merge(species, by = c("code", "species")) %>%
-  group_by (community, incubator)%>%
+  group_by (incubator, community)%>%
   summarise (seeds_germ = sum (seeds_germ),
              viable = sum(viable)) %>%
   mutate (binom.confint(seeds_germ, viable, methods = "wilson")) %>% 
@@ -341,7 +342,6 @@ ggplot()+
         axis.title.y = element_text (size=18), 
         axis.title.x = element_text (size=18))
 
-########### GERMINATION X TEMPERATURES #########################################
 # NON-GROWING season germination <2ºC ####
 read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
@@ -357,15 +357,15 @@ read.csv("data/all_data.csv", sep = ";") %>%
   ungroup () %>%
   group_by (species, code, incubator, petridish) %>%
   summarise (seeds_germ = sum(seeds_germ)) %>%
-  merge (viables_germ) %>%
+  merge (viables) %>%
   filter(viablePER>25)%>%
   filter(germPER>0)%>%
   select(species, code, incubator, petridish, seeds_germ, viable)%>%
   arrange(species) %>%
+  merge(species, by = c("code", "species")) %>%
   mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
-  merge(species, by = c("code", "species")) %>%
   group_by (community, incubator)%>%
   summarise (seeds_germ = sum (seeds_germ),
              viable = sum(viable)) %>%
@@ -392,37 +392,15 @@ ggplot(data= nogrow_graph, aes(incubator, mean, color=community))+
         axis.title.y = element_text (size=18), 
         axis.title.x = element_text (size=18))
 
-# TEMPERATURE GRAPH ####
-rbind(nogrow_graph, coldgerm_graph, warmgerm_graph) %>% 
-  mutate (Temperature = factor(Temperature, levels = c( "< 2ºC", "2-10ºC", "> 10ºC"))) -> graph #reorder levels
-#rm(graph_date)
-x11()
-ggplot()+
-  geom_point(data=graph, aes(Temperature, mean, color=incubator), size =2) +
-  facet_grid (.~community) +
-  geom_errorbar(data= graph, aes(Temperature, mean, ymin = lower, ymax = upper, color = incubator), width = 0.3, size =1) +
-  geom_line(data= graph, aes(as.numeric(Temperature), mean, color = incubator), size =1) +
-  scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
-  scale_y_continuous (limits = c(0,1), breaks = seq (0, 1, by= 0.2)) +
-  labs(title = "Germination response to Temperature", x = "Temperature", y = "Germination proportion") +
-  theme_classic(base_size = 16)+
-  theme(plot.title = element_text (hjust = 0.5, size = 30),
-        strip.text = element_text(face = "italic", size = 24), 
-        legend.position = "right",
-        legend.title = element_text(size=20), 
-        legend.text = element_text(size=16),
-        legend.background = element_rect(fill="transparent",colour=NA),
-        axis.title.y = element_text (size=18), 
-        axis.title.x = element_text (size=18))
 # T50 ####
 t50model %>%
-  merge(viables_germ) %>%
+  merge(viables) %>%
   filter(viablePER>25)%>%
   filter(germPER>0)%>%
-  mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
-  mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
-  mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
   merge(species, by = c("code", "species"))-> t50_graph
+t50_graph %>%
+  group_by(incubator, community) %>%
+  get_summary_stats(t50lm, type="full")
 
 ggplot()+
   geom_boxplot(data=t50_graph, aes(incubator, t50lm, fill=community), size =1) +
@@ -440,78 +418,74 @@ ggplot()+
         axis.title.y = element_text (size=18), 
         axis.title.x = element_text (size=18))
 
-ggplot(data=t50_graph, aes(community, t50lm, fill=incubator))+
+ggplot(data=t50_graph, aes(incubator, t50lm, fill=incubator))+
   geom_boxplot() +
-  #facet_grid (.~incubator) +
+  facet_grid (~community) +
   #geom_signif(comparisons = list(c("Fellfield", "Snowbed")),annotations = "***", y_position = 420, tip_length = 0.04, color = "black", size = 1, textsize = 9) +
   #geom_signif(comparisons = list(c("Mediterranean", "Temperate")),annotations = "***", y_position = 420, tip_length = 0.04, color = "black", size = 1, textsize = 9) +
-  geom_segment (aes(x=0.81, y = 430, xend =1.20, yend =430), color = "black", size = 1) +
-  annotate (geom ="text", x= 1, y = 435, label ="***", colour = "black", size = 9) +
-  geom_segment (aes(x=1.81, y = 430, xend =2.20, yend =430), color = "black", size = 1) +
-  annotate (geom ="text", x= 2, y = 435, label ="***", colour = "black", size = 9) +
-  geom_segment (aes(x=0.81, y = 330, xend =1.81, yend =330), color = "black", size = 1) +
-  annotate (geom ="text", x= 1.4, y = 335, label ="***", colour = "black", size = 9) +
-  geom_segment (aes(x=1.20, y = 350, xend =2.2, yend =350), color = "black", size = 1) +
-  annotate (geom ="text", x= 1.7, y = 355, label ="***", colour = "black", size = 9) +
+  #geom_segment (aes(x=0.81, y = 430, xend =1.20, yend =430), color = "black", size = 1) +
+  #annotate (geom ="text", x= 1, y = 435, label ="***", colour = "black", size = 9) +
+  #geom_segment (aes(x=1.81, y = 430, xend =2.20, yend =430), color = "black", size = 1) +
+  #annotate (geom ="text", x= 2, y = 435, label ="***", colour = "black", size = 9) +
+  #geom_segment (aes(x=0.81, y = 330, xend =1.81, yend =330), color = "black", size = 1) +
+  #annotate (geom ="text", x= 1.4, y = 335, label ="***", colour = "black", size = 9) +
+  #geom_segment (aes(x=1.20, y = 350, xend =2.2, yend =350), color = "black", size = 1) +
+  #annotate (geom ="text", x= 1.7, y = 355, label ="***", colour = "black", size = 9) +
   scale_fill_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
   #scale_fill_manual (name = "community", values = c ("Mediterranean"= "darkgoldenrod1" , "Temperate" = "forestgreen")) +
   scale_y_continuous (limits = c(0,460), breaks = seq (0, 450, by= 100)) +
-  labs(title = "Time to reach 50% germination", x = "community", y = "Time (days)") +
+  labs(title = "Time to reach 50% germination", x = "Incubator", y = "Time (days)") +
   theme_classic(base_size = 16)+
   theme(plot.title = element_text (hjust = 0.5, size = 30),
-        strip.text = element_text(face = "italic", size = 24), 
-        legend.position = "right",
-        legend.title = element_text(size=20), 
-        legend.text = element_text(size=16),
-        legend.background = element_rect(fill="transparent",colour=NA),
+        strip.text = element_text(face = "bold", size = 12), 
+        legend.position = "none",
+        panel.background = element_rect(color = "grey96", fill = "grey96"),
         axis.title.y = element_text (size=18), 
-        axis.title.x = element_text (size=18))
+        axis.title.x = element_text (size=18))-> fig5b
 # Heat sum #####
 t50_dates%>%
   group_by (species, code, incubator, petridish) %>%
   do (heatsum(.)) %>%
-  mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
-  mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
-  mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
-  merge(species, by = c("code", "species")) -> heatsum_graph
+  merge(species, by = c("code", "species"))-> heatsum_graph
+heatsum_graph %>%
+  group_by(incubator, community) %>%
+  get_summary_stats(HS, type= "full")
 x11()
-ggplot(data=heatsum_graph, aes(community, HS, fill=community))+
+ggplot(data=heatsum_graph, aes(incubator, HS, fill=incubator))+
   geom_boxplot() +
-  #facet_grid (.~incubator) +
-  geom_signif(comparisons = list(c("Mediterranean", "Temperate")),annotations = "*", y_position = 3000, tip_length = 0.04, color = "black", size = 1, textsize = 9) +
+  facet_grid (~community) +
+  #geom_signif(comparisons = list(c("Mediterranean", "Temperate")),annotations = "*", y_position = 3000, tip_length = 0.04, color = "black", size = 1, textsize = 9) +
   #geom_segment (aes(x=0.81, y = 2500, xend =1.20, yend =2500), color = "black", size = 1) +
   #annotate (geom ="text", x= 1, y = 2550, label ="*", colour = "black", size = 9) +
   #geom_segment (aes(x=1.81, y = 2500, xend =2.20, yend =2500), color = "black", size = 1) +
   #annotate (geom ="text", x= 2, y = 2550, label ="*", colour = "black", size = 9) +
-  #scale_fill_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
-  scale_fill_manual (name = "community",values = c ("Mediterranean"= "darkgoldenrod1" , "Temperate" = "forestgreen")) +
-  labs(title = "Environmental heat sum to t50", x = "community", y = "Degrees ºC") +
+  scale_fill_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
+  #scale_fill_manual (name = "community",values = c ("Mediterranean"= "darkgoldenrod1" , "Temperate" = "forestgreen")) +
+  labs(title = "Environmental heat sum to t50", x = "Incubator", y = "Degrees ºC") +
   theme_classic(base_size = 16)+
   theme(plot.title = element_text (hjust = 0.5, size = 30),
-        strip.text = element_text(face = "italic", size = 24), 
-        legend.position = "right",
-        legend.title = element_text(size=20), 
-        legend.text = element_text(size=16),
-        legend.background = element_rect(fill="transparent",colour=NA),
+        strip.text = element_text(face = "bold", size = 12), 
+        legend.position = "none",
+        panel.background = element_rect(color = "grey96", fill = "grey96"),
         axis.title.y = element_text (size=18), 
-        axis.title.x = element_text (size=18))
-
-# effect size(individual traits)
+        axis.title.x = element_text (size=18)) -> fig5c
+##### effect size#####
 x11()
 read.csv("data/test_effectsize.csv", sep=";") %>%
-  filter(Trait== "t50")%>%
+  filter(Trait == "t50")%>%
   ggplot(aes(x= terms, y = effect_size, ymin = L95, ymax = U95, color = terms))+
   geom_point(size = 2) +
   geom_errorbar (width = 0.3, size =1) +
   facet_grid (.~community) +
   scale_color_manual (name= "Model terms", 
                       values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
-  #scale_y_continuous (limits = c(-12,6), breaks = seq (-10, 5, by= 5)) +
+  scale_y_continuous (limits = c(-110,650), breaks = seq (-100, 600, by= 100)) +
+  #scale_y_continuous (limits = c(-12,6), breaks = seq (-10, 5, by = 5)) +
   geom_hline(yintercept = 0, linetype = "dashed", size =1, color = "black") +
   coord_flip() +
   labs(title = "t50", y = "Effect size") +
   ggthemes::theme_tufte(base_size = 14) +
-  theme(plot.title = element_text ( size = 14),
+  theme(plot.title = element_text (hjust =0.5, size = 14),
         strip.text = element_blank(),
         legend.position = "none",
         panel.background = element_rect(color = "grey96", fill = "grey96"),
@@ -520,10 +494,14 @@ read.csv("data/test_effectsize.csv", sep=";") %>%
                                    color = c("chocolate2", "deepskyblue3")),
         axis.title.x = element_blank()) -> fig4f
 
+ggarrange(fig4a, fig4b, fig4c,fig4d, fig4e,fig4f,fig4g, ncol = 1, nrow = 7, legend = "none")
+
 fig4 <- ggarrange(fig4a, fig4b, fig4c, fig4d, fig4e, fig4f, fig4g, 
           ncol =1, nrow= 7,  legend = "none")
 annotate_figure(fig4, 
-                top = text_grob ("           MEDITERRANEAN                 TEMPERATE  ", color = "black", face = "bold"))
+                top = text_grob ("           MEDITERRANEAN                 TEMPERATE  ", color = "black", face = "bold"),
+                bottom = text_grob ("               Effect size"))
+
 #effect size all (not working as I want)
 x11()
 read.csv("data/test_effectsize.csv", sep=";") %>%
@@ -557,7 +535,40 @@ ggplot(effect_size, aes(x= terms, y =post.mean, ymin = L95, ymax = U95, color = 
         axis.text.y = element_text(size = 16, color = c("chocolate2", "deepskyblue3")),
         axis.title.x = element_text (size=18)) 
 
+######value graph #####
+x11()
+read.csv("data/meanvalues_graph.csv", sep = ";")%>%
+  filter(!trait =="Heat sum")%>%
+  filter(!trait =="t50")%>%
+ggplot(aes(incubator, mean, fill=incubator))+
+  geom_bar(stat ="identity", width = 0.8) +
+  facet_grid (trait~community ) +
+  #geom_signif(comparisons = list(c("Fellfield", "Snowbed")),annotations = "***", y_position = 0.95, tip_length = 0.05, color = "black", size = 1, textsize = 9) +
+  geom_errorbar(aes(incubator, mean, ymin = lower, ymax = upper), color = "black",width = 0.2, size =1) +
+  # geom_segment (aes(x=1.5, y =0.72, xend=1.5, yend =0.82), color = "black", size = 1)+
+  # geom_segment (aes(x=1.45, y = 0.72, xend =1.55, yend =0.72), color = "black", size = 1) +
+  # geom_segment (aes(x=1.45, y = 0.82, xend =1.55, yend =0.82), color = "black", size = 1) +
+  # annotate (geom ="text", x= 1.60, y = 0.79, label =".", colour = "black", size = 9) +
+  scale_fill_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
+  labs(title = "Mean trait values x incubator", x = "Incubator", y = "Germination proportion") +
+  #ggthemes::theme_tufte(base_size = 16) +
+  theme_classic(base_size = 14) +
+  theme(plot.title = element_text (hjust = 0.5, size = 30),
+        strip.text = element_text(face = "bold", size = 12),
+        #strip.text = element_blank(),
+        legend.position = "none",
+        #panel.background = element_rect(fill="transparent",colour=NA),
+        panel.background = element_rect(color = "grey96", fill = "grey96"),
+        axis.title.y = element_text (size=18), 
+        axis.title.x = element_text (size=18)) -> fig5a
 
+ggarrange(
+  fig5a,                # First row with line plot
+  ggarrange(fig5b, fig5c, nrow = 2, labels = c("B", "C")), # Second row with box and dot plots
+  nrow = 2, 
+  labels = "A" )      # Label of the line plot
+library(patchwork);library(gapminder)
+ fig5 <- fig5a + (fig5b/fig5c)
 #### SPECIES GERMINATION CURVES ####
 # tidyverse transformation to account for the number of viable seeds per each specie and incubator
 # summing up petridishes and accesions/populations of the same species (not taking into account weekly germination)
