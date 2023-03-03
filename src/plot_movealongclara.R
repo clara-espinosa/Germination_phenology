@@ -26,22 +26,23 @@ ggplot(temp, aes ()) +
   scale_y_continuous (limits = c(-3.5,28), breaks = seq (-0, 25, by= 5)) +
   labs (title = "Move-along temperature regimes", y= "Temperature ºC", x = "Date") + 
   theme_classic(base_size = 16) +
-  theme (plot.title = element_text ( size = 30), #hjust = 0.5,
-        axis.title.y = element_text (size=20), 
-         axis.title.x = element_text (size=20), 
-         legend.title = element_text(size = 20),
-         legend.text = element_text (size =16),
+  theme (plot.title = element_text ( size = 32), #hjust = 0.5,
+        axis.title.y = element_text (size=28), 
+         axis.title.x = element_text (size=28), 
+         axis.text.x= element_text (size=24),
+         legend.title = element_text(size = 24),
+         legend.text = element_text (size =22),
         legend.position = "top") +
   geom_vline(xintercept = as.POSIXct(as.Date("2021-11-12")), linetype = "dashed", size =1.25) +
-  annotate (geom ="text", x= as.POSIXct(as.Date("2021-10-30")), y = 28, label ="Autumn", size = 5, fontface ="bold") +
+  annotate (geom ="text", x= as.POSIXct(as.Date("2021-10-25")), y = 28, label ="Autumn", size = 7, fontface ="bold") +
   geom_vline(xintercept = as.POSIXct(as.Date("2022-06-15")), linetype = "dashed", size =1.25) +
-  annotate (geom ="text", x= as.POSIXct(as.Date("2022-06-03")), y = 28, label ="Spring", size = 5, fontface ="bold") +
+  annotate (geom ="text", x= as.POSIXct(as.Date("2022-05-30")), y = 28, label ="Spring", size = 7, fontface ="bold") +
   geom_vline(xintercept = as.POSIXct(as.Date("2022-09-19")), linetype = "dashed", size =1.25) +
-  annotate (geom ="text", x= as.POSIXct(as.Date("2022-09-07")), y = 28, label ="Summer", size = 5, fontface ="bold") +
+  annotate (geom ="text", x= as.POSIXct(as.Date("2022-09-02")), y = 28, label ="Summer", size = 7, fontface ="bold") +
   geom_hline(yintercept=0, linetype ="dashed", size =1, colour = "red") +
   geom_segment (aes(x=as.POSIXct(as.Date("2021-11-12")), y =-2.3, xend=as.POSIXct(as.Date("2022-04-04")), yend =-2.3), color = "chocolate2", size = 1.25) +
   geom_segment (aes(x=as.POSIXct(as.Date("2021-11-12")), y = -2.9, xend =as.POSIXct(as.Date("2022-05-26")), yend =-2.9), color = "deepskyblue3", size = 1.25) +
-  annotate (geom ="text", x= as.POSIXct(as.Date("2022-01-15")), y = -3.4, label ="Winter period", colour = "black", size = 5, fontface ="bold") 
+  annotate (geom ="text", x= as.POSIXct(as.Date("2022-01-15")), y = -3., label ="Winter period", colour = "black", size = 7, fontface ="bold") 
   
 ########### GERMINATION RATE ###################################################
 #### germination peaks  #####
@@ -94,32 +95,33 @@ read.csv("data/all_data.csv", sep = ";") %>%
   mutate(germinated = cumsum(germinated)) %>%
   merge(viables_community) %>%
   mutate(germination = germinated/viable) %>%
-  #filter (community == "Mediterranean") %>%
+  filter (community == "Temperate") %>%
   ggplot(aes(date, germination, color = incubator, fill = incubator)) +
-  geom_line(size = 2) +
+  geom_line(size = 2.5) +
   scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
   scale_y_continuous (limits = c(0,1), breaks = seq (0, 1, by= 0.25)) +
-  facet_wrap(~ community, scales = "free_x", ncol = 2) +
-  labs(title = "", x = "Date", y = "Germination proportion") +
+  #facet_wrap(~ community, scales = "free_x", ncol = 2) +
+  labs(title = "Temperate", x = "Date", y = "Germination proportion") +
   theme_classic(base_size = 16) +
-  theme (plot.title =  element_text ( hjust = 0.5,size = 30), #
-         strip.text = element_text(face = "italic", size = 26),
-         axis.title.y = element_text (size=20), 
-         axis.title.x = element_text (size=20), 
-         legend.title = element_text(size = 20),
-         legend.text = element_text (size =16), 
-         legend.position = "right") +
+  theme (plot.title = element_text (hjust = 0.5, size = 32), #
+          axis.title.y = element_text (size=28), 
+          axis.title.x = element_text (size=28), 
+          axis.text.x= element_text (size=24),
+          plot.margin = margin(r= 40),
+          legend.title = element_text(size = 24),
+          legend.text = element_text (size =22),
+          legend.position = "none") +
   geom_vline(xintercept = as.POSIXct(as.Date("2021-11-12")), linetype = "dashed", size =1.25) +
   #annotate (geom ="text", x= as.POSIXct(as.Date("2021-10-12")), y = 0.8, label ="Autumn", size = 5, fontface ="bold") +
   geom_vline(xintercept = as.POSIXct(as.Date("2022-06-15")), linetype = "dashed", size =1.25) +
   #annotate (geom ="text", x= as.POSIXct(as.Date("2022-05-15")), y = 0.8, label ="Spring", size = 5, fontface ="bold") +
-  geom_vline(xintercept = as.POSIXct(as.Date("2022-09-19")), linetype = "dashed", size =1.25) 
+  geom_vline(xintercept = as.POSIXct(as.Date("2022-09-19")), linetype = "dashed", size =1.25) -> cumulative_Temperate
   #annotate (geom ="text", x= as.POSIXct(as.Date("2022-08-17")), y = 0.8, label ="Summer", size = 5, fontface ="bold") +
   #geom_segment (aes(x=as.POSIXct(as.Date("2021-11-25")), y =0.05, xend=as.POSIXct(as.Date("2022-04-04")), yend =0.05), color = "chocolate2", size = 1.25) +
   #geom_segment (aes(x=as.POSIXct(as.Date("2021-11-12")), y = 0.03, xend =as.POSIXct(as.Date("2022-05-26")), yend =0.03), color = "deepskyblue3", size = 1.25) + 
   #annotate (geom ="text", x= as.POSIXct(as.Date("2022-01-15")), y = 0, label ="Winter period", colour = "black", size = 5, fontface ="bold") 
 
-ggarrange(cumulative_Mediterranean, cumulative_Temperate, ncol =2, nrow= 1,common.legend = TRUE, legend = "right") 
+ggarrange(cumulative_Mediterranean, cumulative_Temperate, ncol =2, nrow= 1,common.legend = TRUE, legend = "bottom") 
 
 
   
