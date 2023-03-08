@@ -207,6 +207,7 @@ read.csv("data/all_data.csv", sep = ";") %>%
   na.omit ()-> df
 
 summary(df)
+df
 ### modeling t50 from raw data ####
 
 f50 <- function(df0) {
@@ -250,7 +251,7 @@ t50model %>%
   arrange(species, code, accession, incubator, petridish)  %>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
   select(!family) %>%  
-  filter(community == "Temperate") %>%
+  filter(community == "Mediterranean") %>%
   na.omit ()-> df
 summary(df)
 
@@ -291,7 +292,7 @@ t50_dates%>%
   arrange(species, code, accession, incubator, petridish)  %>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
   select(!family) %>%  
-  filter (community == "Temperate") %>%
+  filter (community == "Mediterranean") %>%
   na.omit () -> df # punto significa que el objeto al que aplicar la funcion heat sum es el de la linea de arriba
 summary(df)
 
@@ -383,7 +384,7 @@ priors <- list(R = list(V = 1, nu = 0.2),
 
 
 # Gaussian model
-MCMCglmm::MCMCglmm(HS ~ incubator,
+MCMCglmm::MCMCglmm(scale(HS) ~ incubator,
                    random = ~animal + ID + code:ID,
                    family = "gaussian", pedigree = nnls_orig, prior = priors, data = df,
                    nitt = nite, thin = nthi, burnin = nbur,
