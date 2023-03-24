@@ -518,14 +518,12 @@ ggplot(effect_size, aes(x= Trait, y =effect_size, ymin = L95, ymax = U95, color 
   geom_point( size = 3) +
   geom_errorbar (width = 0.2, size =1.2) +
   facet_wrap (~ community, ncol = 2, nrow =7, scales = "free_x") +
-  #facet_grid ( ~ community, scales = "free_x") +
-  #scale_color_viridis_d() +
   scale_color_manual (values = c("#AC1926", "#891171", "#33407D", "#077395", "#00BC7F", "#AADB41", "#FDE333")) +
   scale_x_discrete(labels = function(Trait) str_wrap(Trait, width = 13)) +
-  #scale_color_manual (name= "",values = c ("Mediterranean"= "darkgoldenrod1" , "Temperate" = "forestgreen")) +
+  scale_y_continuous (limits = c(-4.9,4.9), breaks = seq (-4, 4, by = 2)) +
   geom_hline(yintercept = 0, linetype = "dashed", size =1, color = "black") +
   coord_flip() +
-  labs( y = "Effect size of Snowbed Incubator") + #title = "", x =""
+  labs( y = "Effect size") + #title = "", x =""
   theme_classic(base_size = 14) +
   #ggthemes::theme_tufte(base_size = 16) +
   theme(plot.title = element_text (hjust = 0.5, size = 30),
@@ -541,7 +539,12 @@ ggplot(effect_size, aes(x= Trait, y =effect_size, ymin = L95, ymax = U95, color 
         axis.title.y = element_blank(),
         axis.text.x = element_text(size = 16, color = "black"),
         axis.text.y = element_text(size = 16, color = "black"),
-        axis.title.x = element_text (size=18)) 
+        axis.title.x = element_text (size=18)) +
+  annotate("text", x= 0.70, y = -2.5, label = "Higher in Fellfield", size = 3.5, color = "chocolate2" , fontface ="bold" ) +
+  #annotate ("rect", xmin = 0.5, xmax= 7.7, ymin = -5, ymax = -0.1, alpha =0.2, color = "chocolate2", fill = "chocolate2") +
+  annotate ("segment", x = 0.5, xend = 0.5, y= -0.1, yend=-4.9, colour= "chocolate2", size = 2, arrow = arrow()) +
+  annotate("text", x= 0.70, y = 2.6, label = "Higher in Snowbed", size = 3.5, colour= "deepskyblue3", fontface ="bold" ) +
+  annotate ("segment", x = 0.5, xend = 0.5, y= 0.1, yend= 4.9, colour= "deepskyblue3", size = 2, arrow = arrow()) 
 
 ######value graph #####
 library("plyr")
@@ -551,7 +554,7 @@ read.csv("data/meanvalues_graph.csv", sep = ";")%>%
   mutate (trait = fct_relevel(trait, "Total germination", "Autumn germination","Spring germination", "Summer germination", 
                              "Germination in winter conditions",  "t50","Environmental heat sum")) -> mean_values
 ggplot(mean_values, aes(incubator, mean, fill=incubator))+
-  geom_bar(stat ="identity", width = 0.5) +
+  geom_col(position = position_dodge(0.7), width = 0.75) +
   facet_grid (trait ~ community, scales = "free_y", labeller = label_wrap_gen (width = 13)) +
   #facet_wrap (trait ~ community, ncol = 2, nrow =7, scales = "free_y") +
   #geom_signif(comparisons = list(c("Fellfield", "Snowbed")),annotations = "***", y_position = 0.95, tip_length = 0.05, color = "black", size = 1, textsize = 9) +
