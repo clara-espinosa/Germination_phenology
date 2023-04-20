@@ -95,34 +95,33 @@ read.csv("data/all_data.csv", sep = ";") %>%
   mutate(germinated = cumsum(germinated)) %>%
   merge(viables_community) %>%
   mutate(germination = germinated/viable) %>%
-  filter (community == "Temperate") %>%
+  filter (community == "Mediterranean") %>%
   ggplot(aes(date, germination, color = incubator, fill = incubator)) +
   geom_line(size = 2.5) +
   scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
   scale_y_continuous (limits = c(0,1), breaks = seq (0, 1, by= 0.25)) +
   #facet_wrap(~ community, scales = "free_x", ncol = 2) +
-  labs(title = "Temperate", x = "Date", y = "Germination proportion") +
+  labs(title = "Mediterranean", x = "Date", y = "Germination proportion") +
   theme_classic(base_size = 16) +
   theme (plot.title = element_text (hjust = 0.5, size = 32), #
           axis.title.y = element_text (size=28), 
           axis.title.x = element_text (size=28), 
           axis.text.x= element_text (size=24),
           plot.margin = margin(r= 40),
-          legend.title = element_text(size = 24),
-          legend.text = element_text (size =22),
-          legend.position = "none") +
-  geom_vline(xintercept = as.POSIXct(as.Date("2021-11-12")), linetype = "dashed", size =1.25) +
+          legend.title = element_text(size = 32),
+          legend.text = element_text (size =30),
+          legend.position = "none") -> cumulative_Mediterranean
+  #geom_vline(xintercept = as.POSIXct(as.Date("2021-11-12")), linetype = "dashed", size =1.25) +
   #annotate (geom ="text", x= as.POSIXct(as.Date("2021-10-12")), y = 0.8, label ="Autumn", size = 5, fontface ="bold") +
-  geom_vline(xintercept = as.POSIXct(as.Date("2022-06-15")), linetype = "dashed", size =1.25) +
+  #geom_vline(xintercept = as.POSIXct(as.Date("2022-06-15")), linetype = "dashed", size =1.25) +
   #annotate (geom ="text", x= as.POSIXct(as.Date("2022-05-15")), y = 0.8, label ="Spring", size = 5, fontface ="bold") +
-  geom_vline(xintercept = as.POSIXct(as.Date("2022-09-19")), linetype = "dashed", size =1.25) -> cumulative_Temperate
+  #geom_vline(xintercept = as.POSIXct(as.Date("2022-09-19")), linetype = "dashed", size =1.25) 
   #annotate (geom ="text", x= as.POSIXct(as.Date("2022-08-17")), y = 0.8, label ="Summer", size = 5, fontface ="bold") +
   #geom_segment (aes(x=as.POSIXct(as.Date("2021-11-25")), y =0.05, xend=as.POSIXct(as.Date("2022-04-04")), yend =0.05), color = "chocolate2", size = 1.25) +
   #geom_segment (aes(x=as.POSIXct(as.Date("2021-11-12")), y = 0.03, xend =as.POSIXct(as.Date("2022-05-26")), yend =0.03), color = "deepskyblue3", size = 1.25) + 
   #annotate (geom ="text", x= as.POSIXct(as.Date("2022-01-15")), y = 0, label ="Winter period", colour = "black", size = 5, fontface ="bold") 
 
 ggarrange(cumulative_Mediterranean, cumulative_Temperate, ncol =2, nrow= 1,common.legend = TRUE, legend = "bottom") 
-
 
   
 ########### TOTAL GERMINATIONv + TIMING  #######################################
@@ -623,37 +622,44 @@ library(patchwork);library(gapminder)
 read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date)))) %>%
-  group_by(species, incubator, code, petridish) %>%
+  group_by(species, incubator, accession, code, petridish) %>%
   filter(date == max(date)) %>%
-  select(species, incubator, code, petridish, viable) %>%
-  group_by(species, incubator) %>%
+  select(species, incubator, accession, code, petridish, viable) %>%
+  group_by(species, accession, incubator) %>%
   summarise(viable = sum(viable)) -> viables_sp
 # write.csv (viables,"results/viables.csv", row.names = FALSE )
 # tidyverse modification to have the accumulated germination along the whole experiment + ggplot
 x11()
 read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
+  mutate(date = as.POSIXct(date))%>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date)))) %>%
-  group_by(species, incubator, time) %>%
+  merge (species) %>%
+  group_by(community, species, accession, incubator, date) %>%
   summarise(germinated = sum(germinated)) %>%
   mutate(germinated = cumsum(germinated)) %>%
   merge(viables_sp) %>%
   mutate(germination = germinated/viable) %>%
+  mutate(ID = paste(community, accession)) %>%
   filter(species == "Thymus praecox") %>% ### change species name
-  ggplot(aes(time, germination, color = incubator, fill = incubator)) +
+  ggplot(aes(date, germination, color = incubator, fill = incubator)) +
   geom_line(size = 1.5) +
   scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
-  facet_wrap(~ species, scales = "free_x", ncol = 2) +
+  facet_wrap(~ ID, scales = "free_x", ncol = 2) +
   coord_cartesian(ylim = c(0, 1)) +
-  labs(x = "Time (days)", y = "Germination proportion") +
-  theme(strip.text = element_text(face = "italic", size = 20), 
-        legend.title = element_text(size=18), 
-        legend.text = element_text(size=14),
-        axis.title.y = element_text (size=16), 
-        axis.title.x = element_text (size=16)) + 
-  geom_vline(xintercept = 122, linetype = "dashed", size= 1.5) +
-  geom_vline(xintercept = 248, linetype = "dashed", size= 1.5, color = "chocolate2") +
-  geom_vline(xintercept = 290, linetype = "dashed", size= 1.5, color = "deepskyblue3") 
+  labs(title= "Thymus praecox", x = "Time (days)", y = "Germination proportion") +
+  theme_classic(base_size = 14) +
+  theme(plot.title = element_text (size = 32),
+        strip.text = element_text (size = 24, face = "italic"),
+        axis.title.y = element_text (size=24), 
+        axis.title.x = element_text (size=24), 
+        axis.text.x= element_text (size=18, angle = 75, vjust = 0.5),
+        plot.margin = margin(r= 20),
+        legend.title = element_text(size = 24),
+        legend.text = element_text (size =20))  
+  #geom_vline(xintercept = 122, linetype = "dashed", size= 1.5) +
+  #geom_vline(xintercept = 248, linetype = "dashed", size= 1.5, color = "chocolate2") +
+  #geom_vline(xintercept = 290, linetype = "dashed", size= 1.5, color = "deepskyblue3") 
   
 # Save the plots
 ggsave(filename = "results/FigAgrostistileni.png", Agrostistileni, path = NULL, 
