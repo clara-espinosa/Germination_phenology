@@ -629,38 +629,61 @@ read.csv("data/all_data.csv", sep = ";") %>%
   summarise(viable = sum(viable)) -> viables_sp
 # write.csv (viables,"results/viables.csv", row.names = FALSE )
 # tidyverse modification to have the accumulated germination along the whole experiment + ggplot
+read.csv("data/extrapoint_visualization.csv", sep = ";")-> data_vis 
 x11()
 read.csv("data/all_data.csv", sep = ";") %>%
+  rbind(data_vis)%>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
+  spread(date, germinated, fill = 0) %>% # wide format for dates, and fill Na with 0
+  gather ("date", "germinated", 8: last_col() )%>% # back in long format frrom 8th colum to the last
+  arrange (species, accession, code, incubator, petridish, date)%>% # sort row observations this way
   mutate(date = as.POSIXct(date))%>%
-  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date)))) %>%
   merge (species) %>%
-  group_by(community, species, accession, incubator, date) %>%
+  group_by(community, species, accession,  incubator, date) %>%
   summarise(germinated = sum(germinated)) %>%
   mutate(germinated = cumsum(germinated)) %>%
   merge(viables_sp) %>%
   mutate(germination = germinated/viable) %>%
-  mutate(ID = paste(community, accession)) %>%
+  mutate(ID = paste(community, accession)) -> germination_curves
   filter(species == "Thymus praecox") %>% ### change species name
   ggplot(aes(date, germination, color = incubator, fill = incubator)) +
-  geom_line(size = 1.5) +
+  geom_line(size = 2) +
   scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
-  facet_wrap(~ ID, scales = "free_x", ncol = 2) +
+  facet_wrap(~ accession, scales = "free_x", ncol = 2) +
   coord_cartesian(ylim = c(0, 1)) +
-  labs(title= "Thymus praecox", x = "Time (days)", y = "Germination proportion") +
+  labs(title= "Thymus praecox", x = "Time ", y = "Germination proportion") +
   theme_classic(base_size = 14) +
-  theme(plot.title = element_text (size = 32),
+  theme(plot.title = element_text (size = 30),
         strip.text = element_text (size = 24, face = "italic"),
         axis.title.y = element_text (size=24), 
         axis.title.x = element_text (size=24), 
         axis.text.x= element_text (size=18, angle = 75, vjust = 0.5),
-        plot.margin = margin(r= 20),
-        legend.title = element_text(size = 24),
-        legend.text = element_text (size =20))  
-  #geom_vline(xintercept = 122, linetype = "dashed", size= 1.5) +
-  #geom_vline(xintercept = 248, linetype = "dashed", size= 1.5, color = "chocolate2") +
-  #geom_vline(xintercept = 290, linetype = "dashed", size= 1.5, color = "deepskyblue3") 
+        legend.position = "none",
+        plot.margin = margin(t=0.5, l =0.5, b = 0.5, r =0.5, unit ="cm")) -> C
+  
   
 # Save the plots
-ggsave(filename = "results/FigAgrostistileni.png", Agrostistileni, path = NULL, 
-       scale = 1, width = 180, height = 180, units = "mm", dpi = 600)
+ggsave(filename = "results/Species germination curves/Thymus praecox.png", C, path = NULL, 
+       scale = 1, width = 360, height = 360, units = "mm", dpi = 600)
+
+#loop for many graphs (WORK ON IT)
+for (var in unique(germination_curves$species)) {
+  curve_plot = ggplot(germination_curves[germination_curves$species==var,], aes(x = date,
+                                                      y = germination, ymin = 0, ymax = 1,
+                                                      color = incubator, fill = incubator)) +
+    geom_line(size = 2) +
+    scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
+    labs(title= var, x = "Time ", y = "Germination proportion") +
+    scale_y_continuous(limits = c(0, 1),  breaks = c(0, 0.25, 0.50, 0.75, 1)) +
+    facet_wrap(~ accession, nrow = 2) +
+    theme_classic(base_size = 14) +
+    theme(plot.title = element_text (size = 30),
+          strip.text = element_text (size = 24, face = "italic"),
+          axis.title.y = element_text (size=24), 
+          axis.title.x = element_text (size=24), 
+          axis.text.x= element_text (size=18, angle = 75, vjust = 0.5),
+          legend.position = "right",
+          plot.margin = margin(t=0.5, l =0.5, b = 0.5, r =0.5, unit ="cm"))
+  ggsave(curve_plot, file = paste0("Germination ", var,".png"),
+         path = NULL, scale = 1, width = 360, height = 250, units = "mm", dpi = 600)
+}

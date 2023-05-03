@@ -29,11 +29,11 @@ read.csv("data/all_data.csv", sep = ";") %>%
   group_by(species, code, incubator, petridish) %>%
   summarise(total_germ = sum(germinated),
             viable= last(viable),
-            total = last(total)) %>% # 
+            total = last(total)) %>% 
   mutate(germPER = (total_germ/viable) *100, # 
          germPER = round (germPER, digit =2)) %>%
   mutate(viablePER=(viable/total) *100, 
-         viablePER = round(viablePER, digit =2)) -> viables 
+         viablePER = round(viablePER, digit =2))  -> viables 
 ### seeds germ + viables/community filtered ####
 read.csv("data/all_data.csv", sep = ";") %>%
   #mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
@@ -297,6 +297,22 @@ t50_dates%>%
 summary(df)
 
 
+### GERMINAR INDEX mgt AND SYN ####
+read.csv("data/sincronia.csv", sep=";")%>%
+  merge(species)%>%
+  merge (viables)%>% 
+  filter (germPER>0) %>%
+  filter(viablePER>25)%>%
+  convert_as_factor(code, species, incubator, family, community, habitat, germ_strategy) %>%
+  mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
+  mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
+  mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
+  arrange(species, code, accession, incubator, petridish)  %>%
+  mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
+  select(!family) %>%  
+  #filter (community == "Temperate") %>%
+  na.omit () -> df # punto significa que el objeto al que aplicar la funcion heat sum es el de la linea de arriba
+summary(df)
 #### PHYLO TREE AND MODEL SPECIFICATION FOR MULTINOMIAL####
  ### Read tree
 phangorn::nnls.tree(cophenetic(ape::read.tree("results/tree.tree")), 
@@ -384,7 +400,7 @@ priors <- list(R = list(V = 1, nu = 0.2),
 
 
 # Gaussian model
-MCMCglmm::MCMCglmm(scale(HS) ~ incubator * community,
+MCMCglmm::MCMCglmm(scale(syn) ~ incubator * community ,
                    random = ~animal + ID + code:ID,
                    family = "gaussian", pedigree = nnls_orig, prior = priors, data = df,
                    nitt = nite, thin = nthi, burnin = nbur,
