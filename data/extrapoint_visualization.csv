@@ -1,16 +1,16 @@
 species;accession;code;incubator;petridish;total;viable;date;germinated
-Cerastium sp;150721-05;150721-05;Fellfield;1;25;25;03/04/2022;0
-Cerastium sp;150721-05;150721-05;Fellfield;2;25;24;03/04/2022;0
-Cerastium sp;150721-05;150721-05;Fellfield;3;25;25;03/04/2022;0
-Cerastium sp;150721-05;150721-05;Fellfield;4;25;25;03/04/2022;0
+Cerastium ramosissimum;150721-05;150721-05;Fellfield;1;25;25;03/04/2022;0
+Cerastium ramosissimum;150721-05;150721-05;Fellfield;2;25;24;03/04/2022;0
+Cerastium ramosissimum;150721-05;150721-05;Fellfield;3;25;25;03/04/2022;0
+Cerastium ramosissimum;150721-05;150721-05;Fellfield;4;25;25;03/04/2022;0
 Spergula morisonii;150721-01;150721-01;Fellfield;1;25;14;03/04/2022;0
 Spergula morisonii;150721-01;150721-01;Fellfield;2;25;25;03/04/2022;0
 Spergula morisonii;150721-01;150721-01;Fellfield;3;25;21;03/04/2022;0
 Spergula morisonii;150721-01;150721-01;Fellfield;4;25;20;03/04/2022;0
-Cerastium sp;280721-02;280721-02;Fellfield;1;25;24;03/04/2022;0
-Cerastium sp;280721-02;280721-02;Fellfield;2;25;24;03/04/2022;0
-Cerastium sp;280721-02;280721-02;Fellfield;3;25;22;03/04/2022;0
-Cerastium sp;280721-02;280721-02;Fellfield;4;25;18;03/04/2022;0
+Cerastium ramosissimum;280721-02;280721-02;Fellfield;1;25;24;03/04/2022;0
+Cerastium ramosissimum;280721-02;280721-02;Fellfield;2;25;24;03/04/2022;0
+Cerastium ramosissimum;280721-02;280721-02;Fellfield;3;25;22;03/04/2022;0
+Cerastium ramosissimum;280721-02;280721-02;Fellfield;4;25;18;03/04/2022;0
 Spergula morisonii;280721-01;280721-01;Fellfield;1;17;13;03/04/2022;0
 Spergula morisonii;280721-01;280721-01;Fellfield;2;17;11;03/04/2022;0
 Spergula morisonii;280721-01;280721-01;Fellfield;3;17;12;03/04/2022;0
@@ -308,8 +308,8 @@ Euphrasia salisburgensis;011021-01;011021-01;Fellfield;3;25;25;03/04/2022;0
 Euphrasia salisburgensis;011021-01;011021-01;Fellfield;4;25;25;03/04/2022;0
 Spergula morisonii;150721-01;150721-01b;Fellfield;5;25;25;03/04/2022;0
 Spergula morisonii;150721-01;150721-01b;Fellfield;6;24;24;03/04/2022;0
-Cerastium sp;280721-02;280721-02b;Fellfield;5;25;25;03/04/2022;0
-Cerastium sp;280721-02;280721-02b;Fellfield;6;25;24;03/04/2022;0
+Cerastium ramosissimum;280721-02;280721-02b;Fellfield;5;25;25;03/04/2022;0
+Cerastium ramosissimum;280721-02;280721-02b;Fellfield;6;25;24;03/04/2022;0
 Dianthus langeanus;110821-01;110821-01b;Fellfield;6;25;25;03/04/2022;0
 Dianthus langeanus;120821-02;120821-02b;Fellfield;5;25;25;03/04/2022;0
 Dianthus langeanus;120821-02;120821-02b;Fellfield;6;24;23;03/04/2022;0

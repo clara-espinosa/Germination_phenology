@@ -3,7 +3,6 @@ library(tidyverse)
 ### Phylo tree
 # always check family names with http://www.mobot.org/MOBOT/research/APweb/
 read.csv("data/species.csv", sep =";") %>%
-  mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>%
   select (species, family) %>%

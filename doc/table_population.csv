@@ -25,10 +25,10 @@ Temperate;Carex sempervirens;Cyperaceae;130921-02;13/09/2021;Fellfield;5.44;99;6
 Temperate;Carex sempervirens;Cyperaceae;130921-02;13/09/2021;Snowbed;5.44;90;73;81.11;72;98.63;0;0;98.63;0;281.925;546.75;0.00344;0.482
 Temperate;Carex sempervirens;Cyperaceae;310821-13;31/08/2021;Fellfield;5.44;100;90;90;90;100;0;93.33;6.67;0;247.8291667;725;0.00397;0.232
 Temperate;Carex sempervirens;Cyperaceae;310821-13;31/08/2021;Snowbed;5.44;99;86;86.87;86;100;0;0;100;0;283.8737041;549.875;0.00348;0.705
-Mediterranean;Cerastium sp;Caryophyllaceae;150721-05;15/07/2021;Fellfield;0.04;100;95;95;20;21.05;21.05;0;0;0;NA;NA;0.0143;1
-Mediterranean;Cerastium sp;Caryophyllaceae;150721-05;15/07/2021;Snowbed;0.04;100;98;98;20;20.41;20.41;0;0;0;NA;NA;0.014;0.7
-Mediterranean;Cerastium sp;Caryophyllaceae;280721-02;28/07/2021;Fellfield;0.04;150;134;90;114;85.525;84.955;0;0.57;0;30.19182638;436.625;0.012855;0.8065
-Mediterranean;Cerastium sp;Caryophyllaceae;280721-02;28/07/2021;Snowbed;0.04;150;136;93;105;73.605;73.605;0;0;0;32.52339758;404.4375;0.013605;0.744
+Mediterranean;Cerastium ramosissimum;Caryophyllaceae;150721-05;15/07/2021;Fellfield;0.04;100;95;95;20;21.05;21.05;0;0;0;NA;NA;0.0143;1
+Mediterranean;Cerastium ramosissimum;Caryophyllaceae;150721-05;15/07/2021;Snowbed;0.04;100;98;98;20;20.41;20.41;0;0;0;NA;NA;0.014;0.7
+Mediterranean;Cerastium ramosissimum;Caryophyllaceae;280721-02;28/07/2021;Fellfield;0.04;150;134;90;114;85.525;84.955;0;0.57;0;30.19182638;436.625;0.012855;0.8065
+Mediterranean;Cerastium ramosissimum;Caryophyllaceae;280721-02;28/07/2021;Snowbed;0.04;150;136;93;105;73.605;73.605;0;0;0;32.52339758;404.4375;0.013605;0.744
 Mediterranean;Conopodium majus;Apiaceae;240821-03;24/08/2021;Fellfield;0.33;149;70;56.14;66;94.645;0;94.645;0;16.665;182.7205129;330.5625;0.004655;0.4395
 Mediterranean;Conopodium majus;Apiaceae;240821-03;24/08/2021;Snowbed;0.33;150;99;72.5;98;98.915;0;97.97;0.945;97.97;176.0092198;224.75;0.0041;0.9835
 Mediterranean;Conopodium majus;Apiaceae;250821-04;25/08/2021;Fellfield;0.33;100;56;56;56;100;0;100;0;0;202.6166667;479;0.00468;0.943

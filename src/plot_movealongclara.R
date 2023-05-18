@@ -1,6 +1,7 @@
 library(FD); library(vegan); library(FactoMineR); library(emmeans);
 library(tidyverse); library(ggrepel); library(cowplot);library(ggpubr);
 library (binom);library (ggsignif);library (rstatix); library (stringr);
+library(plyr);library(patchwork)
 theme_set(theme_cowplot(font_size = 10)) 
 Sys.setlocale("LC_ALL","English")
 ## GERMINATION EXPERIMENTS
@@ -471,39 +472,6 @@ ggplot(data=heatsum_graph, aes(incubator, HS, fill=incubator))+
         axis.title.y = element_text (size=18), 
         axis.title.x = element_text (size=18)) -> fig5c
 ##### effect size#####
-x11()
-read.csv("data/test_effectsize.csv", sep=";") %>%
-  #filter(Trait == "t50")%>%
-  ggplot(aes(x= Trait, y = effect_size, ymin = L95, ymax = U95, color = community))+
-  geom_point(size = 2) +
-  geom_errorbar (width = 0.3, size =1) +
-  facet_grid (.~community) +
-  scale_color_manual (name= "Model terms", 
-                      values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
-  #scale_y_continuous (limits = c(-110,650), breaks = seq (-100, 600, by= 100)) +
-  #scale_y_continuous (limits = c(-12,6), breaks = seq (-10, 5, by = 5)) +
-  geom_hline(yintercept = 0, linetype = "dashed", size =1, color = "black") +
-  coord_flip() +
-  labs(title = "", y = "Effect size") +
-  ggthemes::theme_tufte(base_size = 14) +
-  theme(plot.title = element_text (hjust =0.5, size = 14),
-        #strip.text = element_blank(),
-        legend.position = "none",
-        panel.background = element_rect(color = "grey96", fill = "grey96"),
-        axis.title.y = element_blank(),
-        axis.text.y = element_text(size = 12,
-                                   color = c("chocolate2", "deepskyblue3")),
-        axis.title.x = element_blank())  
-
-ggarrange(fig4a, fig4b, fig4c,fig4d, fig4e,fig4f,fig4g, ncol = 1, nrow = 7, legend = "none")
-
-fig4 <- ggarrange(fig4a, fig4b, fig4c, fig4d, fig4e, fig4f, fig4g, 
-          ncol =1, nrow= 7,  legend = "none")
-annotate_figure(fig4, 
-                top = text_grob ("           MEDITERRANEAN                 TEMPERATE  ", color = "black", face = "bold"),
-                bottom = text_grob ("               Effect size"))
-
-#effect size all 
 library(viridis)
 x11()
 read.csv("data/test_effectsize.csv", sep=";") %>%
@@ -519,13 +487,13 @@ ggplot(effect_size, aes(x= Trait, y =effect_size, ymin = L95, ymax = U95, color 
   facet_wrap (~ community, ncol = 2, nrow =7, scales = "free_x") +
   scale_color_manual (values = c("#AC1926", "#891171", "#33407D", "#077395", "#00BC7F", "#AADB41", "#FDE333")) +
   scale_x_discrete(labels = function(Trait) str_wrap(Trait, width = 13)) +
-  scale_y_continuous (limits = c(-4.9,4.9), breaks = seq (-4, 4, by = 2)) +
+  scale_y_continuous (limits = c(-5,5), breaks = seq (-4, 4, by = 2)) +
   geom_hline(yintercept = 0, linetype = "dashed", size =1, color = "black") +
   coord_flip() +
-  labs( y = "Effect size") + #title = "", x =""
+  labs(title = "A", y = "Effect size") + #title = "", x =""
   theme_classic(base_size = 14) +
   #ggthemes::theme_tufte(base_size = 16) +
-  theme(plot.title = element_text (hjust = 0.5, size = 30),
+  theme(plot.title = element_text (size = 22),
         strip.text = element_text(face = "bold", size = 22),
         #strip.background = element_rect(fill = )
         
@@ -543,8 +511,10 @@ ggplot(effect_size, aes(x= Trait, y =effect_size, ymin = L95, ymax = U95, color 
   #annotate ("rect", xmin = 0.5, xmax= 7.7, ymin = -5, ymax = -0.1, alpha =0.2, color = "chocolate2", fill = "chocolate2") +
   annotate ("segment", x = 0.5, xend = 0.5, y= -0.1, yend=-4.9, colour= "chocolate2", size = 2, arrow = arrow()) +
   annotate("text", x= 0.70, y = 2.6, label = "Higher in Snowbed", size = 3.5, colour= "deepskyblue3", fontface ="bold" ) +
-  annotate ("segment", x = 0.5, xend = 0.5, y= 0.1, yend= 4.9, colour= "deepskyblue3", size = 2, arrow = arrow()) 
+  annotate ("segment", x = 0.5, xend = 0.5, y= 0.1, yend= 4.9, colour= "deepskyblue3", size = 2, arrow = arrow()) ->effect_size_graph
 
+ggsave(filename = "results/Fig4v3(2).png", effect_size_graph, path = NULL, 
+       scale = 1, width = 360, height = 360, units = "mm", dpi = 600)
 ######value graph #####
 library("plyr")
 x11()
@@ -563,17 +533,27 @@ ggplot(mean_values, aes(incubator, mean, fill=incubator))+
   # geom_segment (aes(x=1.45, y = 0.82, xend =1.55, yend =0.82), color = "black", size = 1) +
   # annotate (geom ="text", x= 1.60, y = 0.79, label =".", colour = "black", size = 9) +
   scale_fill_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
-  labs( x = "Incubator", y = "Degres (ºC) Time (days)                                     Germination proportion                                ") + #title = "",
+  #labs(title = "B", x = "Incubator", y = "Degres (ºC) Time (days)                               Germination proportion                                ") + #title = "",
+  
+  labs(title = "B", x = "Incubator", y = "Degres (ºC)         Time (days)                                                                           Germination proportion                                ") + #title = "",
   #ggthemes::theme_tufte(base_size = 16) +
   theme_classic(base_size = 14) +
-  theme(plot.title = element_text (hjust = 0.5, size = 30),
+  theme(plot.title = element_text (size = 22),
         #strip.text = element_blank(),
         strip.text.x = element_text(face = "bold", size = 22),
         strip.text.y = element_text(size = 14, angle = 360),
         legend.position = "none",
         panel.background = element_rect(color = "black", fill = NULL),
         axis.title.y = element_text (size=16), 
-        axis.title.x = element_text (size=16))
+        axis.title.x = element_text (size=16)) -> mean_values_graph
+
+ggsave(filename = "results/Fig5v3(2).png", mean_values_graph, path = NULL, 
+       scale = 1, width = 240, height = 360, units = "mm", dpi = 600)
+
+Fig4_5 <- effect_size_graph + mean_values_graph
+
+ggsave(filename = "results/Fig4_5(2).png", Fig4_5, path = NULL, 
+       scale = 1, width = 400, height = 360, units = "mm", dpi = 600)
 
 
 label_wrap_gen <- function (width = 13) { ### function to make labels in several lines with facet grid
@@ -622,15 +602,16 @@ library(patchwork);library(gapminder)
 read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date)))) %>%
-  group_by(species, incubator, accession, code, petridish) %>%
+  dplyr::group_by(species, incubator, accession, code, petridish) %>%
   filter(date == max(date)) %>%
   select(species, incubator, accession, code, petridish, viable) %>%
-  group_by(species, accession, incubator) %>%
-  summarise(viable = sum(viable)) -> viables_sp
+  dplyr::group_by(species, accession, incubator) %>%
+  dplyr::summarise(viable = sum(viable)) -> viables_sp
 # write.csv (viables,"results/viables.csv", row.names = FALSE )
 # tidyverse modification to have the accumulated germination along the whole experiment + ggplot
 read.csv("data/extrapoint_visualization.csv", sep = ";")-> data_vis 
 x11()
+
 read.csv("data/all_data.csv", sep = ";") %>%
   rbind(data_vis)%>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
@@ -639,27 +620,27 @@ read.csv("data/all_data.csv", sep = ";") %>%
   arrange (species, accession, code, incubator, petridish, date)%>% # sort row observations this way
   mutate(date = as.POSIXct(date))%>%
   merge (species) %>%
-  group_by(community, species, accession,  incubator, date) %>%
-  summarise(germinated = sum(germinated)) %>%
-  mutate(germinated = cumsum(germinated)) %>%
+  dplyr::group_by(community, species, accession,  incubator, date) %>%
+  dplyr::summarise(germinated = sum(germinated)) %>%
+  dplyr::mutate(germinated = cumsum(germinated)) %>%
   merge(viables_sp) %>%
-  mutate(germination = germinated/viable) %>%
-  mutate(ID = paste(community, accession)) -> germination_curves
-  filter(species == "Thymus praecox") %>% ### change species name
+  mutate(germination = germinated/viable)  %>%
+  mutate(ID = paste(community, accession)) %>%
+  filter(species == "Cerastium ramosissimum") %>% ### change species name
   ggplot(aes(date, germination, color = incubator, fill = incubator)) +
   geom_line(size = 2) +
   scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
   facet_wrap(~ accession, scales = "free_x", ncol = 2) +
   coord_cartesian(ylim = c(0, 1)) +
-  labs(title= "Thymus praecox", x = "Time ", y = "Germination proportion") +
+  labs(title= "Cerastium ramosissimum", x = "Time ", y = "Germination proportion") +
   theme_classic(base_size = 14) +
   theme(plot.title = element_text (size = 30),
         strip.text = element_text (size = 24, face = "italic"),
         axis.title.y = element_text (size=24), 
         axis.title.x = element_text (size=24), 
         axis.text.x= element_text (size=18, angle = 75, vjust = 0.5),
-        legend.position = "none",
-        plot.margin = margin(t=0.5, l =0.5, b = 0.5, r =0.5, unit ="cm")) -> C
+        legend.position = "right",
+        plot.margin = margin(t=0.5, l =0.5, b = 0.5, r =0.5, unit ="cm")) #-> C
   
   
 # Save the plots

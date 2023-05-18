@@ -1,15 +1,15 @@
 Trait;community;terms;effect_size;L95;U95
-Total germination;Mediterranean;IncubatorSnowbed;-0.28636;-0.60353;0.03957
-Total germination;Temperate;IncubatorSnowbed;-0.5552;-0.8612;-0.2506
-Autumn germination;Mediterranean;IncubatorSnowbed;-1.815;-2.181;-1.461
-Autumn germination;Temperate;IncubatorSnowbed;-2.967;-3.44;-2.52
-Spring germination;Mediterranean;IncubatorSnowbed;0.1023;-0.3799;0.602
-Spring germination;Temperate;IncubatorSnowbed;-1.6821;-2.0885;-1.25
-Summer germination;Mediterranean;IncubatorSnowbed;2.015;1.546;2.482
-Summer germination;Temperate;IncubatorSnowbed;3.117;2.707;3.541
-Germination in winter conditions;Mediterranean;IncubatorSnowbed;3.641;3.035;4.291
-Germination in winter conditions;Temperate;IncubatorSnowbed;4.105;3.355;4.872
-t50;Mediterranean;IncubatorSnowbed;0.35541;0.23577;0.47465
-t50;Temperate;IncubatorSnowbed;0.8103;0.653;0.9787
-Environmental heat sum;Mediterranean;IncubatorSnowbed;-0.142203;-0.27683;-0.002514
-Environmental heat sum;Temperate;IncubatorSnowbed;0.09876;-0.10026;0.29259
+Total germination;Mediterranean;IncubatorSnowbed;-0.28366;-0.58964;0.06112
+Total germination;Temperate;IncubatorSnowbed;-0.4776;-0.7973;-0.1504
+Autumn germination;Mediterranean;IncubatorSnowbed;-1.815;-2.169;-1.453
+Autumn germination;Temperate;IncubatorSnowbed;-2.849;-3.335;-2.355
+Spring germination;Mediterranean;IncubatorSnowbed;0.1017;-0.3884;0.5815
+Spring germination;Temperate;IncubatorSnowbed;-1.754;-2.192;-1.331
+Summer germination;Mediterranean;IncubatorSnowbed;2.014;1.553;2.481
+Summer germination;Temperate;IncubatorSnowbed;3.159;2.732;3.599
+Germination in winter conditions;Mediterranean;IncubatorSnowbed;3.628;2.984;4.241
+Germination in winter conditions;Temperate;IncubatorSnowbed;4.106;3.347;4.916
+t50;Mediterranean;IncubatorSnowbed;0.3564921;0.2427047;0.4779386
+t50;Temperate;IncubatorSnowbed;0.786;0.6233;0.951
+Environmental heat sum;Mediterranean;IncubatorSnowbed;-0.12111;-0.25091;0.01452
+Environmental heat sum;Temperate;IncubatorSnowbed;0.0509;-0.12767;0.22708

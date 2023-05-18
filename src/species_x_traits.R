@@ -2,7 +2,6 @@ library(tidyverse)
 
 #species data
 read.csv("data/all_info.csv", sep =";") %>% # modify column values of 3 sp names:
-  mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>% # Cerastium sp as Cerastium pumilum;
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>% # Minuartia CF as Minuartia arctica;
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album"))-> species  #Sedum sp (album cf) as Sedum album
 
@@ -127,7 +126,6 @@ germ_traits_list %>%
           winter_germ = winter_germ/viable) %>% 
   full_join(seed_mass, by= c("species", "macroclimate")) %>% 
   merge(read.csv("data/species.csv", sep =";")) %>% 
-  mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album"))%>%
   write.csv("data/traits_sp_incubator.csv")
