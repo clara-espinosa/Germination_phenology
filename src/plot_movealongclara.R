@@ -647,7 +647,7 @@ read.csv("data/all_data.csv", sep = ";") %>%
 ggsave(filename = "results/Species germination curves/Thymus praecox.png", C, path = NULL, 
        scale = 1, width = 360, height = 360, units = "mm", dpi = 600)
 
-#loop for many graphs (WORK ON IT)
+#loop for many graphs 
 for (var in unique(germination_curves$species)) {
   curve_plot = ggplot(germination_curves[germination_curves$species==var,], aes(x = date,
                                                       y = germination, ymin = 0, ymax = 1,

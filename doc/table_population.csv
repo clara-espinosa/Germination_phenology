@@ -1,4 +1,4 @@
-community;species;family;population;recolection;incubator;abundance;total seeds;viable seeds;viable %;total seeds germinated;final germ %;autumn germ %;spring germ %;summer germ %;winter germ %;t50;Environmental heat sum;Mean Germination Time;Synchrony
+community;species;family;population;recolection;incubator;abundance;total_seeds;viable_seeds;viablePER;total_seeds_germinated;final_germ;autumn_germ ;spring_germ;summer_germ;winter_germ;t50;Env_heat_sum;MGT;Syn
 Mediterranean;Agrostis tileni;Poaceae;250821-06;25/08/2021;Fellfield;0.43;66;9;13.64;9;100;0;100;0;0;225.4583333;574.3333333;0.00439;0.867
 Mediterranean;Agrostis tileni;Poaceae;250821-06;25/08/2021;Snowbed;0.43;75;5;6.67;5;100;0;0;100;0;301.6666667;817.5;0.00333;1
 Temperate;Androsace villosa;Primulaceae;300821-03;30/08/2021;Fellfield;0.85;100;98;98;0;0;0;0;0;0;NA;NA;NA;NA
