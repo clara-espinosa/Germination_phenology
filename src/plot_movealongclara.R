@@ -2,10 +2,9 @@ library(FD); library(vegan); library(FactoMineR); library(emmeans);
 library(tidyverse); library(ggrepel); library(cowplot);library(ggpubr);
 library (binom);library (ggsignif);library (rstatix); library (stringr);
 library(plyr);library(patchwork)
-theme_set(theme_cowplot(font_size = 10)) 
 Sys.setlocale("LC_ALL","English")
-## GERMINATION EXPERIMENTS
-#### dataframe  AND VISUALIZATION for temperature programs ####
+## 
+#### temperature experimental programs VISUALIZATION ####
 read.csv("data/date_temp.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y")) %>%
   mutate(date = as.POSIXct(date))%>%
@@ -24,29 +23,29 @@ ggplot(temp, aes ()) +
   geom_ribbon (data = temp, aes (x=date, ymin =Tmin, ymax=Tmax, colour = incubator, fill = incubator), alpha =0.5) +
   scale_fill_manual (name= "Incubator", values =c("chocolate2", "deepskyblue3")) +
   scale_color_manual (name= "Incubator", values =c("chocolate2", "deepskyblue3")) +
-  scale_y_continuous (limits = c(-3.5,28), breaks = seq (-0, 25, by= 5)) +
-  labs (title = "Experimental programs", y= "Temperature ºC", x = "Date") + 
-  theme_classic(base_size = 16) +
-  theme (plot.title = element_text ( size = 32), #hjust = 0.5,
-        axis.title.y = element_text (size=28), 
-         axis.title.x = element_text (size=28), 
-         axis.text.x= element_text (size=24),
-         legend.title = element_text(size = 24),
-         legend.text = element_text (size =22),
+  scale_y_continuous (limits = c(-5,28), breaks = seq (-5, 25, by= 5)) +
+  labs (title = "Experimental temperature regimes", y= "Temperature ºC", x = "Date") + 
+  theme_classic(base_size = 20) +
+  theme (plot.title = element_text ( size = 36), #hjust = 0.5,
+        axis.title.y = element_text (size=32), 
+         axis.title.x = element_text (size=32), 
+         axis.text.x= element_text (size=28),
+         legend.title = element_text(size = 28),
+         legend.text = element_text (size =26),
         legend.position = "top") +
   geom_vline(xintercept = as.POSIXct(as.Date("2021-11-12")), linetype = "dashed", size =1.25) +
-  annotate (geom ="text", x= as.POSIXct(as.Date("2021-10-25")), y = 28, label ="Autumn", size = 7, fontface ="bold") +
+  annotate (geom ="text", x= as.POSIXct(as.Date("2021-10-17")), y = 28, label ="Autumn \n germination", size = 8, fontface ="bold") +
   geom_vline(xintercept = as.POSIXct(as.Date("2022-06-15")), linetype = "dashed", size =1.25) +
-  annotate (geom ="text", x= as.POSIXct(as.Date("2022-05-30")), y = 28, label ="Spring", size = 7, fontface ="bold") +
+  annotate (geom ="text", x= as.POSIXct(as.Date("2022-05-20")), y = 28, label ="Spring\n germination", size = 8, fontface ="bold") +
   geom_vline(xintercept = as.POSIXct(as.Date("2022-09-19")), linetype = "dashed", size =1.25) +
-  annotate (geom ="text", x= as.POSIXct(as.Date("2022-09-02")), y = 28, label ="Summer", size = 7, fontface ="bold") +
+  annotate (geom ="text", x= as.POSIXct(as.Date("2022-08-25")), y = 28, label ="Summer\n germination", size = 8, fontface ="bold") +
   geom_hline(yintercept=0, linetype ="dashed", size =1, colour = "red") +
-  geom_segment (aes(x=as.POSIXct(as.Date("2021-11-12")), y =-2.3, xend=as.POSIXct(as.Date("2022-04-04")), yend =-2.3), color = "chocolate2", size = 1.25) +
-  geom_segment (aes(x=as.POSIXct(as.Date("2021-11-12")), y = -2.9, xend =as.POSIXct(as.Date("2022-05-26")), yend =-2.9), color = "deepskyblue3", size = 1.25) +
-  annotate (geom ="text", x= as.POSIXct(as.Date("2022-01-15")), y = -3.5, label ="Winter period", colour = "black", size = 7, fontface ="bold") 
+  geom_segment (aes(x=as.POSIXct(as.Date("2021-11-12")), y =-2.8, xend=as.POSIXct(as.Date("2022-04-04")), yend =-2.8), color = "chocolate2", size = 2) +
+  geom_segment (aes(x=as.POSIXct(as.Date("2021-11-12")), y = -3.8, xend =as.POSIXct(as.Date("2022-05-26")), yend =-3.8), color = "deepskyblue3", size = 2) +
+  annotate (geom ="text", x= as.POSIXct(as.Date("2022-01-15")), y = -5, label ="Winter conditions", colour = "black", size = 8.5, fontface ="bold") 
   
 ########### GERMINATION RATE ###################################################
-#### germination peaks  #####
+#### germination peaks (not used in the final paper) #####
 data.frame(community = c("Mediterranean","Mediterranean","Mediterranean","Temperate", "Temperate"),
            incubator  = c("Fellfield", "Fellfield","Snowbed", "Fellfield", "Fellfield"),
            time = c(105, 247, 105, 105, 247),
@@ -78,6 +77,7 @@ read.csv("data/all_data.csv", sep = ";") %>%
 
 #### cumulative germination  ####
 # tidyverse modification to have the accumulated germination along the whole experiment + ggplot
+detach(package:plyr) # to make summarise work properly
 data.frame(community = c("Mediterranean","Mediterranean","Mediterranean","Temperate", "Temperate"),
            incubator  = c("Fellfield", "Fellfield","Snowbed", "Fellfield", "Fellfield"),
            date = c("2021-11-12", "2022-04-03", "2021-11-12", "2021-11-12", "2022-04-03"),
@@ -125,8 +125,9 @@ read.csv("data/all_data.csv", sep = ";") %>%
 ggarrange(cumulative_Mediterranean, cumulative_Temperate, ncol =2, nrow= 1,common.legend = TRUE, legend = "bottom") 
 
   
-########### TOTAL GERMINATIONv + TIMING  #######################################
+########### TOTAL GERMINATION + TIMING  #######################################
 # Total germination (test representation) ####
+detach(package:plyr)
 read.csv("data/all_data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   group_by(species, code, incubator, petridish) %>%
@@ -137,7 +138,6 @@ read.csv("data/all_data.csv", sep = ";") %>%
   filter(viablePER>25)%>%
   filter(germPER>0)%>%
   merge(species) %>%
-  mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
   group_by (incubator, community) %>%
@@ -183,7 +183,6 @@ read.csv("data/all_data.csv", sep = ";") %>%
   filter(viablePER>25)%>%
   filter(germPER>0)%>% 
   merge(species, by = c("code", "species")) %>%
-  mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
   select (code, species, community, incubator, petridish, seeds_germ, viable)%>%
@@ -238,7 +237,6 @@ read.csv("data/all_data.csv", sep = ";") %>%
   filter(viablePER>25)%>%
   filter(germPER>0)%>%
   merge(species) %>%
-  mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
   group_by (incubator, community)%>%
@@ -286,7 +284,6 @@ read.csv("data/all_data.csv", sep = ";") %>%
   filter(germPER>0)%>%
   select(species, code, incubator, petridish, seeds_germ, cumulative, viable) %>%
   merge(species, by = c("code", "species")) %>%
-  mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
   group_by (incubator, community)%>%
@@ -365,7 +362,6 @@ read.csv("data/all_data.csv", sep = ";") %>%
   select(species, code, incubator, petridish, seeds_germ, viable)%>%
   arrange(species) %>%
   merge(species, by = c("code", "species")) %>%
-  mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
   group_by (community, incubator)%>%
@@ -515,7 +511,7 @@ ggplot(effect_size, aes(x= Trait, y =effect_size, ymin = L95, ymax = U95, color 
 
 ggsave(filename = "results/Fig4v3(2).png", effect_size_graph, path = NULL, 
        scale = 1, width = 360, height = 360, units = "mm", dpi = 600)
-######value graph #####
+######  mean value graph #####
 library("plyr")
 x11()
 read.csv("data/meanvalues_graph.csv", sep = ";")%>%

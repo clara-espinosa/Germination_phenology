@@ -381,10 +381,10 @@ summary(m1)$Gcovariances[3, 1] %>% round(2)
 summary(m1)$Gcovariances[3, 2] %>% round(2) 
 summary(m1)$Gcovariances[3, 3] %>% round(2)
 
-#### PHYLO AND MODEL SPECIFICATION FOR GAUSSIAN (t50 + env heat)####
+#### PHYLO AND MODEL SPECIFICATION FOR GAUSSIAN (synchrony, mgt, t50 and env heat)####
 ### Read tree
 phangorn::nnls.tree(cophenetic(ape::read.tree("results/tree.tree")), 
-                    ape::read.tree("results/tree.tree"), rooted = TRUE) -> 
+                    ape::read.tree("results/tree.tree"), method = "ultrametric") -> 
   nnls_orig
 
 nnls_orig$node.label <- NULL

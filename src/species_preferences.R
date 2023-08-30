@@ -1,4 +1,5 @@
 library (tidyverse); library (dplyr)
+library(MCMCglmm); 
 # Species levels: ecological preferences and germination responses
 # Species preferences calculated from ibuttons data and inventories
 # original scripts and data in Omaña80 and Picos Github repository (respectively)
@@ -35,7 +36,9 @@ species %>%
 #  filter(! animal %in% nnls_orig$tip.label) %>% 
 #  select(animal) %>% 
 #  unique
-setdiff(sp_pref_villa$species, species$species)
+#setdiff(sp_pref_villa$species, species$species)
+
+#### PCA and correlations ####
 sp_pref_villa%>%
   merge(species)%>%
   dplyr::select(community, species, accession, code,site, family, abundance, bio1:Snw) %>%
@@ -45,8 +48,44 @@ sp_pref_villa%>%
 sp_pref_villa[, 3:8] %>%
   FactoMineR::PCA() -> pca1
 
-setdiff(sp_pref_picos$species, species$species)
-setdiff(species$species, sp_pref_picos$species)
+pca1$var$contrib
+
+sp_pref_villa[, 3:8] %>%
+  cor()
+
+cbind((sp_pref_villa %>%  dplyr::select(species)), data.frame(pca1$ind$coord[, 1:2])) %>%
+  mutate(species = factor(species)) -> pcaInds
+
+pca1$var$coord[, 1:2] %>%
+  data.frame %>%
+  rownames_to_column(var = "Variable") %>%
+  mutate(Variable = fct_recode(Variable, "Snow" = "Snw"))-> pcaVars
+
+### Plot PCA
+ggplot(pcaInds, aes(x = Dim.1, y = Dim.2)) +
+  coord_fixed() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  geom_segment(data = pcaVars, aes(x = 0, y = 0, xend = 3*Dim.1, yend = 3*Dim.2)) +
+  geom_point(aes(fill = species, color = species), size = 4) +
+  geom_label(data = pcaVars, aes(x = 3*Dim.1, y = 3*Dim.2, label = Variable),  show.legend = FALSE, size = 4) +
+  ggthemes::theme_tufte() + 
+  theme(text = element_text(family = "sans"),
+        legend.position = "right", 
+        legend.title = element_blank(),
+        legend.text = element_text(size = 8, color = "black"),
+        panel.background = element_rect(color = "black", fill = NULL),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 12, color = "black"),
+        plot.margin = unit(c(0, 0.1, 0, 0), "cm")) +
+  guides(fill = guide_legend(override.aes = list(shape = 22))) +
+  scale_x_continuous(name = paste("Axis 1 (", round(pca1$eig[1, 2], 0),
+                                  "% variance explained)", sep = "")) + 
+  scale_y_continuous(name = paste("Axis 2 (", round(pca1$eig[2, 2], 0), 
+                                  "% variance explained)", sep = "")) 
+
+#setdiff(sp_pref_picos$species, species$species)
+#setdiff(species$species, sp_pref_picos$species)
 sp_pref_picos%>%
   merge(species)%>%
   dplyr::select(community, species, accession, code,site, family, abundance, bio1:Snw) %>%
@@ -55,6 +94,42 @@ sp_pref_picos%>%
 
 sp_pref_picos[, 3:8] %>%
   FactoMineR::PCA() -> pca1
+
+pca1$var$contrib
+
+sp_pref_picos[, 3:8] %>%
+  cor()
+
+cbind((sp_pref_picos %>%  dplyr::select(species)), data.frame(pca1$ind$coord[, 1:2])) %>%
+  mutate(species = factor(species)) -> pcaInds
+
+pca1$var$coord[, 1:2] %>%
+  data.frame %>%
+  rownames_to_column(var = "Variable") %>%
+  mutate(Variable = fct_recode(Variable, "Snow" = "Snw"))-> pcaVars
+
+### Plot PCA
+ggplot(pcaInds, aes(x = Dim.1, y = Dim.2)) +
+  coord_fixed() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  geom_segment(data = pcaVars, aes(x = 0, y = 0, xend = 3*Dim.1, yend = 3*Dim.2)) +
+  geom_point(aes(fill = species, color = species), size = 4) +
+  geom_label(data = pcaVars, aes(x = 3*Dim.1, y = 3*Dim.2, label = Variable),  show.legend = FALSE, size = 4) +
+  ggthemes::theme_tufte() + 
+  theme(text = element_text(family = "sans"),
+        legend.position = "right", 
+        legend.title = element_blank(),
+        legend.text = element_text(size = 8, color = "black"),
+        panel.background = element_rect(color = "black", fill = NULL),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 12, color = "black"),
+        plot.margin = unit(c(0, 0.1, 0, 0), "cm")) +
+  guides(fill = guide_legend(override.aes = list(shape = 22))) +
+  scale_x_continuous(name = paste("Axis 1 (", round(pca1$eig[1, 2], 0),
+                                  "% variance explained)", sep = "")) + 
+  scale_y_continuous(name = paste("Axis 2 (", round(pca1$eig[2, 2], 0), 
+                                  "% variance explained)", sep = "")) 
 
 ##### Calculate areas between curves (Fellfield-Snowbed) for each species ####
 # CALCULATED INDIVIDUALLY PER EACH SPECIES AND ADDED MANUALLY TO all_info.csv
@@ -89,9 +164,9 @@ read.csv("data/all_data.csv", sep = ";") %>%
         legend.position = "right",
         plot.margin = margin(t=0.5, l =0.5, b = 0.5, r =0.5, unit ="cm")) #-> C
 
-#example with IBERIS CARNOSA (x = time (not dates))
+#example with 1 species (x = time (not dates))
 read.csv("data/all_data.csv", sep = ";") %>%
-  rbind(data_vis)%>%
+  #rbind(data_vis)%>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
   spread(time, germinated, fill = 0) %>% # wide format for dates, and fill Na with 0
@@ -159,25 +234,82 @@ species %>%
   group_by(species) %>%
   summarise(across(Area_curves:Snw, ~ mean(.x, na.rm = TRUE))) %>%
   mutate(species= factor(species)) %>%
-  data.frame() -> sp_villa
+  data.frame() %>%
+  mutate(species = factor(species)) %>%
+  mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
+  na.omit () -> sp_villa
+
 species %>%
   merge(sp_pref_picos) %>%
   group_by(species) %>%
   summarise(across(Area_curves:Snw, ~ mean(.x, na.rm = TRUE))) %>%
   mutate(species= factor(species)) %>%
-  data.frame() -> sp_picos
-glm(Area_curves ~ FDD + GDD + Snw, family = "gaussian", data= sp_picos) -> m1
+  data.frame() %>%
+  mutate(species = factor(species)) %>%
+  mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
+  mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
+  mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
+  na.omit ()-> sp_picos
+
+rbind (sp_picos, sp_villa) -> sp
+hist(sp$Area_curves)
+
+glm(Area_curves ~ FDD + GDD + Snw, family = "gaussian", data= sp) -> m1
 summary(m1)
 
+lm(Area_curves ~ FDD + GDD , data= sp_picos) -> m1
+summary(m1)
+
+plot(x= bio1, y= GDD, data= sp)
+
+#MCMC GLMM for AREA between curves ####
+### Read tree
+phangorn::nnls.tree(cophenetic(ape::read.tree("results/tree.tree")), 
+                    ape::read.tree("results/tree.tree"), method = "ultrametric") -> 
+  nnls_orig
+
+nnls_orig$node.label <- NULL
+
+### Set number of iterations
+nite = 1000000
+nthi = 100
+nbur = 100000
+
+# shorter iterations
+nite = 10000
+nthi = 10
+nbur = 100
+### Gaussian priors
+priors <- list(R = list(V = 1, nu = 0.2),
+               G = list(G1 = list(V = 1, nu = 0.2, alpha.mu = 0, alpha.V = 1e3),
+                        G2 = list(V = 1, nu = 0.2, alpha.mu = 0, alpha.V = 1e3))) 
+#G3 = list(V = 1, nu = 0.2, alpha.mu = 0, alpha.V = 1e3)))
+
+
+# Gaussian model
+MCMCglmm::MCMCglmm( Area_curves ~ FDD + GDD + Snw,
+                   random = ~ animal + ID,
+                   family = "gaussian", pedigree = nnls_orig, prior = priors, data = sp_villa,
+                   nitt = nite, thin = nthi, burnin = nbur,
+                   verbose = FALSE, saveX = FALSE, saveZ = FALSE, saveXL = FALSE, pr = FALSE, pl = FALSE) -> g1
+# save(m1, file = "results/mcmc.Rdata")
+x11()
+plot(g1)
+
+# load("results/mcmc.Rdata")
+summary(g1)
+
+# exploratory plots ####
 library(ggrepel)
 str(sp_villa)
-ggplot (sp_picos, aes(x=Snw, y= Area_curves, color = species)) +
+ggplot (sp_villa, aes(x=GDD, y= bio1)) + #, color = species
   geom_point() +
+  geom_smooth(method = "lm") +
   geom_text_repel (aes(label= species))+
-  theme_bw()+
+  #theme_bw()+
   theme(legend.position = "none")
 
-# GLMs traits depending realized niche (FDD, GDD, SNW)
+# GLMs traits depending realized niche (FDD, GDD, SNW) ####
 read.csv("doc/table_population.csv", sep = ";") %>%
   merge(sp_pref_picos) %>%
   merge(species) %>%
@@ -186,3 +318,4 @@ read.csv("doc/table_population.csv", sep = ";") %>%
 
 glm(Syn ~ FDD + GDD + Snw + incubator, family = "gaussian", data= traits_picos) -> m1
 summary(m1)
+
