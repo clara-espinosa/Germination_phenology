@@ -1,29 +1,29 @@
-trait;incubator;community;mean;lower;upper
-Autumn germination;Fellfield;Mediterranean;0.548;0.532;0.564
-Autumn germination;Snowbed;Mediterranean;0.4;0.35;0.416
-Autumn germination;Fellfield;Temperate;0.239;0.223;0.255
-Autumn germination;Snowbed;Temperate;0.0681;0.0595;0.078
-Environmental heat sum;Fellfield;Mediterranean;304;267.7;340.3
-Environmental heat sum;Snowbed;Mediterranean;238;220.4;255.6
-Environmental heat sum;Fellfield;Temperate;445;409.6;480.4
-Environmental heat sum;Snowbed;Temperate;427;396.9;457.1
-Spring germination;Fellfield;Mediterranean;0.28;0.266;0.295
-Spring germination;Snowbed;Mediterranean;0.301;0.286;0.315
-Spring germination;Fellfield;Temperate;0.398;0.38;0.416
-Spring germination;Snowbed;Temperate;0.212;0.197;0.227
-Summer germination;Fellfield;Mediterranean;0.0268;0.0221;0.0324
-Summer germination;Snowbed;Mediterranean;0.117;0.108;0.128
-Summer germination;Fellfield;Temperate;0.0801;0.0707;0.0906
-Summer germination;Snowbed;Temperate;0.374;0.356;0.392
-t50;Fellfield;Mediterranean;82.7;75.24;90.16
-t50;Snowbed;Mediterranean;122;113.54;130.46
-t50;Fellfield;Temperate;164;154.33;173.67
-t50;Snowbed;Temperate;236;227.98;244.02
-Total germination;Fellfield;Mediterranean;0.855;0.844;0.866
-Total germination;Snowbed;Mediterranean;0.818;0.806;0.83
-Total germination;Fellfield;Temperate;0.717;0.7;0.733
-Total germination;Snowbed;Temperate;0.654;0.636;0.671
-Germination in winter conditions;Fellfield;Mediterranean;0.0378;0.0322;0.0443
-Germination in winter conditions;Snowbed;Mediterranean;0.197;0.185;0.21
-Germination in winter conditions;Fellfield;Temperate;0.024;0.019;0.0303
-Germination in winter conditions;Snowbed;Temperate;0.143;0.131;0.156
+trait;community;incubator;mean;lower;upper
+T50;Mediterranean;Fellfield;64.278;47.818;80.738
+T50;Temperate;Fellfield;163.302;141.816;184.788
+T50;Mediterranean;Snowbed;104.362;84.174;124.55
+T50;Temperate;Snowbed;242.249;225.014;259.484
+Environmental heat sum;Mediterranean;Fellfield;312.835;231.337;394.333
+Environmental heat sum;Temperate;Fellfield;474.337;400.064;548.61
+Environmental heat sum;Mediterranean;Snowbed;264.385;230.377;298.393
+Environmental heat sum;Temperate;Snowbed;465.667;403.418;527.916
+Autumn germination;Mediterranean;Fellfield;0.637880987;0.619757165;0.655620972
+Autumn germination;Temperate;Fellfield;0.259779719;0.243388577;0.276870786
+Autumn germination;Mediterranean;Snowbed;0.530172414;0.511604356;0.548657321
+Autumn germination;Temperate;Snowbed;0.073779796;0.064420324;0.084376446
+Winter germination;Mediterranean;Fellfield;0.003991292;0.00223016;0.007133225
+Winter germination;Temperate;Fellfield;0.000379795;6.70E-05;0.002148278
+Winter germination;Mediterranean;Snowbed;0.119971264;0.108422063;0.132567774
+Winter germination;Temperate;Snowbed;0.121831252;0.109907034;0.134853172
+Spring germination;Mediterranean;Fellfield;0.198838897;0.184361436;0.214154738
+Spring germination;Temperate;Fellfield;0.383972655;0.365577574;0.402705802
+Spring germination;Mediterranean;Snowbed;0.100933908;0.090288053;0.112679536
+Spring germination;Temperate;Snowbed;0.130155127;0.117862208;0.143521585
+Summer germination;Mediterranean;Fellfield;0.011248186;0.007935593;0.015921379
+Summer germination;Temperate;Fellfield;0.062286365;0.053677639;0.07217045
+Summer germination;Mediterranean;Snowbed;0.080100575;0.070586248;0.090772088
+Summer germination;Temperate;Snowbed;0.3102535;0.292903435;0.328154337
+Total germination;Mediterranean;Fellfield;0.851959361;0.838210714;0.864728215
+Total germination;Temperate;Fellfield;0.706418534;0.688733146;0.723502484
+Total germination;Mediterranean;Snowbed;0.831178161;0.816809191;0.844634448
+Total germination;Temperate;Snowbed;0.636019675;0.617491375;0.654153154

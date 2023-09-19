@@ -30,6 +30,7 @@ ggplot(temp, aes ()) +
         axis.title.y = element_text (size=32), 
          axis.title.x = element_text (size=32), 
          axis.text.x= element_text (size=28),
+         axis.text.y = element_text(size= 24),
          legend.title = element_text(size = 28),
          legend.text = element_text (size =26),
         legend.position = "top") +
@@ -44,7 +45,7 @@ ggplot(temp, aes ()) +
   geom_segment (aes(x=as.POSIXct(as.Date("2021-11-12")), y = -3.8, xend =as.POSIXct(as.Date("2022-05-26")), yend =-3.8), color = "deepskyblue3", size = 2) +
   annotate (geom ="text", x= as.POSIXct(as.Date("2022-01-15")), y = -5, label ="Winter conditions", colour = "black", size = 8.5, fontface ="bold") 
   
-########### GERMINATION RATE ###################################################
+
 #### germination peaks (not used in the final paper) #####
 data.frame(community = c("Mediterranean","Mediterranean","Mediterranean","Temperate", "Temperate"),
            incubator  = c("Fellfield", "Fellfield","Snowbed", "Fellfield", "Fellfield"),
@@ -108,6 +109,7 @@ read.csv("data/all_data.csv", sep = ";") %>%
           axis.title.y = element_text (size=28), 
           axis.title.x = element_text (size=28), 
           axis.text.x= element_text (size=24),
+          axis.text.y = element_text(size= 24),
           plot.margin = margin(r= 40),
           legend.title = element_text(size = 32),
           legend.text = element_text (size =30),

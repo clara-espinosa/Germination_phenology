@@ -1,15 +1,15 @@
 Trait;community;terms;effect_size;L95;U95
-Total germination;Mediterranean;IncubatorSnowbed;-0.28366;-0.58964;0.06112
-Total germination;Temperate;IncubatorSnowbed;-0.4776;-0.7973;-0.1504
-Autumn germination;Mediterranean;IncubatorSnowbed;-1.815;-2.169;-1.453
-Autumn germination;Temperate;IncubatorSnowbed;-2.849;-3.335;-2.355
-Spring germination;Mediterranean;IncubatorSnowbed;0.1017;-0.3884;0.5815
-Spring germination;Temperate;IncubatorSnowbed;-1.754;-2.192;-1.331
-Summer germination;Mediterranean;IncubatorSnowbed;2.014;1.553;2.481
-Summer germination;Temperate;IncubatorSnowbed;3.159;2.732;3.599
-Germination in winter conditions;Mediterranean;IncubatorSnowbed;3.628;2.984;4.241
-Germination in winter conditions;Temperate;IncubatorSnowbed;4.106;3.347;4.916
-t50;Mediterranean;IncubatorSnowbed;0.3564921;0.2427047;0.4779386
-t50;Temperate;IncubatorSnowbed;0.786;0.6233;0.951
-Environmental heat sum;Mediterranean;IncubatorSnowbed;-0.12111;-0.25091;0.01452
-Environmental heat sum;Temperate;IncubatorSnowbed;0.0509;-0.12767;0.22708
+Autumn germination;Mediterranean;IncubatorSnowbed;-1.313;-1.7022;-0.9455
+Autumn germination;Temperate;IncubatorSnowbed;-2.8734;-3.373;-2.4062
+Winter germination;Mediterranean;IncubatorSnowbed;5.275;4.252;6.309
+Winter germination;Temperate;IncubatorSnowbed;8.027;5.44;10.831
+Spring germination;Mediterranean;IncubatorSnowbed;-1.482;-1.9918;-0.9571
+Spring germination;Temperate;IncubatorSnowbed;-3.243;-3.767;-2.744
+Summer germination;Mediterranean;IncubatorSnowbed;1.894;1.309;2.476
+Summer germination;Temperate;IncubatorSnowbed;3.15;2.635;3.65
+Total germination;Mediterranean;IncubatorSnowbed;-0.18778;-0.56115;0.1889
+Total germination;Temperate;IncubatorSnowbed;-0.5501;-0.8811;-0.2067
+t50;Mediterranean;IncubatorSnowbed;0.3319;0.1921;0.47228
+t50;Temperate;IncubatorSnowbed;0.8247;0.6486;0.9911
+Environmental heat sum;Mediterranean;IncubatorSnowbed;-0.16618;-0.33657;0.01873
+Environmental heat sum;Temperate;IncubatorSnowbed;0.1397;-0.09198;0.3599

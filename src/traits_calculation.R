@@ -40,6 +40,27 @@ read.csv("data/clean data.csv", sep = ";") %>%
   mutate(germPER = (seeds_germ/viable) *100, # 
          germPER = round (germPER, digit =2)) %>%
   select (species, code, incubator, petridish, seeds_germ, germPER)-> finalgerm 
+#### GERMINATION RATE  ####
+read.csv("data/all_data.csv", sep = ";") %>%
+  mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
+  mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
+  group_by (species, code, incubator, petridish) %>%
+  mutate (cumulative = cumsum(germinated))%>%
+  merge(viables)%>%
+  arrange(species, code,  accession, incubator, petridish, time) %>%
+  filter(viablePER>25)%>%
+  filter(germPER>0)%>%
+  select(species, code, incubator, petridish, germinated, cumulative, viable, time)%>%
+  merge(species, by = c("code", "species")) %>%
+  convert_as_factor(code, species, incubator,site, family, community, habitat, germ_strategy) %>%
+  mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>% # Minuartia CF as Minuartia arctica;
+  mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>%
+  mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
+  select(!family) %>%
+  filter (community == "Temperate") %>%
+  na.omit () -> df
+summary(df)
+
 # seed germinated in spring + summer (needed for early sesason germ calculation) ####
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
@@ -851,3 +872,30 @@ ger_summary(SeedN = "seeds", evalName = "D", data=dat[,1: ncol(dat)])%>%
 
 
   
+### GERMINAR INDEX mgt AND SYN ####
+read.csv("data/sincronia.csv", sep=";")%>%
+  merge(species)%>%
+  merge (viables)%>% 
+  filter (germPER>0) %>%
+  filter(viablePER>25)%>%
+  convert_as_factor(code, species, incubator, family, community, habitat, germ_strategy) %>%
+  mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
+  mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
+  arrange(species, code, accession, incubator, petridish)  %>%
+  mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
+  select(!family) %>%  
+  #filter (community == "Temperate") %>%
+  na.omit () -> df # punto significa que el objeto al que aplicar la funcion heat sum es el de la linea de arriba
+summary(df)
+
+# summary sincrony and mgt values
+read.csv("data/sincronia.csv", sep=";")%>%
+  merge(species)%>%
+  merge (viables)%>% 
+  filter (germPER>0) %>%
+  filter(viablePER>25)%>%
+  #convert_as_factor(code, species, incubator, family, community, habitat, germ_strategy) %>%
+  select( community, species, accession, code, incubator, petridish, mgr, syn)%>%
+  na.omit () %>%
+  group_by(community, incubator) %>%
+  summarise(mgr = mean(mgr),syn = mean(syn)) -> syn_mgr_summary
