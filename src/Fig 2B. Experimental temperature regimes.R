@@ -32,7 +32,7 @@ ggplot(temp, aes ()) +
   theme (plot.title = element_text ( size = 24), #hjust = 0.5,
          axis.title.y = element_text (size=20), 
          axis.title.x = element_blank(), 
-         axis.text.x= element_text (size = 12, color = "black"),
+         axis.text.x= element_text (size = 18, color = "black"),
          axis.text.y = element_text(size = 18),
          plot.tag.position = c(0,1),
          legend.title = element_text (size =14),

@@ -250,4 +250,6 @@ Fig
 ggsave(filename = "results/Fig3 no sig.png", Fig3, path = NULL, 
        scale = 1, width = 400, height = 360, units = "mm", dpi = 600)
 
-
+mean_values %>%
+  group_by(community, trait) %>%
+  summarise_all(mean)
