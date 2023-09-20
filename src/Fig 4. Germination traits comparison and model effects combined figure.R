@@ -8,36 +8,42 @@ library(viridis)
 x11()
 read.csv("data/test_effectsize.csv", sep=";") %>%
   convert_as_factor(Trait, community, terms) %>%
-  mutate (Trait = fct_relevel(Trait, "Environmental heat sum", "t50","Total germination",
+  mutate (Trait = fct_relevel(Trait, "Environmental heat sum", "T50","Total germination",
                                "Summer germination", "Spring germination",
                               "Winter germination","Autumn germination" ))%>%
   mutate(community = fct_relevel (community, "Temperate","Mediterranean"))-> effect_size
 
 ggplot(effect_size, aes(x= Trait, y =effect_size, ymin = L95, ymax = U95, color = Trait))+
-  geom_point( size = 3) +
-  geom_errorbar (width = 0.2, size =1.2) +
+   geom_rect(data=NULL,aes(ymin=-Inf,ymax=0,xmin=-Inf,xmax=Inf),
+            fill="chocolate2", color= "black", alpha=1)+
+  geom_rect(data=NULL,aes(ymin=0,ymax=Inf,xmin=-Inf,xmax=Inf),
+            fill="deepskyblue3", color= "black",alpha=1)+
+  geom_point( size = 3, color="black") +
+  geom_errorbar (width = 0.2, size =1.2, color="black") +
   facet_wrap (~ community, ncol = 2, nrow =7, scales = "free_x") +
-  scale_color_manual (values = c("#AC1926", "#891171", "#33407D", "#077395", "#00BC7F", "#AADB41", "#FDE333")) +
   scale_x_discrete(labels = function(Trait) str_wrap(Trait, width = 13)) +
-  scale_y_continuous (limits = c(-5,11), breaks = seq (-4, 10, by = 2)) +
+  scale_y_continuous (limits = c(-4,11), breaks = seq (-6, 10, by = 2)) +
   geom_hline(yintercept = 0, linetype = "dashed", size =1, color = "black") +
   coord_flip() +
-  labs(title = "A", y = "Effect size") + 
+  labs(y = "Effect size", tag = "A") + 
   theme_classic(base_size = 14) +
-  theme(plot.title = element_text (size = 22),
-        strip.text = element_text(face = "bold", size = 22),
+  theme(plot.title = element_text (size = 20),
+        strip.text = element_text( size = 20), #face = "bold",
+        strip.text.y = element_text(size = 14),
         legend.position = "none",
         panel.background = element_rect(color = "black", fill = NULL),
+        plot.tag.position = c(0,1),
         axis.title.y = element_blank(),
         axis.text.x = element_text(size = 16, color = "black"),
         axis.text.y = element_text(size = 16, color = "black"),
-        axis.title.x = element_text (size=18)) +
-  annotate("text", x= 0.70, y = -2.5, label = "Higher in Fellfield", size = 4, color = "chocolate2" , fontface ="bold" ) +
-  annotate ("segment", x = 0.5, xend = 0.5, y= -0.1, yend=-4.9, colour= "chocolate2", size = 2, arrow = arrow()) +
-  annotate("text", x= 0.70, y = 2.6, label = "Higher in Snowbed", size = 4, colour= "deepskyblue3", fontface ="bold" ) +
-  annotate ("segment", x = 0.5, xend = 0.5, y= 0.1, yend= 9.9, colour= "deepskyblue3", size = 2, arrow = arrow()) -> effect_size_graph; effect_size_graph
+        axis.title.x = element_text (size=18)) 
+  # scale_color_manual (values = c("#AC1926", "#891171", "#33407D", "#077395", "#00BC7F", "#AADB41", "#FDE333")) +
+  #annotate("text", x= 0.7, y = -2.5, label = "Higher in Fellfield", size = 3, color = "chocolate2" , fontface ="bold" ) +
+  #annotate ("segment", x = 0.5, xend = 0.5, y= -0.1, yend=-3.9, colour= "chocolate2", size = 2, arrow = arrow()) +
+  #annotate("text", x= 0.70, y = 4.5, label = "Higher in Snowbed", size = 3, colour= "deepskyblue3", fontface ="bold" ) +
+  #annotate ("segment", x = 0.5, xend = 0.5, y= 0.1, yend= 10.5, colour= "deepskyblue3", size = 2, arrow = arrow()) -> effect_size_graph; effect_size_graph
 
-ggsave(filename = "results/Figures/fig3.png", effect_size_graph, path = NULL, 
+#ggsave(filename = "results/Figures/fig3.png", effect_size_graph, path = NULL, 
        scale = 1, width = 360, height = 360, units = "mm", dpi = 600)
 #### mean value table  ####
 # AUTUMN (test representation) 
@@ -221,23 +227,25 @@ ggplot(mean_values, aes(incubator, mean, fill=incubator))+
   facet_grid (trait ~ community, scales = "free_y", labeller = label_wrap_gen (width = 13)) +
   geom_errorbar(aes(incubator, mean, ymin = lower, ymax = upper), color = "black",width = 0.2, size =1) +
   scale_fill_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
-  labs(title = "B", x = "Incubator", y = "Degres (ºC) Time (days)                                        Germination proportion                          ") + 
+  labs(tag = "B", x = "Mean values", y = "Degres (ºC) Time (days)                       Germination proportion                         ") + 
   theme_classic(base_size = 14) +
   theme(plot.title = element_text (size = 22),
-        strip.text.x = element_text(face = "bold", size = 22),
+        strip.text.x = element_text( size = 20),# face = "bold",
         strip.text.y = element_text(size = 14, angle = 360),
         legend.position = "none",
+        plot.tag.position = c(0,1),
         panel.background = element_rect(color = "black", fill = NULL),
-        axis.text.x = element_text(size = 16, color = "black"),
-        axis.text.y = element_text(size = 14, color = "black"),
-        axis.title.y = element_text (size=16), 
-        axis.title.x = element_text (size=16)) -> mean_values_graph;mean_values_graph
+        axis.text.x = element_text(size = 14, color = "black"),
+        axis.text.y = element_text(size = 12, color = "black"),
+        axis.title.y = element_text (size=15), 
+        axis.title.x = element_text (size=18)) -> mean_values_graph;mean_values_graph
 
 ggsave(filename = "results/Fig3Bv5.png", mean_values_graph, path = NULL, 
        scale = 1, width = 240, height = 360, units = "mm", dpi = 600)
 
 #combine both graphs 
 Fig3 <- effect_size_graph + mean_values_graph
+Fig
 
 ggsave(filename = "results/Fig3 no sig.png", Fig3, path = NULL, 
        scale = 1, width = 400, height = 360, units = "mm", dpi = 600)

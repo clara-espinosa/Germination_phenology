@@ -21,7 +21,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
          germPER = round (germPER, digit =2)) %>%
   mutate(viablePER=(viable/total) *100, 
          viablePER = round(viablePER, digit =2)) %>%
-  arrange(community, species, code) -> appendix 
+  arrange(community, species, code)  -> appendix 
 #autumn
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
@@ -193,4 +193,3 @@ HS %>%
   arrange (species,  code, incubator)-> appendix
 
 write.csv(appendix, "results/Supplementary/5. Traits summary table.csv")
-

@@ -1,4 +1,4 @@
-library(tidyverse)
+library(tidyverse);library(ggpubr);
 
 ## WEEKLY MEANS (2009-2018) FOR PICOS ####
 read.csv("data/temp_picos_raw.csv", sep = ";") %>%
@@ -36,15 +36,20 @@ read.csv("data/weekly_picos_graph.csv", sep = ";") %>%
   scale_color_manual (name = "Site", values = c ("Hoyo Sin Tierra"= "darkgoldenrod1" , "Los Boches" = "forestgreen")) +
   scale_fill_manual (name = "Site", values = c ("Hoyo Sin Tierra"= "darkgoldenrod1" , "Los Boches" = "forestgreen")) +
   scale_y_continuous (limits = c(-3,25), breaks = seq (0, 25, by= 5)) +
-  labs (title = "A) Weekly mean Tmax and Tmin 2009-2018", y= "Temperature ºC", x = "Time (weeks)") + 
+  labs (title = "Weekly mean Tmax and Tmin 2008-2019", y= "Temperature ºC", x = "Time (weeks)", tag = "A") + 
   theme_classic(base_size = 16) +
-  theme (plot.title = element_text ( size = 32), #hjust = 0.5,
-         axis.title.y = element_text (size=28), 
-         axis.text.y = element_text (size = 22),
+  theme (plot.title = element_text ( size = 24), #hjust = 0.5,
+         axis.title.y = element_text (size=20), 
+         axis.text.y = element_text (size = 18),
          axis.title.x = element_blank(), 
          axis.text.x= element_blank(),
-         legend.title = element_text (size =24),
-         legend.text = element_text (size =24),
+         axis.ticks.x = element_blank(),
+         plot.tag.position = c(0,1),
+         legend.title = element_text (size =14),
+         legend.text = element_text (size =13),
+         legend.background = element_rect(fill="transparent"),
          legend.position = c(0.9, 0.28)) + # legend.position = "top") + 
   geom_hline(yintercept=0, linetype ="dashed", size =1, colour = "red") -> fig2a; fig2a
 
+ggarrange(fig2a, fig2b, ncol =1, nrow= 2,common.legend = FALSE)
+#ggsave(ggarrange(fig2a, fig2b,  ncol =1, nrow= 2,common.legend = FALSE), file="fig2.png", width = 210, height = 297, units = "mm")

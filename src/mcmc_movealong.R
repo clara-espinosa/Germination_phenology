@@ -110,6 +110,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
 summary(df)
 df
 #### SPRING (Tmin >1 to Mid-June = solstice) ####
+detach(package:plyr)
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
@@ -144,7 +145,7 @@ rbind(Springgerm_F, Springgerm_S) %>%
   convert_as_factor(code, species, incubator, family, community, habitat, germ_strategy) %>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
   mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
-  arrange(species, code,site,  accession, incubator, petridish)  %>%
+  arrange(species, code,site, incubator, petridish)  %>%
   mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
   select(!family) %>%  
   #filter(community == "Mediterranean") %>%
@@ -308,7 +309,7 @@ priors <- list(R = list(V = 1, nu = 50),
                            G2 = list(V = 1, nu = 1, alpha.mu = 0, alpha.V = 500)))
                            #G3 = list(V = 1, nu = 1, alpha.mu = 0, alpha.V = 500)))   
 ### TEST
-MCMCglmm::MCMCglmm(cbind(total_germ, viable - total_germ) ~ incubator, # *community
+MCMCglmm::MCMCglmm(cbind(seeds_germ, viable - seeds_germ) ~ incubator*community, # 
                    random = ~ animal + code:ID,
                    family = "multinomial2", pedigree = nnls_orig, prior = priors, data = df,
                    nitt = nite, thin = nthi, burnin = nbur,

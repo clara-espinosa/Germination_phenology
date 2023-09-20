@@ -9,7 +9,7 @@ Summer germination;Mediterranean;IncubatorSnowbed;1.894;1.309;2.476
 Summer germination;Temperate;IncubatorSnowbed;3.15;2.635;3.65
 Total germination;Mediterranean;IncubatorSnowbed;-0.18778;-0.56115;0.1889
 Total germination;Temperate;IncubatorSnowbed;-0.5501;-0.8811;-0.2067
-t50;Mediterranean;IncubatorSnowbed;0.3319;0.1921;0.47228
-t50;Temperate;IncubatorSnowbed;0.8247;0.6486;0.9911
+T50;Mediterranean;IncubatorSnowbed;0.3319;0.1921;0.47228
+T50;Temperate;IncubatorSnowbed;0.8247;0.6486;0.9911
 Environmental heat sum;Mediterranean;IncubatorSnowbed;-0.16618;-0.33657;0.01873
 Environmental heat sum;Temperate;IncubatorSnowbed;0.1397;-0.09198;0.3599

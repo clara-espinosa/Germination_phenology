@@ -1,7 +1,7 @@
 library(FD); library(vegan); library(FactoMineR); library(emmeans);
 library(tidyverse); library(ggrepel); library(cowplot);library(ggpubr);
 library (binom);library (ggsignif);library (rstatix); library (stringr);
-library(plyr);library(patchwork)
+library(plyr);library(patchwork);library(scales)
 theme_set(theme_cowplot(font_size = 10)) 
 Sys.setlocale("LC_ALL","English")
 ## GERMINATION EXPERIMENTS FIG 2!!!
@@ -26,20 +26,23 @@ ggplot(temp, aes ()) +
   scale_fill_manual (name= "Incubator", values =c("chocolate2", "deepskyblue3")) +
   scale_color_manual (name= "Incubator", values =c("chocolate2", "deepskyblue3")) +
   scale_y_continuous (limits = c(-3,25), breaks = seq (0, 25, by= 5)) +
-  scale_x_datetime(date_breaks = "2 month", date_labels = "%b-%Y")+
-  labs (title = "B) Experimental temperature regimes", y= "Temperature ºC", x = "Date") + 
+  scale_x_datetime(date_breaks = "2 month", date_labels = "%b %y")+
+  labs (title = "Experimental temperature programs", y= "Temperature ºC", x = "Date", tag= "B") + 
   theme_classic(base_size = 20) +
-  theme (plot.title = element_text ( size = 32), #hjust = 0.5,
-         axis.title.y = element_text (size=28), 
+  theme (plot.title = element_text ( size = 24), #hjust = 0.5,
+         axis.title.y = element_text (size=20), 
          axis.title.x = element_blank(), 
-         axis.text.x= element_text (size=22),
-         axis.text.y = element_text(size= 22),
-         legend.title = element_text (size =24),
-         legend.text = element_text (size =24),
+         axis.text.x= element_text (size = 12, color = "black"),
+         axis.text.y = element_text(size = 18),
+         plot.tag.position = c(0,1),
+         legend.title = element_text (size =14),
+         legend.text = element_text (size =13),
+         legend.background = element_rect(fill="transparent"),
          legend.position = c(0.9, 0.28)) + 
   geom_hline(yintercept=0, linetype ="dashed", size =1, colour = "red") -> fig2b; fig2b
 
 #stacked bar 
+detach(package:plyr)
 temp %>%
   group_by(incubator, germination_period) %>%
   summarise(n= length(date))%>%
@@ -48,17 +51,23 @@ temp %>%
   ggplot(aes(x= incubator, y = n, fill = germination_period)) +
   geom_bar(stat = "identity", width=0.99, color = "black", position = position_stack(reverse= TRUE)) +
   coord_flip()+
-  labs (title = "C) Germination phenology periods", y= "Temperature ºC", x = "Date") + 
-  scale_fill_manual (name= "germination_period", values =c("brown", "cadetblue3","chartreuse3", "darkgoldenrod1")) +
+  labs (tag = "C") + 
+  scale_fill_manual (name= "Germination phenology periods", values =c("brown", "cadetblue3","chartreuse3", "darkgoldenrod1"),
+                     guide = guide_legend (title.position = "top",direction = "horizontal")) +
   theme_minimal(base_size = 20) +
-  theme (plot.title = element_text ( size = 32), #hjust = 0.5,
+  theme (plot.title = element_text (size = 24), #hjust = 0.5,
          axis.title.y = element_blank (), 
-         axis.text.y = element_text(size= 22),
+         axis.text.y = element_text(size= 18, color = c( "deepskyblue3","chocolate2")),
          axis.title.x = element_blank (), 
          axis.text.x= element_blank (),
-         legend.title = element_blank(),
-         legend.text = element_text (size =30),
-         legend.position = "bottom") -> fig2c;fig2c
+         plot.tag.position = c(0,1),
+         legend.position = "bottom",
+         legend.margin = margin(0, 0, 0, 0)) -> fig2c;fig2c
+         #legend.title = element_text (size =14),
+         #legend.text = element_text (size =14),
+          
+  
+         
 
   #geom_vline(xintercept = as.POSIXct(as.Date("2021-11-12")), linetype = "dashed", size =1.25) +
   #annotate (geom ="text", x= as.POSIXct(as.Date("2021-10-17")), y = 28, label ="Autumn \n germination", size = 8, fontface ="bold") +
