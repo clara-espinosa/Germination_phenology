@@ -79,7 +79,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
   na.omit ()-> df 
 summary (df)
 
-#### WINTER germination  considering first checks after winter until Tmin>1ºC#####
+#### WINTER germination  considering first checks after winter until Tmean>2ºC#####
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
   spread(date, germinated, fill = 0) %>% # wide format for dates, and fill Na with 0
@@ -109,7 +109,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
 
 summary(df)
 df
-#### SPRING (Tmin >1 to Mid-June = solstice) ####
+#### SPRING (Tmean >2 to Mid-June = solstice) ####
 detach(package:plyr)
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%

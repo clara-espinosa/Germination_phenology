@@ -192,4 +192,43 @@ HS %>%
          summer_germ, t50lm, HS) %>% 
   arrange (species,  code, incubator)-> appendix
 
+### delay to reach t50 check days between incubators ####
+t50model %>%
+  merge (viables_germ)%>%
+  filter(viablePER>25)%>%
+  group_by (species, code, incubator) %>%
+  summarise(t50lm = mean(t50lm)) %>%
+  spread(incubator, t50lm) %>% 
+  mutate(delayS_F = Snowbed - Fellfield) %>%  # NAs appear when species don't reach 50% germination (t50lm_days =Na)
+  na.omit () %>%
+  mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
+  mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
+  mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
+  merge(species, by = c("code", "species")) %>%
+  mutate(code=factor(code)) %>%
+  mutate(species=factor(species)) %>%
+  mutate(family=factor(family)) %>%
+  mutate(macroclimate=factor(macroclimate)) %>%
+  mutate(habitat=factor(habitat)) %>%
+  mutate(germ_strategy=factor(germ_strategy)) %>%
+  mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
+  select(!family) %>%  
+  na.omit () -> df 
+summary(df)
+df %>%
+  select (code, species,delayS_F, macroclimate)%>%
+  group_by (macroclimate) %>%
+  summarise (Delay = delayS_F) %>%
+  get_summary_stats(type ="full")
+# delay to reach t50 check days between incubators ####
+t50model %>%
+  ungroup() %>%
+  #select(species, code, incubator, t50lm) %>% 
+  group_by (species, code, incubator) %>%# only possible if we join data by species and incubator, adding petridish produce an error
+  summarise(t50lm = mean(t50lm)) %>%
+  spread(incubator, t50lm) %>% 
+  mutate(delayS_F = Snowbed - Fellfield) %>% 
+  select (species, code, delayS_F)-> delaytime # NAs appear when species don't reach 50% germination (t50lm_days =Na)
+
+
 write.csv(appendix, "results/Supplementary/5. Traits summary table.csv")

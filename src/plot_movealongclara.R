@@ -597,40 +597,40 @@ library(patchwork);library(gapminder)
 #### SPECIES GERMINATION CURVES ####
 # tidyverse transformation to account for the number of viable seeds per each specie and incubator
 # summing up petridishes and accesions/populations of the same species (not taking into account weekly germination)
-read.csv("data/all_data.csv", sep = ";") %>%
+read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date)))) %>%
-  dplyr::group_by(species, incubator, accession, code, petridish) %>%
+  dplyr::group_by(species, incubator, code, petridish) %>%
   filter(date == max(date)) %>%
-  select(species, incubator, accession, code, petridish, viable) %>%
-  dplyr::group_by(species, accession, incubator) %>%
-  dplyr::summarise(viable = sum(viable)) -> viables_sp
+  select(species, incubator,  code, petridish, viable) %>%
+  dplyr::group_by(species,  code, incubator) %>%
+  dplyr::summarise(viable = sum(viable)) -> viables_pop
 # write.csv (viables,"results/viables.csv", row.names = FALSE )
 # tidyverse modification to have the accumulated germination along the whole experiment + ggplot
-read.csv("data/extrapoint_visualization.csv", sep = ";")-> data_vis 
+read.csv("data/extrapoint_visualization.csv", sep = ";") %>%
+  select(species, code, incubator, petridish, total, viable, date, germinated)-> data_vis 
 x11()
 
-read.csv("data/all_data.csv", sep = ";") %>%
+read.csv("data/clean data.csv", sep = ";") %>%
   rbind(data_vis)%>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   spread(date, germinated, fill = 0) %>% # wide format for dates, and fill Na with 0
   gather ("date", "germinated", 8: last_col() )%>% # back in long format frrom 8th colum to the last
-  arrange (species, accession, code, incubator, petridish, date)%>% # sort row observations this way
+  arrange (species, code, incubator, petridish, date)%>% # sort row observations this way
   mutate(date = as.POSIXct(date))%>%
   merge (species) %>%
-  dplyr::group_by(community, species, accession,  incubator, date) %>%
+  dplyr::group_by(community, species, code, incubator, date) %>%
   dplyr::summarise(germinated = sum(germinated)) %>%
   dplyr::mutate(germinated = cumsum(germinated)) %>%
-  merge(viables_sp) %>%
-  mutate(germination = germinated/viable)  %>%
-  mutate(ID = paste(community, accession)) %>%
-  filter(species == "Cerastium ramosissimum") %>% ### change species name
+  merge(viables_pop) %>%
+  mutate(germination = germinated/viable) %>% #-> germination_curves_pop    
+  filter(species == "Conopodium majus") %>% ### change species name
   ggplot(aes(date, germination, color = incubator, fill = incubator)) +
   geom_line(size = 2) +
   scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
-  facet_wrap(~ accession, scales = "free_x", ncol = 2) +
+  facet_wrap(~ code, scales = "free_x", ncol = 2) +
   coord_cartesian(ylim = c(0, 1)) +
-  labs(title= "Cerastium ramosissimum", x = "Time ", y = "Germination proportion") +
+  labs(title= "Conopodium majus", x = "Time ", y = "Germination proportion") +
   theme_classic(base_size = 14) +
   theme(plot.title = element_text (size = 30),
         strip.text = element_text (size = 24, face = "italic"),
@@ -654,7 +654,7 @@ for (var in unique(germination_curves$species)) {
     scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
     labs(title= var, x = "Time ", y = "Germination proportion") +
     scale_y_continuous(limits = c(0, 1),  breaks = c(0, 0.25, 0.50, 0.75, 1)) +
-    facet_wrap(~ accession, nrow = 2) +
+    facet_wrap(~ code, ncol = 2) +
     theme_classic(base_size = 14) +
     theme(plot.title = element_text (size = 30),
           strip.text = element_text (size = 24, face = "italic"),
