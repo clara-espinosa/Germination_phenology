@@ -194,23 +194,12 @@ HS %>%
          summer_germ, t50lm, HS) %>% 
   arrange (species,  code, incubator)-> appendix
 
-### delay to reach t50 check days between incubators ####
-t50model %>%
-  group_by (species, code, incubator) %>%
-  summarise(t50lm = mean(t50lm)) %>%   #, na.rm = TRUE 
-  spread(incubator, t50lm) %>% 
-  mutate(delayS_F = Snowbed - Fellfield) %>%  # NAs appear when species don't reach 50% germination (t50lm_days =Na)
-  right_join(appendix, by =c("species",  "code")) %>%
-  select(community, species, abundance, family,  code, recolection, incubator, 
-         total,viable, viablePER, total_germ,germPER,  area_curves, autumn_germ,winter_germ,  spring_germ,
-         summer_germ, t50lm, HS, delayS_F) %>% 
-  arrange (species,  code, incubator)-> appendix
 
 # final table, only selected variables
 appendix%>%
   ungroup()%>%
-  select(community, species, family, abundance, incubator, germPER, area_curves, 
-         autumn_germ,winter_germ,  spring_germ, summer_germ, t50lm, HS, delayS_F) %>% 
+  select(community, species, family, abundance, incubator, area_curves, 
+         autumn_germ,winter_germ,  spring_germ, summer_germ, t50lm, HS) %>% 
   group_by(community, species, family, incubator)%>% 
   summarise(across(everything(), .f= mean , na.rm = TRUE)) %>%
   write.csv("results/Tables/2. Traits per sp summary.csv")

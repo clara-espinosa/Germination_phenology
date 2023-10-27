@@ -1,3 +1,4 @@
+library (tidyverse); library(scales)
 ##### Calculate areas between curves (Fellfield-Snowbed) for each species ####
 # CALCULATED INDIVIDUALLY PER EACH SPECIES AND ADDED MANUALLY TO all_info.csv
 #visualization
@@ -101,17 +102,21 @@ read.csv("data/all_info.csv", sep = ";") %>%
   group_by (community, species, family, habitat) %>%
   summarise(area_curves = mean(ABC_clean_data))%>%
   filter (! area_curves==0) %>% # remove species with 0 difference meaning they had 0 germ
-  ggplot(aes(x= area_curves, after_stat(count), fill = community, color=community))+  #
-  geom_density(alpha =0.2) + #, position="stack"
-  facet_wrap(~community)+
+  filter (community == "Mediterranean")%>%
+  ggplot(aes(x= area_curves))+  #
+  geom_density(alpha =0.2, fill = "azure4", color="azure4" ) + #, position="stack"
+  geom_vline(xintercept = 0, linetype = "dashed", size =1) +
+  scale_y_continuous(labels = percent, limits = c(0,0.0105)) +
+  #facet_wrap(~community)+
   theme_classic(base_size = 16) +
-  theme (plot.title = element_text (face = "bold",hjust = 0.5,size = 24), #
-         axis.title.y = element_text (size=16),
-         axis.text.y = element_text (size = 14),
+  labs (title= "Area between curves")+
+  theme (plot.title = element_text (face = "bold",size = 16), #hjust = 0.5,
+         axis.title.y = element_text (size=14),
+         axis.text.y = element_text (size = 13),
          axis.title.x = element_blank(), 
          axis.text.x= element_text (size = 13, color = "black"),
-         strip.text = element_text( size = 20, hjust = 0),
-         strip.background = element_blank(), 
+         #strip.text = element_text( size = 20, hjust = 0),
+         #strip.background = element_blank(), 
          panel.background = element_blank(), #element_rect(color = "black", fill = NULL), 
          #panel.grid = element_blank(),
          legend.title = element_text (size =14),

@@ -1,7 +1,7 @@
 library(FD); library(vegan); library(FactoMineR); library(emmeans);
 library(tidyverse); library(ggrepel); library(cowplot);library(ggpubr);
 library (binom);library (ggsignif);library (rstatix); library (stringr);
-library(patchwork)
+library(patchwork);library (RColorBrewer)
 theme_set(theme_cowplot(font_size = 10)) 
 Sys.setlocale("LC_ALL","English")
 
@@ -36,28 +36,34 @@ read.csv("data/clean data.csv", sep = ";") %>%
   scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
   scale_y_continuous (limits = c(0,1), breaks = seq (0, 1, by= 0.25)) +
   scale_x_datetime(date_breaks = "2 month", date_labels = "%b %y")+
-  labs(title = "Cumulative germination curves", x = "Date", y = "Germination proportion") +
+  labs(title = "A) Cumulative germination curves (all species)", x = "Date", y = "Germination proportion") +
   theme_classic(base_size = 16) +
-  theme (plot.title = element_text (face = "bold",hjust = 0.5,size = 24), #
-         axis.title.y = element_text (size=16),
-         axis.text.y = element_text (size = 14),
+  theme (plot.title = element_text (face = "bold",size = 20), #hjust = 0.5,
+         axis.title.y = element_text (size=14),
+         axis.text.y = element_text (size = 13),
          axis.title.x = element_blank(), 
-         axis.text.x= element_text (size = 13, color = "black"),
-         strip.text = element_text( size = 20, hjust = 0),
+         axis.text.x= element_text (size = 12, color = "black"),
+         strip.text = element_text( size = 18, hjust = 0),
          strip.background = element_blank(), 
          panel.background = element_blank(), #element_rect(color = "black", fill = NULL), 
          #panel.grid = element_blank(),
          legend.title = element_text (size =14),
          legend.text = element_text (size =14),
-         legend.position = "bottom", # legend.position = c(0.85, 0.5),
+         legend.position = "none", # legend.position = c(0.85, 0.5),
          legend.box.background = element_rect(color = "black", size = 2)) -> fig2d;fig2d
 
 #ggarrange (fig2a, fig2b, fig2c, fig2d,ncol =1, nrow= 4,common.legend = FALSE)
 
 ##### individual species curves #####
+
+# create/extent colorpalette (https://www.datanovia.com/en/blog/easy-way-to-expand-color-palettes-in-r/)
+nb.cols <- 59
+Fcolors <- colorRampPalette(brewer.pal(9, "Oranges"))(nb.cols)
+Scolors <- colorRampPalette(brewer.pal(9, "Blues"))(nb.cols)
+
 x11()
 read.csv("data/clean data.csv", sep = ";") %>%
-  rbind(data_vis)%>%
+  rbind(read.csv("data/extrapoint_visualization.csv", sep = ";") )%>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   spread(date, germinated, fill = 0) %>% # wide format for dates, and fill Na with 0
   gather ("date", "germinated", 8: last_col() )%>% # back in long format frrom 8th colum to the last
@@ -71,22 +77,23 @@ read.csv("data/clean data.csv", sep = ";") %>%
   mutate(germination = germinated/viable)  %>%   
   mutate(community = fct_relevel (community, "Temperate","Mediterranean"))%>%
   mutate (community = recode (community, "Temperate" = "Temperate (N = 38)", "Mediterranean" = "Mediterranean (N = 21)"))%>%
-  filter(incubator == "Snowbed") %>% ### change species name
-  ggplot(aes(date, germination, group = species, color = incubator, fill = incubator)) +
-  geom_line(size = 2) +
-  scale_color_manual (name= "Incubator", values = c ("Snowbed" ="deepskyblue3")) + #,"Fellfield"= "chocolate2" 
+  filter(incubator == "Fellfield") %>% ### change species name
+  ggplot(aes(date, germination, group = species, color = species, fill = species)) +
+  geom_line(size = 1.2) +
+  #scale_color_manual (name= "Incubator", values = c ("Snowbed" ="deepskyblue3")) + #,"Fellfield"= "chocolate2" 
   facet_wrap(~ community, scales = "free_x", ncol = 2) +
   scale_y_continuous (limits = c(0,1), breaks = seq (0, 1, by= 0.25)) +
   scale_x_datetime(date_breaks = "2 month", date_labels = "%b %y")+
+  scale_color_manual(values = Fcolors) +
   coord_cartesian(ylim = c(0, 1)) +
-  labs(title= "Snowbed germination curves", x = "Time ", y = "Germination proportion") +
+  labs(title= "B) Fellfield cumulative germination curves (individual species)", x = "Time ", y = "Germination proportion") +
   theme_classic(base_size = 16) +
-  theme (plot.title = element_text (face = "bold",hjust = 0.5,size = 24), #
-         axis.title.y = element_text (size=16),
-         axis.text.y = element_text (size = 14),
+  theme (plot.title = element_text (face = "bold",size = 20), #,hjust = 0.5
+         axis.title.y = element_text (size=14),
+         axis.text.y = element_text (size = 13),
          axis.title.x = element_blank(), 
-         axis.text.x= element_text (size = 13, color = "black"),
-         strip.text = element_text( size = 20, hjust = 0),
+         axis.text.x= element_text (size = 12, color = "black"),
+         strip.text = element_text( size = 18, hjust = 0),
          strip.background = element_blank(), 
          panel.background = element_blank(), #element_rect(color = "black", fill = NULL), 
          #panel.grid = element_blank(),

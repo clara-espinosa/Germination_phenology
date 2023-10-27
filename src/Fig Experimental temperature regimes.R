@@ -27,7 +27,7 @@ ggplot(temp, aes ()) +
   scale_color_manual (name= "Incubator", values =c("chocolate2", "deepskyblue3")) +
   scale_y_continuous (limits = c(-3,25), breaks = seq (0, 25, by= 5)) +
   scale_x_datetime(date_breaks = "2 month", date_labels = "%b %y")+
-  labs (title = "Experimental temperature programs", y= "Temperature ºC", x = "Date") + #, tag= "B"
+  labs (title = "Experimental temperature programs", y= "Temperature ºC", x = "Date", tag= "B") + #
   theme_classic(base_size = 20) +
   theme (plot.title = element_text ( size = 24), #hjust = 0.5,
          axis.title.y = element_text (size=20), 
@@ -51,16 +51,19 @@ temp %>%
   ggplot(aes(x= incubator, y = n, fill = germination_period)) +
   geom_bar(stat = "identity", width=0.99, color = "black", position = position_stack(reverse= TRUE)) +
   coord_flip()+
-  labs (tag = "C") + 
-  scale_fill_manual (name= "Germination phenology periods", values =c("brown", "cadetblue3","chartreuse3", "darkgoldenrod1"),
+  #labs (tag = "C") + 
+  scale_fill_manual (name= "Germination phenology periods", 
+                     values =c("brown", "cadetblue3","chartreuse3", "darkgoldenrod1"),
                      guide = guide_legend (title.position = "top",direction = "horizontal")) +
   theme_minimal(base_size = 20) +
   theme (plot.title = element_text (size = 24), #hjust = 0.5,
          axis.title.y = element_blank (), 
-         axis.text.y = element_text(size= 18, color = c( "deepskyblue3","chocolate2")),
+         axis.text.y = element_text(size= 22, color = c( "deepskyblue3","chocolate2")),
          axis.title.x = element_blank (), 
          axis.text.x= element_blank (),
          plot.tag.position = c(0,1),
+         legend.title = element_text(size =24),
+         legend.text = element_text(size=22),
          legend.position = "bottom",
          legend.margin = margin(0, 0, 0, 0)) -> fig2c;fig2c
          #legend.title = element_text (size =14),

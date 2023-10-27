@@ -35,7 +35,7 @@ read.csv("data/weekly_picos_graph.csv", sep = ";") %>%
   scale_color_manual (name = "Field sites", values = c ("Fellfield site"= "darkgoldenrod1" , "Snowbed site" = "forestgreen")) +
   scale_fill_manual (name = "Field sites", values = c ("Fellfield site"= "darkgoldenrod1" , "Snowbed site" = "forestgreen")) +
   scale_y_continuous (limits = c(-3,25), breaks = seq (0, 25, by= 5)) +
-  labs (title = "Soil temperature records 2008 - 2019", y= "Temperature ºC", x = "Time (weeks)") + #, tag = "A"
+  labs (title = "Soil temperature records 2008 - 2019", y= "Temperature ºC", x = "Time (weeks)", tag = "A") + #
   theme_classic(base_size = 16) +
   theme (plot.title = element_text ( size = 24), #hjust = 0.5,
          axis.title.y = element_text (size=20), 
