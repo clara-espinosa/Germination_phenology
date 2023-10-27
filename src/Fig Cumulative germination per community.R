@@ -94,6 +94,15 @@ read.csv("data/clean data.csv", sep = ";") %>%
          legend.text = element_text (size =14),
          legend.position = "none", # legend.position = c(0.85, 0.5),
          legend.box.background = element_rect(color = "black", size = 2))
+#geom_vline(xintercept = as.POSIXct(as.Date("2021-11-12")), linetype = "dashed", size =1.25) +
+#annotate (geom ="text", x= as.POSIXct(as.Date("2021-10-12")), y = 0.8, label ="Autumn", size = 5, fontface ="bold") +
+#geom_vline(xintercept = as.POSIXct(as.Date("2022-06-15")), linetype = "dashed", size =1.25) +
+#annotate (geom ="text", x= as.POSIXct(as.Date("2022-05-15")), y = 0.8, label ="Spring", size = 5, fontface ="bold") +
+#geom_vline(xintercept = as.POSIXct(as.Date("2022-09-19")), linetype = "dashed", size =1.25) 
+#annotate (geom ="text", x= as.POSIXct(as.Date("2022-08-17")), y = 0.8, label ="Summer", size = 5, fontface ="bold") +
+#geom_segment (aes(x=as.POSIXct(as.Date("2021-11-25")), y =0.05, xend=as.POSIXct(as.Date("2022-04-04")), yend =0.05), color = "chocolate2", size = 1.25) +
+#geom_segment (aes(x=as.POSIXct(as.Date("2021-11-12")), y = 0.03, xend =as.POSIXct(as.Date("2022-05-26")), yend =0.03), color = "deepskyblue3", size = 1.25) + 
+#annotate (geom ="text", x= as.POSIXct(as.Date("2022-01-15")), y = 0, label ="Winter period", colour = "black", size = 5, fontface ="bold") 
 
 ggarrange( fig2d, fig2e, ncol =1, nrow= 2,common.legend = TRUE)
 

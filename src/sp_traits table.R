@@ -16,7 +16,8 @@ read.csv("data/clean data.csv", sep = ";") %>%
   summarise (total_germ = sum (total_germ), 
              viable = sum (viable), 
              total = sum(total), 
-             abundance = mean (abundance))%>%
+             abundance = mean (abundance),
+             area_curves= mean(ABC_clean_data))%>%
   mutate(germPER = (total_germ/viable) *100, # 
          germPER = round (germPER, digit =2)) %>%
   mutate(viablePER=(viable/total) *100, 
@@ -37,7 +38,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
   mutate(autumn_germ = (seeds_germ/viable)*100, 
          autumn_germ = round (autumn_germ, digit = 2))%>%
   select (community, species, abundance, family, code,  recolection, incubator, 
-           total,viable, viablePER, total_germ,germPER,  autumn_germ) -> appendix
+           total,viable, viablePER, total_germ,germPER, area_curves, autumn_germ) -> appendix
 # winter
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
@@ -55,9 +56,9 @@ read.csv("data/clean data.csv", sep = ";") %>%
   merge(appendix)%>%
   group_by (community, species, code, incubator)%>%
   mutate(winter_germ = (seeds_germ/viable)*100, 
-         winter_germ = round (autumn_germ, digit = 2))%>%
+         winter_germ = round (winter_germ, digit = 2))%>%
   select (community, species, abundance, family, code,  recolection, incubator, 
-          total,viable, viablePER, total_germ,germPER,  autumn_germ, winter_germ) -> appendix
+          total,viable, viablePER, total_germ,germPER,  area_curves, autumn_germ, winter_germ) -> appendix
 #spring
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
@@ -84,6 +85,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
   group_by (species, code, incubator, petridish) %>%
   summarise(seeds_germ = sum(germinated)) %>%
   merge (viables)  -> Springgerm_S
+
 rbind(Springgerm_F, Springgerm_S) %>%
   select(species, code, incubator, petridish, seeds_germ, viable) %>%
   group_by (species, code, incubator) %>%
@@ -93,7 +95,7 @@ rbind(Springgerm_F, Springgerm_S) %>%
   mutate(spring_germ = (seeds_germ/viable)*100, 
          spring_germ = round (spring_germ, digit = 2))%>%
   select (community, species, abundance, family,  code, recolection, incubator, 
-          total,viable, viablePER, total_germ,germPER,  autumn_germ, winter_germ, spring_germ) -> appendix
+          total,viable, viablePER, total_germ,germPER,  area_curves, autumn_germ, winter_germ, spring_germ) -> appendix
 #summer
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))  %>%
@@ -113,7 +115,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
   mutate(summer_germ = (seeds_germ/viable)*100, 
          summer_germ = round (summer_germ, digit = 2))%>%
   select (community, species, abundance, family,  code, recolection, incubator, 
-          total,viable, viablePER, total_germ,germPER,  autumn_germ, winter_germ, spring_germ,
+          total,viable, viablePER, total_germ,germPER,  area_curves, autumn_germ, winter_germ, spring_germ,
           summer_germ) -> appendix
 
 # t50
@@ -150,7 +152,7 @@ t50model %>%
   summarise(t50lm = mean (t50lm))%>%
   right_join(appendix, by =c("species",  "code", "incubator")) %>%
   select(community, species, abundance, family,  code, recolection, incubator, 
-        total,viable, viablePER, total_germ, germPER,  autumn_germ, winter_germ, spring_germ,
+        total,viable, viablePER, total_germ, germPER,  area_curves, autumn_germ, winter_germ, spring_germ,
         summer_germ,t50lm) %>% 
   arrange (species, code, incubator)-> appendix
 
@@ -188,47 +190,27 @@ HS %>%
   summarise(HS = mean(HS)) %>%
   right_join(appendix, by =c("species",  "code", "incubator")) %>%
   select(community, species, abundance, family,  code, recolection, incubator, 
-         total,viable, viablePER, total_germ,germPER,  autumn_germ,winter_germ,  spring_germ,
+         total,viable, viablePER, total_germ,germPER,  area_curves, autumn_germ,winter_germ,  spring_germ,
          summer_germ, t50lm, HS) %>% 
   arrange (species,  code, incubator)-> appendix
 
 ### delay to reach t50 check days between incubators ####
 t50model %>%
-  merge (viables_germ)%>%
-  filter(viablePER>25)%>%
   group_by (species, code, incubator) %>%
-  summarise(t50lm = mean(t50lm)) %>%
+  summarise(t50lm = mean(t50lm)) %>%   #, na.rm = TRUE 
   spread(incubator, t50lm) %>% 
   mutate(delayS_F = Snowbed - Fellfield) %>%  # NAs appear when species don't reach 50% germination (t50lm_days =Na)
-  na.omit () %>%
-  mutate(species= str_replace(species, "Cerastium sp", "Cerastium pumilum"))%>%
-  mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
-  mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>% 
-  merge(species, by = c("code", "species")) %>%
-  mutate(code=factor(code)) %>%
-  mutate(species=factor(species)) %>%
-  mutate(family=factor(family)) %>%
-  mutate(macroclimate=factor(macroclimate)) %>%
-  mutate(habitat=factor(habitat)) %>%
-  mutate(germ_strategy=factor(germ_strategy)) %>%
-  mutate(ID = gsub(" ", "_", species), animal = ID) %>% 
-  select(!family) %>%  
-  na.omit () -> df 
-summary(df)
-df %>%
-  select (code, species,delayS_F, macroclimate)%>%
-  group_by (macroclimate) %>%
-  summarise (Delay = delayS_F) %>%
-  get_summary_stats(type ="full")
-# delay to reach t50 check days between incubators ####
-t50model %>%
-  ungroup() %>%
-  #select(species, code, incubator, t50lm) %>% 
-  group_by (species, code, incubator) %>%# only possible if we join data by species and incubator, adding petridish produce an error
-  summarise(t50lm = mean(t50lm)) %>%
-  spread(incubator, t50lm) %>% 
-  mutate(delayS_F = Snowbed - Fellfield) %>% 
-  select (species, code, delayS_F)-> delaytime # NAs appear when species don't reach 50% germination (t50lm_days =Na)
+  right_join(appendix, by =c("species",  "code")) %>%
+  select(community, species, abundance, family,  code, recolection, incubator, 
+         total,viable, viablePER, total_germ,germPER,  area_curves, autumn_germ,winter_germ,  spring_germ,
+         summer_germ, t50lm, HS, delayS_F) %>% 
+  arrange (species,  code, incubator)-> appendix
 
-
-write.csv(appendix, "results/Supplementary/5. Traits summary table.csv")
+# final table, only selected variables
+appendix%>%
+  ungroup()%>%
+  select(community, species, family, abundance, incubator, germPER, area_curves, 
+         autumn_germ,winter_germ,  spring_germ, summer_germ, t50lm, HS, delayS_F) %>% 
+  group_by(community, species, family, incubator)%>% 
+  summarise(across(everything(), .f= mean , na.rm = TRUE)) %>%
+  write.csv("results/Tables/2. Traits per sp summary.csv")
