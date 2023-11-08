@@ -123,3 +123,12 @@ read.csv("data/all_info.csv", sep = ";") %>%
          legend.text = element_text (size =14),
          legend.position = "bottom", # legend.position = c(0.85, 0.5),
          legend.box.background = element_rect(color = "black", size = 2))
+
+
+# test if area between curves depends on habitat specialist vs generalist
+read.csv("data/all_info.csv", sep =";") %>%
+  select(species, family, community, habitat, ABC_clean_data, germ_period_F, germ_period_S) %>%
+  group_by (community, habitat) %>%
+  count(germ_period_S)%>%
+  ggplot( aes(x= germ_period_F))+
+  geom_bar(stat= "count", position = "stack") +

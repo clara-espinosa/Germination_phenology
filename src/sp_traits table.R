@@ -203,3 +203,10 @@ appendix%>%
   group_by(community, species, family, incubator)%>% 
   summarise(across(everything(), .f= mean , na.rm = TRUE)) %>%
   write.csv("results/Tables/2. Traits per sp summary.csv")
+
+appendix %>% write.csv("results/Supplementary/Species traits summary.csv")
+  str(appendix)
+appendix %>%
+  select(species, incubator, HS)%>%
+  spread(incubator, HS)%>%
+  print(n=95)

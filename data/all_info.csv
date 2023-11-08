@@ -1,96 +1,96 @@
-code;species;site;abundance;recolection;family;community;habitat;germ_strategy;ABC_all_data;ABC_clean_data
-250821-06;Agrostis tileni;Penauta;0.43;25/08/2021;Poaceae;Mediterranean;Specialist;Late_season;69.84887;69.81458
-240821-01;Armeria duriaei;Rabinalto;0.88;24/08/2021;Plumbaginaceae;Mediterranean;Specialist;Autumn;68.45313;25.44096
-250821-01;Armeria duriaei;Penauta;0.88;25/08/2021;Plumbaginaceae;Mediterranean;Specialist;Autumn;68.45313;25.44096
-150721-05;Cerastium ramosissimum;Cañada;0.04;15/07/2021;Caryophyllaceae;Mediterranean;Not_specialist;Autumn;10.83592;-8.026992
-280721-02;Cerastium ramosissimum;Rabinalto;0.04;28/07/2021;Caryophyllaceae;Mediterranean;Not_specialist;Autumn;10.83592;-8.026992
-240821-03;Conopodium majus;Rabinalto;0.33;24/08/2021;Apiaceae;Mediterranean;Not_specialist;Early_season;28.44295;29.18449
-250821-04;Conopodium majus;Penauta;0.33;25/08/2021;Apiaceae;Mediterranean;Not_specialist;Early_season;28.44295;29.18449
-110821-01;Dianthus langeanus;Penauta;3.79;11/08/2021;Caryophyllaceae;Mediterranean;Not_specialist;Autumn;57.05614;6.122285
-120821-02;Dianthus langeanus;Cañada;3.79;12/08/2021;Caryophyllaceae;Mediterranean;Not_specialist;Autumn;57.05614;6.122285
-240821-02;Festuca summilusitana;Rabinalto;20.26;24/08/2021;Poaceae;Mediterranean;Specialist;Autumn;30.55134;17.04612
-250821-02;Festuca summilusitana;Penauta;20.26;25/08/2021;Poaceae;Mediterranean;Specialist;Autumn;30.55134;17.04612
-240821-06;Helictochloa marginata;Rabinalto;0.41;24/08/2021;Poaceae;Mediterranean;Not_specialist;Biphasic;34.43597;34.58818
-110821-06;Jurinea humilis;Solana;0.41;11/08/2021;Asteraceae;Mediterranean;Not_specialist;Biphasic;83.86313;191.2164
-120821-03;Jurinea humilis;Cañada;0.41;12/08/2021;Asteraceae;Mediterranean;Not_specialist;Biphasic;83.86313;191.2164
-110821-03;Luzula caespitosa;Penauta;15.35;11/08/2021;Juncaceae;Mediterranean;Specialist;Biphasic;12.85309;107.0115
-120821-04;Luzula caespitosa;Cañada;15.35;12/08/2021;Juncaceae;Mediterranean;Specialist;Biphasic;12.85309;107.0115
-110821-07;Minuartia recurva;Solana;0.37;11/08/2021;Caryophyllaceae;Mediterranean;Specialist;Biphasic;54.4922;54.19677
-120821-01;Minuartia recurva;Cañada;0.37;12/08/2021;Caryophyllaceae;Mediterranean;Specialist;Biphasic;54.4922;54.19677
-240821-07;Neoschischkinia truncatula;Rabinalto;0.58;24/08/2021;Poaceae;Mediterranean;Not_specialist;Autumn;56.54167;17.60386
-250821-03;Neoschischkinia truncatula;Penauta;0.58;25/08/2021;Poaceae;Mediterranean;Not_specialist;Autumn;56.54167;17.60386
-110821-02;Phalacrocarpum oppositifolium;Penauta;0.71;11/08/2021;Asteraceae;Mediterranean;Not_specialist;Biphasic;-9.222841;2.73503
-120821-05;Phalacrocarpum oppositifolium;Rabinalto;0.71;12/08/2021;Asteraceae;Mediterranean;Not_specialist;Biphasic;-9.222841;2.73503
-240821-10;Phyteuma hemisphaericum;Cañada;0.21;24/08/2021;Campanulaceae;Mediterranean;Specialist;Early_season;10.14229;10.14752
-250821-07;Phyteuma hemisphaericum;Penauta;0.21;25/08/2021;Campanulaceae;Mediterranean;Specialist;Early_season;10.14229;10.14752
-240821-04;Plantago holosteum;Rabinalto;0.36;24/08/2021;Plantaginaceae;Mediterranean;Not_specialist;Autumn;37.88527;8.871351
-250821-12;Plantago holosteum;Solana;0.36;25/08/2021;Plantaginaceae;Mediterranean;Not_specialist;Autumn;37.88527;8.871351
-240821-09;Sedum anglicum;Cañada;0.08;24/08/2021;Crassulaceae;Mediterranean;Specialist;Biphasic;63.42315;62.85937
-250821-09;Sedum anglicum;Penauta;0.08;25/08/2021;Crassulaceae;Mediterranean;Specialist;Biphasic;63.42315;62.85937
-240821-11;Sedum brevifolium;Cañada;1.8;24/08/2021;Crassulaceae;Mediterranean;Not_specialist;Biphasic;40.75914;28.35367
-250821-08;Sedum brevifolium;Penauta;1.8;25/08/2021;Crassulaceae;Mediterranean;Not_specialist;Biphasic;40.75914;28.35367
-230921-02;Sempervivum arachnoideum;Penauta;0.27;23/09/2021;Crassulaceae;Mediterranean;Not_specialist;Late_season;55.39626;55.33441
-230921-04;Sempervivum arachnoideum;Solana;0.27;23/09/2021;Crassulaceae;Mediterranean;Not_specialist;Late_season;55.39626;55.33441
-230921-01;Silene ciliata;Penauta;0.47;23/09/2021;Caryophyllaceae;Mediterranean;Specialist;Early_season;30.51937;30.54915
-230921-03;Silene ciliata;Solana;0.47;23/09/2021;Caryophyllaceae;Mediterranean;Specialist;Early_season;30.51937;30.54915
-240821-08;Solidago virgaurea;Rabinalto;0.02;24/08/2021;Asteraceae;Mediterranean;Not_specialist;Biphasic;135.7171;164.5787
-250821-13;Solidago virgaurea;Penauta;0.02;25/08/2021;Asteraceae;Mediterranean;Not_specialist;Biphasic;135.7171;164.5787
-150721-01;Spergula morisonii;Cañada;0.02;15/07/2021;Caryophyllaceae;Mediterranean;Not_specialist;Autumn;-27.97822;-62.09302
-280721-01;Spergula morisonii;Rabinalto;0.02;28/07/2021;Caryophyllaceae;Mediterranean;Not_specialist;Autumn;-27.97822;-62.09302
-110821-05;Thymus praecox;Solana;0.81;11/08/2021;Lamiaceae;Mediterranean;Not_specialist;Biphasic;63.58631;65.79285
-120821-06;Thymus praecox;Rabinalto;0.81;12/08/2021;Lamiaceae;Mediterranean;Not_specialist;Biphasic;63.58631;65.79285
-300821-03;Androsace villosa;Hoyo sin Tierra;0.85;30/08/2021;Primulaceae;Temperate;Specialist;Sporadic_low;;-0.6323417
-310821-11;Androsace villosa;Cazadores;0.85;31/08/2021;Primulaceae;Temperate;Specialist;Sporadic_low;;-0.6323417
-300821-04;Anthyllis vulneraria;Hoyo sin Tierra;2.71;30/08/2021;Fabaceae;Temperate;Not_specialist;Biphasic;;12.15582
-310821-12;Anthyllis vulneraria;Cazadores;2.71;31/08/2021;Fabaceae;Temperate;Not_specialist;Biphasic;;12.15582
-300821-08;Arenaria erinacea;Hoyo sin Tierra;0.16;30/08/2021;Caryophyllaceae;Temperate;Specialist;Autumn;69.1048;69.10274
-140921-02;Arenaria moehringioides;Boches;0.04;14/09/2021;Caryophyllaceae;Temperate;Specialist;Early_season;30.75812;30.7779
-130921-15;Armeria cantabrica;Hou sin Tierri;1.37;13/09/2021;Plumbaginaceae;Temperate;Specialist;Late_season;30.88229;30.84555
-140921-07;Armeria cantabrica;Boches;1.37;14/09/2021;Plumbaginaceae;Temperate;Specialist;Late_season;30.88229;30.84555
-130921-02;Carex sempervirens;Hou sin Tierri;5.44;13/09/2021;Cyperaceae;Temperate;Specialist;Late_season;37.60237;38.15311
-310821-13;Carex sempervirens;Cazadores;5.44;31/08/2021;Cyperaceae;Temperate;Specialist;Late_season;37.60237;38.15311
-310821-07;Dethawia splendens;Cazadores;0.18;31/08/2021;Apiaceae;Temperate;Specialist;Early_season;11.81382;11.8709
-310821-15;Erigeron alpinus;Cazadores;0.04;31/08/2021;Asteraceae;Temperate;Specialist;Late_season;43.78209;43.79633
-011021-01;Euphrasia salisburgensis;Hou sin Tierri;0.04;01/10/2021;Orobanchaceae;Temperate;Specialist;Sporadic_low;;0.07757839
-300921-01;Euphrasia salisburgensis;Cazadores;0.04;30/09/2021;Orobanchaceae;Temperate;Specialist;Sporadic_low;;0.07757839
-130921-16;Festuca hystrix;Hou sin Tierri;0.43;13/09/2021;Poaceae;Temperate;Not_specialist;Biphasic;83.16848;83.15741
-300821-01;Festuca hystrix;Hoyo sin Tierra;0.43;30/08/2021;Poaceae;Temperate;Not_specialist;Biphasic;83.16848;83.15741
-310821-02;Festuca rubra;Cazadores;2.12;31/08/2021;Poaceae;Temperate;Not_specialist;Late_season;;
-130921-06;Gentiana verna;Hou sin Tierri;0.1;13/09/2021;Gentianaceae;Temperate;Specialist;Early_season;1.212687;1.208498
-140921-06;Gentiana verna;Boches;0.1;14/09/2021;Gentianaceae;Temperate;Specialist;Early_season;1.212687;1.208498
-300921-03;Gentianella campestris;Cazadores;0.01;30/09/2021;Gentianaceae;Temperate;Not_specialist;Sporadic_low;0;0
-300821-10;Gypsophila repens;Hoyo sin Tierra;0.32;30/08/2021;Caryophyllaceae;Temperate;Not_specialist;Early_season;75.36499;75.3701
-310821-08;Gypsophila repens;Cazadores;0.32;31/08/2021;Caryophyllaceae;Temperate;Not_specialist;Early_season;75.36499;75.3701
-300821-05;Helianthemum canum;Hoyo sin Tierra;2.29;30/08/2021;Cistaceae;Temperate;Not_specialist;Biphasic;29.81871;29.81976
-310821-05;Helianthemum canum;Cazadores;2.29;31/08/2021;Cistaceae;Temperate;Not_specialist;Biphasic;29.81871;29.81976
-130921-05;Helianthemum urrielense;Hou sin Tierri;2.48;13/09/2021;Cistaceae;Temperate;Not_specialist;Autumn;12.33412;-32.50942
-140921-04;Helianthemum urrielense;Boches;2.48;14/09/2021;Cistaceae;Temperate;Not_specialist;Autumn;12.33412;-32.50942
-300821-09;Helictotrichon sedenense;Hoyo sin Tierra;1.04;30/08/2021;Poaceae;Temperate;Specialist;Early_season;22.97535;23.03575
-130921-12;Iberis carnosa;Hou sin Tierri;0.09;13/09/2021;Brassicaceae;Temperate;Not_specialist;Biphasic;138.2313;183.4111
-130921-14;Jasione cavanillesii;Hou sin Tierri;0.04;13/09/2021;Campanulaceae;Temperate;Specialist;Late_season;14.03666;14.02195
-140921-05;Jasione cavanillesii;Boches;0.04;14/09/2021;Campanulaceae;Temperate;Specialist;Late_season;14.03666;14.02195
-310821-01;Jurinea humilis;Cazadores;0.27;31/08/2021;Asteraceae;Temperate;Not_specialist;Biphasic;46.28999;94.14644
-130921-03;Kobresia myosuroides;Hou sin Tierri;0.01;13/09/2021;Cyperaceae;Temperate;Specialist;Sporadic_low;0;0
-300821-02;Koeleria vallesiana;Hoyo sin Tierra;1.76;30/08/2021;Poaceae;Temperate;Specialist;Biphasic;58.74179;54.54562
-310821-09;Koeleria vallesiana;Cazadores;1.76;31/08/2021;Poaceae;Temperate;Specialist;Biphasic;58.74179;54.54562
-310821-10;Minuartia CF;Cazadores;;31/08/2021;Caryophyllaceae;Temperate;Specialist;Biphasic;97.22416;97.17049
-300821-06;Minuartia verna;Hoyo sin Tierra;0.26;30/08/2021;Caryophyllaceae;Temperate;Specialist;Biphasic;112.4645;112.3931
-130921-04;Pedicularis pyrenaica;Hou sin Tierri;0.09;13/09/2021;Orobanchaceae;Temperate;Specialist;Early_season;21.05502;21.05373
-310821-04;Pedicularis pyrenaica;Cazadores;0.09;31/08/2021;Orobanchaceae;Temperate;Specialist;Early_season;21.05502;21.05373
-300921-02;Phyteuma orbiculare;Cazadores;0.19;30/09/2021;Campanulaceae;Temperate;Not_specialist;Late_season;-11.39109;-11.42264
-130921-08;Plantago alpina;Hou sin Tierri;1.27;13/09/2021;Plantaginaceae;Temperate;Specialist;Biphasic;82.99626;82.97421
-300821-15;Plantago alpina;Hoyo sin Tierra;1.27;30/08/2021;Plantaginaceae;Temperate;Specialist;Biphasic;82.99626;82.97421
-310821-16;Ranunculus carinthiacus;Cazadores;0.17;31/08/2021;Ranunculaceae;Temperate;Specialist;Sporadic_low;24.66671;24.66875
-140921-01;Salix breviserrata;Boches;0.03;14/09/2021;Salicaceae;Temperate;Specialist;Sporadic_low;0;0
-130921-09;Saxifraga conifera;Hou sin Tierri;0.81;13/09/2021;Saxifragaceae;Temperate;Specialist;Biphasic;195.2192;195.1693
-140921-08;Saxifraga conifera;Boches;0.81;14/09/2021;Saxifragaceae;Temperate;Specialist;Biphasic;195.2192;195.1693
-310821-14;Saxifraga paniculata;Cazadores;0.03;31/08/2021;Saxifragaceae;Temperate;Not_specialist;Late_season;84.8386;84.82935
-310821-06;Scilla verna;Cazadores;0.04;31/08/2021;Asparagaceae;Temperate;Not_specialist;Late_season;-1.316253;-1.361059
-300821-14;Sedum album cf;Hoyo sin Tierra;0.03;30/08/2021;Crassulaceae;Temperate;Not_specialist;Sporadic_low;0;0
-310821-03;Sesleria caerula;Cazadores;;31/08/2021;Poaceae;Temperate;Not_specialist;Biphasic;129.6479;146.8434
-130921-07;Silene acaulis;Hou sin Tierri;1.45;13/09/2021;Caryophyllaceae;Temperate;Specialist;Late_season;17.51724;17.53493
-140921-03;Silene acaulis;Boches;1.45;14/09/2021;Caryophyllaceae;Temperate;Specialist;Late_season;17.51724;17.53493
-140921-09;Silene ciliata;Boches;0.45;14/09/2021;Caryophyllaceae;Temperate;Specialist;Early_season;56.58018;56.58296
-300821-11;Silene ciliata;Hoyo sin Tierra;0.45;30/08/2021;Caryophyllaceae;Temperate;Specialist;Early_season;56.58018;56.58296
-130921-10;Thymus praecox;Hou sin Tierri;2.65;13/09/2021;Lamiaceae;Temperate;Not_specialist;Biphasic;125.6879;151.8266
-300821-07;Thymus praecox;Hoyo sin Tierra;2.65;30/08/2021;Lamiaceae;Temperate;Not_specialist;Biphasic;125.6879;151.8266
+code;species;site;abundance;recolection;family;community;habitat;germ_strategy;germ_period_F;germ_period_S;ABC_all_data;ABC_clean_data
+250821-06;Agrostis tileni;Penauta;0.43;25/08/2021;Poaceae;Mediterranean;Specialist;Late_season;Spring;Spring;69.84887;69.81458
+240821-01;Armeria duriaei;Rabinalto;0.88;24/08/2021;Plumbaginaceae;Mediterranean;Specialist;Autumn;Autumn;Autumn;68.45313;25.44096
+250821-01;Armeria duriaei;Penauta;0.88;25/08/2021;Plumbaginaceae;Mediterranean;Specialist;Autumn;Autumn;Autumn;68.45313;25.44096
+150721-05;Cerastium ramosissimum;Cañada;0.04;15/07/2021;Caryophyllaceae;Mediterranean;Not_specialist;Autumn;Autumn;Autumn;10.83592;-8.026992
+280721-02;Cerastium ramosissimum;Rabinalto;0.04;28/07/2021;Caryophyllaceae;Mediterranean;Not_specialist;Autumn;Autumn;Autumn;10.83592;-8.026992
+240821-03;Conopodium majus;Rabinalto;0.33;24/08/2021;Apiaceae;Mediterranean;Not_specialist;Early_season;Spring;Winter;28.44295;29.18449
+250821-04;Conopodium majus;Penauta;0.33;25/08/2021;Apiaceae;Mediterranean;Not_specialist;Early_season;Spring;Winter;28.44295;29.18449
+110821-01;Dianthus langeanus;Penauta;3.79;11/08/2021;Caryophyllaceae;Mediterranean;Not_specialist;Autumn;Autumn;Autumn;57.05614;6.122285
+120821-02;Dianthus langeanus;Cañada;3.79;12/08/2021;Caryophyllaceae;Mediterranean;Not_specialist;Autumn;Autumn;Autumn;57.05614;6.122285
+240821-02;Festuca summilusitana;Rabinalto;20.26;24/08/2021;Poaceae;Mediterranean;Specialist;Autumn;Autumn;Autumn;30.55134;17.04612
+250821-02;Festuca summilusitana;Penauta;20.26;25/08/2021;Poaceae;Mediterranean;Specialist;Autumn;Autumn;Autumn;30.55134;17.04612
+240821-06;Helictochloa marginata;Rabinalto;0.41;24/08/2021;Poaceae;Mediterranean;Not_specialist;Biphasic;Spring;Summer;34.43597;34.58818
+110821-06;Jurinea humilis;Solana;0.41;11/08/2021;Asteraceae;Mediterranean;Not_specialist;Biphasic;Autumn;Winter;83.86313;191.2164
+120821-03;Jurinea humilis;Cañada;0.41;12/08/2021;Asteraceae;Mediterranean;Not_specialist;Biphasic;Autumn;Winter;83.86313;191.2164
+110821-03;Luzula caespitosa;Penauta;15.35;11/08/2021;Juncaceae;Mediterranean;Specialist;Biphasic;Autumn;Winter;12.85309;107.0115
+120821-04;Luzula caespitosa;Cañada;15.35;12/08/2021;Juncaceae;Mediterranean;Specialist;Biphasic;Autumn;Winter;12.85309;107.0115
+110821-07;Minuartia recurva;Solana;0.37;11/08/2021;Caryophyllaceae;Mediterranean;Specialist;Biphasic;Autumn;Autumn;54.4922;54.19677
+120821-01;Minuartia recurva;Cañada;0.37;12/08/2021;Caryophyllaceae;Mediterranean;Specialist;Biphasic;Autumn;Autumn;54.4922;54.19677
+240821-07;Neoschischkinia truncatula;Rabinalto;0.58;24/08/2021;Poaceae;Mediterranean;Not_specialist;Autumn;Autumn;Autumn;56.54167;17.60386
+250821-03;Neoschischkinia truncatula;Penauta;0.58;25/08/2021;Poaceae;Mediterranean;Not_specialist;Autumn;Autumn;Autumn;56.54167;17.60386
+110821-02;Phalacrocarpum oppositifolium;Penauta;0.71;11/08/2021;Asteraceae;Mediterranean;Not_specialist;Biphasic;Autumn;Autumn;-9.222841;2.73503
+120821-05;Phalacrocarpum oppositifolium;Rabinalto;0.71;12/08/2021;Asteraceae;Mediterranean;Not_specialist;Biphasic;Autumn;Autumn;-9.222841;2.73503
+240821-10;Phyteuma hemisphaericum;Cañada;0.21;24/08/2021;Campanulaceae;Mediterranean;Specialist;Early_season;Spring;Spring;10.14229;10.14752
+250821-07;Phyteuma hemisphaericum;Penauta;0.21;25/08/2021;Campanulaceae;Mediterranean;Specialist;Early_season;Spring;Spring;10.14229;10.14752
+240821-04;Plantago holosteum;Rabinalto;0.36;24/08/2021;Plantaginaceae;Mediterranean;Not_specialist;Autumn;Autumn;Autumn;37.88527;8.871351
+250821-12;Plantago holosteum;Solana;0.36;25/08/2021;Plantaginaceae;Mediterranean;Not_specialist;Autumn;Autumn;Autumn;37.88527;8.871351
+240821-09;Sedum anglicum;Cañada;0.08;24/08/2021;Crassulaceae;Mediterranean;Specialist;Biphasic;Autumn;Autumn;63.42315;62.85937
+250821-09;Sedum anglicum;Penauta;0.08;25/08/2021;Crassulaceae;Mediterranean;Specialist;Biphasic;Autumn;Autumn;63.42315;62.85937
+240821-11;Sedum brevifolium;Cañada;1.8;24/08/2021;Crassulaceae;Mediterranean;Not_specialist;Biphasic;Autumn;Autumn;40.75914;28.35367
+250821-08;Sedum brevifolium;Penauta;1.8;25/08/2021;Crassulaceae;Mediterranean;Not_specialist;Biphasic;Autumn;Autumn;40.75914;28.35367
+230921-02;Sempervivum arachnoideum;Penauta;0.27;23/09/2021;Crassulaceae;Mediterranean;Not_specialist;Late_season;Spring;Summer;55.39626;55.33441
+230921-04;Sempervivum arachnoideum;Solana;0.27;23/09/2021;Crassulaceae;Mediterranean;Not_specialist;Late_season;Spring;Summer;55.39626;55.33441
+230921-01;Silene ciliata;Penauta;0.47;23/09/2021;Caryophyllaceae;Mediterranean;Specialist;Early_season;Spring;Spring;30.51937;30.54915
+230921-03;Silene ciliata;Solana;0.47;23/09/2021;Caryophyllaceae;Mediterranean;Specialist;Early_season;Spring;Spring;30.51937;30.54915
+240821-08;Solidago virgaurea;Rabinalto;0.02;24/08/2021;Asteraceae;Mediterranean;Not_specialist;Biphasic;Autumn;Winter;135.7171;164.5787
+250821-13;Solidago virgaurea;Penauta;0.02;25/08/2021;Asteraceae;Mediterranean;Not_specialist;Biphasic;Autumn;Winter;135.7171;164.5787
+150721-01;Spergula morisonii;Cañada;0.02;15/07/2021;Caryophyllaceae;Mediterranean;Not_specialist;Autumn;Autumn;Autumn;-27.97822;-62.09302
+280721-01;Spergula morisonii;Rabinalto;0.02;28/07/2021;Caryophyllaceae;Mediterranean;Not_specialist;Autumn;Autumn;Autumn;-27.97822;-62.09302
+110821-05;Thymus praecox;Solana;0.81;11/08/2021;Lamiaceae;Mediterranean;Not_specialist;Biphasic;Autumn;Autumn;63.58631;65.79285
+120821-06;Thymus praecox;Rabinalto;0.81;12/08/2021;Lamiaceae;Mediterranean;Not_specialist;Biphasic;Autumn;Autumn;63.58631;65.79285
+300821-03;Androsace villosa;Hoyo sin Tierra;0.85;30/08/2021;Primulaceae;Temperate;Specialist;Sporadic_low;;Summer;;-0.6323417
+310821-11;Androsace villosa;Cazadores;0.85;31/08/2021;Primulaceae;Temperate;Specialist;Sporadic_low;;Summer;;-0.6323417
+300821-04;Anthyllis vulneraria;Hoyo sin Tierra;2.71;30/08/2021;Fabaceae;Temperate;Not_specialist;Biphasic;Autumn;Autumn;;12.15582
+310821-12;Anthyllis vulneraria;Cazadores;2.71;31/08/2021;Fabaceae;Temperate;Not_specialist;Biphasic;Autumn;Autumn;;12.15582
+300821-08;Arenaria erinacea;Hoyo sin Tierra;0.16;30/08/2021;Caryophyllaceae;Temperate;Specialist;Autumn;Autumn;Autumn;69.1048;69.10274
+140921-02;Arenaria moehringioides;Boches;0.04;14/09/2021;Caryophyllaceae;Temperate;Specialist;Early_season;Spring;Summer;30.75812;30.7779
+130921-15;Armeria cantabrica;Hou sin Tierri;1.37;13/09/2021;Plumbaginaceae;Temperate;Specialist;Late_season;Spring;Summer;30.88229;30.84555
+140921-07;Armeria cantabrica;Boches;1.37;14/09/2021;Plumbaginaceae;Temperate;Specialist;Late_season;Spring;Summer;30.88229;30.84555
+130921-02;Carex sempervirens;Hou sin Tierri;5.44;13/09/2021;Cyperaceae;Temperate;Specialist;Late_season;Spring;Summer;37.60237;38.15311
+310821-13;Carex sempervirens;Cazadores;5.44;31/08/2021;Cyperaceae;Temperate;Specialist;Late_season;Spring;Summer;37.60237;38.15311
+310821-07;Dethawia splendens;Cazadores;0.18;31/08/2021;Apiaceae;Temperate;Specialist;Early_season;Spring;Winter;11.81382;11.8709
+310821-15;Erigeron alpinus;Cazadores;0.04;31/08/2021;Asteraceae;Temperate;Specialist;Late_season;Spring;Spring;43.78209;43.79633
+011021-01;Euphrasia salisburgensis;Hou sin Tierri;0.04;01/10/2021;Orobanchaceae;Temperate;Specialist;Sporadic_low;Summer;Winter;;0.07757839
+300921-01;Euphrasia salisburgensis;Cazadores;0.04;30/09/2021;Orobanchaceae;Temperate;Specialist;Sporadic_low;Summer;Winter;;0.07757839
+130921-16;Festuca hystrix;Hou sin Tierri;0.43;13/09/2021;Poaceae;Temperate;Not_specialist;Biphasic;Autumn;Autumn;83.16848;83.15741
+300821-01;Festuca hystrix;Hoyo sin Tierra;0.43;30/08/2021;Poaceae;Temperate;Not_specialist;Biphasic;Autumn;Autumn;83.16848;83.15741
+310821-02;Festuca rubra;Cazadores;2.12;31/08/2021;Poaceae;Temperate;Not_specialist;Late_season;Spring;;;
+130921-06;Gentiana verna;Hou sin Tierri;0.1;13/09/2021;Gentianaceae;Temperate;Specialist;Early_season;Spring;Winter;1.212687;1.208498
+140921-06;Gentiana verna;Boches;0.1;14/09/2021;Gentianaceae;Temperate;Specialist;Early_season;Spring;Winter;1.212687;1.208498
+300921-03;Gentianella campestris;Cazadores;0.01;30/09/2021;Gentianaceae;Temperate;Not_specialist;Sporadic_low;;;0;0
+300821-10;Gypsophila repens;Hoyo sin Tierra;0.32;30/08/2021;Caryophyllaceae;Temperate;Not_specialist;Early_season;Spring;Summer;75.36499;75.3701
+310821-08;Gypsophila repens;Cazadores;0.32;31/08/2021;Caryophyllaceae;Temperate;Not_specialist;Early_season;Spring;Summer;75.36499;75.3701
+300821-05;Helianthemum canum;Hoyo sin Tierra;2.29;30/08/2021;Cistaceae;Temperate;Not_specialist;Biphasic;Autumn;Autumn;29.81871;29.81976
+310821-05;Helianthemum canum;Cazadores;2.29;31/08/2021;Cistaceae;Temperate;Not_specialist;Biphasic;Autumn;Autumn;29.81871;29.81976
+130921-05;Helianthemum urrielense;Hou sin Tierri;2.48;13/09/2021;Cistaceae;Temperate;Not_specialist;Autumn;Autumn;Autumn;12.33412;-32.50942
+140921-04;Helianthemum urrielense;Boches;2.48;14/09/2021;Cistaceae;Temperate;Not_specialist;Autumn;Autumn;Autumn;12.33412;-32.50942
+300821-09;Helictotrichon sedenense;Hoyo sin Tierra;1.04;30/08/2021;Poaceae;Temperate;Specialist;Early_season;Spring;Winter;22.97535;23.03575
+130921-12;Iberis carnosa;Hou sin Tierri;0.09;13/09/2021;Brassicaceae;Temperate;Not_specialist;Biphasic;Autumn;Summer;138.2313;183.4111
+130921-14;Jasione cavanillesii;Hou sin Tierri;0.04;13/09/2021;Campanulaceae;Temperate;Specialist;Late_season;Spring;Summer;14.03666;14.02195
+140921-05;Jasione cavanillesii;Boches;0.04;14/09/2021;Campanulaceae;Temperate;Specialist;Late_season;Spring;Summer;14.03666;14.02195
+310821-01;Jurinea humilis;Cazadores;0.27;31/08/2021;Asteraceae;Temperate;Not_specialist;Biphasic;Spring;Winter;46.28999;94.14644
+130921-03;Kobresia myosuroides;Hou sin Tierri;0.01;13/09/2021;Cyperaceae;Temperate;Specialist;Sporadic_low;;;0;0
+300821-02;Koeleria vallesiana;Hoyo sin Tierra;1.76;30/08/2021;Poaceae;Temperate;Specialist;Biphasic;Autumn;Autumn;58.74179;54.54562
+310821-09;Koeleria vallesiana;Cazadores;1.76;31/08/2021;Poaceae;Temperate;Specialist;Biphasic;Autumn;Autumn;58.74179;54.54562
+310821-10;Minuartia CF;Cazadores;;31/08/2021;Caryophyllaceae;Temperate;Specialist;Biphasic;Autumn;Summer;97.22416;97.17049
+300821-06;Minuartia verna;Hoyo sin Tierra;0.26;30/08/2021;Caryophyllaceae;Temperate;Specialist;Biphasic;Autumn;Autumn;112.4645;112.3931
+130921-04;Pedicularis pyrenaica;Hou sin Tierri;0.09;13/09/2021;Orobanchaceae;Temperate;Specialist;Early_season;Spring;Winter;21.05502;21.05373
+310821-04;Pedicularis pyrenaica;Cazadores;0.09;31/08/2021;Orobanchaceae;Temperate;Specialist;Early_season;Spring;Winter;21.05502;21.05373
+300921-02;Phyteuma orbiculare;Cazadores;0.19;30/09/2021;Campanulaceae;Temperate;Not_specialist;Late_season;Spring;Winter;-11.39109;-11.42264
+130921-08;Plantago alpina;Hou sin Tierri;1.27;13/09/2021;Plantaginaceae;Temperate;Specialist;Biphasic;Spring;Winter;82.99626;82.97421
+300821-15;Plantago alpina;Hoyo sin Tierra;1.27;30/08/2021;Plantaginaceae;Temperate;Specialist;Biphasic;Spring;Winter;82.99626;82.97421
+310821-16;Ranunculus carinthiacus;Cazadores;0.17;31/08/2021;Ranunculaceae;Temperate;Specialist;Sporadic_low;Spring;;24.66671;24.66875
+140921-01;Salix breviserrata;Boches;0.03;14/09/2021;Salicaceae;Temperate;Specialist;Sporadic_low;;;0;0
+130921-09;Saxifraga conifera;Hou sin Tierri;0.81;13/09/2021;Saxifragaceae;Temperate;Specialist;Biphasic;Autumn;Summer;195.2192;195.1693
+140921-08;Saxifraga conifera;Boches;0.81;14/09/2021;Saxifragaceae;Temperate;Specialist;Biphasic;Autumn;Summer;195.2192;195.1693
+310821-14;Saxifraga paniculata;Cazadores;0.03;31/08/2021;Saxifragaceae;Temperate;Not_specialist;Late_season;Spring;Summer;84.8386;84.82935
+310821-06;Scilla verna;Cazadores;0.04;31/08/2021;Asparagaceae;Temperate;Not_specialist;Late_season;Summer;Summer;-1.316253;-1.361059
+300821-14;Sedum album cf;Hoyo sin Tierra;0.03;30/08/2021;Crassulaceae;Temperate;Not_specialist;Sporadic_low;;;0;0
+310821-03;Sesleria caerula;Cazadores;;31/08/2021;Poaceae;Temperate;Not_specialist;Biphasic;Autumn;Summer;129.6479;146.8434
+130921-07;Silene acaulis;Hou sin Tierri;1.45;13/09/2021;Caryophyllaceae;Temperate;Specialist;Late_season;Summer;Summer;17.51724;17.53493
+140921-03;Silene acaulis;Boches;1.45;14/09/2021;Caryophyllaceae;Temperate;Specialist;Late_season;Summer;Summer;17.51724;17.53493
+140921-09;Silene ciliata;Boches;0.45;14/09/2021;Caryophyllaceae;Temperate;Specialist;Early_season;Spring;Spring;56.58018;56.58296
+300821-11;Silene ciliata;Hoyo sin Tierra;0.45;30/08/2021;Caryophyllaceae;Temperate;Specialist;Early_season;Spring;Spring;56.58018;56.58296
+130921-10;Thymus praecox;Hou sin Tierri;2.65;13/09/2021;Lamiaceae;Temperate;Not_specialist;Biphasic;Autumn;Summer;125.6879;151.8266
+300821-07;Thymus praecox;Hoyo sin Tierra;2.65;30/08/2021;Lamiaceae;Temperate;Not_specialist;Biphasic;Autumn;Summer;125.6879;151.8266

@@ -76,18 +76,18 @@ str(sp_traits)
 ######## MEDITERRANEAN + FELLFIELD ##########################
 read.csv("data/traits_inc_sp.csv", sep = ";") %>%
   mutate(across(c(community, species, family, incubator), as.factor))%>%
-  merge(seed_mass, by= c("community", "species"))%>%
+  #merge(seed_mass, by= c("community", "species"))%>%
   filter (community == "Mediterranean") %>%
   filter (incubator == "Fellfield") %>%
   select(community, species, family, incubator, autumn_germ, spring_germ, 
-         summer_germ, winter_germ, EHS, seed_mass ) %>% #    all traits
+         summer_germ, winter_germ, EHS ) %>% #, seed_mass    all traits
   #select(total_germ, autumn_germ, spring_germ, summer_germ, winter_germ, area_curves, seed_mass) %>% 
   na.omit() -> traits
 
 traits$species <-make.cepnames(traits$species) # USEFUL!!Shorten sp names with 4 letters from genus name and 4 letter from species name 
 
 ### PCA
-traits[, 5:10] %>%
+traits[, 5:9] %>%
   FactoMineR::PCA() -> pca1
 
 cbind((traits %>%  dplyr::select(species, family)), data.frame(pca1$ind$coord[, 1:4]))-> pcaInds
@@ -129,18 +129,18 @@ pca1$var
 ######## MEDITERRANEAN + SNOWBED ##########################
 read.csv("data/traits_inc_sp.csv", sep = ";") %>%
   mutate(across(c(community, species, family, incubator), as.factor))%>%
-  merge(seed_mass, by= c("community", "species"))%>%
+  #merge(seed_mass, by= c("community", "species"))%>%
   filter (community == "Mediterranean") %>%
   filter (incubator == "Snowbed") %>%
   select(community, species, family, incubator, autumn_germ, spring_germ, 
-         summer_germ, winter_germ, EHS, seed_mass ) %>% #    all traits
+         summer_germ, winter_germ, EHS ) %>% # , seed_mass   all traits
   #select(total_germ, autumn_germ, spring_germ, summer_germ, winter_germ, area_curves, seed_mass) %>% 
   na.omit() -> traits
 
 traits$species <-make.cepnames(traits$species) # USEFUL!!Shorten sp names with 4 letters from genus name and 4 letter from species name 
 
 ### PCA
-traits[, 5:10] %>%
+traits[, 5:9] %>%
   FactoMineR::PCA() -> pca1
 
 cbind((traits %>%  dplyr::select(species, family)), data.frame(pca1$ind$coord[, 1:4]))-> pcaInds
@@ -183,18 +183,18 @@ pca1$var
 ######## TEMPERATE + FELLFIELD ##########################
 read.csv("data/traits_inc_sp.csv", sep = ";") %>%
   mutate(across(c(community, species, family, incubator), as.factor))%>%
-  merge(seed_mass, by= c("community", "species"))%>%
+  #merge(seed_mass, by= c("community", "species"))%>%
   filter (community == "Temperate") %>%
   filter (incubator == "Fellfield") %>%
   select(community, species, family, incubator, autumn_germ, spring_germ, 
-         summer_germ, winter_germ, EHS , seed_mass) %>% #    all traits
+         summer_germ, winter_germ, EHS ) %>% # , seed_mass   all traits
   #select(total_germ, autumn_germ, spring_germ, summer_germ, winter_germ, area_curves, seed_mass) %>% 
   na.omit() -> traits
 
 traits$species <-make.cepnames(traits$species) # USEFUL!!Shorten sp names with 4 letters from genus name and 4 letter from species name 
 
 ### PCA
-traits[, 5:10] %>%
+traits[, 5:9] %>%
   FactoMineR::PCA() -> pca1
 
 cbind((traits %>%  dplyr::select(species, family)), data.frame(pca1$ind$coord[, 1:4]))-> pcaInds
@@ -236,18 +236,18 @@ pca1$var
 ######## TEMPERATE + SNOWBED ##########################
 read.csv("data/traits_inc_sp.csv", sep = ";") %>%
   mutate(across(c(community, species, family, incubator), as.factor))%>%
-  merge(seed_mass, by= c("community", "species"))%>%
+  #merge(seed_mass, by= c("community", "species"))%>%
   filter (community == "Temperate") %>%
   filter (incubator == "Snowbed") %>%
   select(community, species, family, incubator, autumn_germ, spring_germ, 
-         summer_germ, winter_germ, EHS , seed_mass ) %>% #   all traits
+         summer_germ, winter_germ, EHS  ) %>% # , seed_mass  all traits
   #select(total_germ, autumn_germ, spring_germ, summer_germ, winter_germ, area_curves, seed_mass) %>% 
   na.omit() -> traits
 
 traits$species <-make.cepnames(traits$species) # USEFUL!!Shorten sp names with 4 letters from genus name and 4 letter from species name 
 
 ### PCA
-traits[, 5:10] %>%
+traits[, 5:9] %>%
   FactoMineR::PCA() -> pca1
 
 cbind((traits %>%  dplyr::select(species, family)), data.frame(pca1$ind$coord[, 1:4]))-> pcaInds
