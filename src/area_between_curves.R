@@ -1,4 +1,5 @@
 library (tidyverse); library(scales)
+
 ##### Calculate areas between curves (Fellfield-Snowbed) for each species ####
 # CALCULATED INDIVIDUALLY PER EACH SPECIES AND ADDED MANUALLY TO all_info.csv
 #visualization
@@ -132,3 +133,16 @@ read.csv("data/all_info.csv", sep =";") %>%
   count(germ_period_S)%>%
   ggplot( aes(x= germ_period_F))+
   geom_bar(stat= "count", position = "stack") +
+
+#### delay time to reach 50% germ in days between incubators ####
+t50model %>%
+  ungroup() %>%
+  #select(species, code, incubator, t50lm) %>% 
+  group_by (species, code, incubator) %>%# only possible if we join data by species and incubator, adding petridish produce an error
+  summarise(t50lm = mean(t50lm)) %>%
+  spread(incubator, t50lm) %>% 
+  mutate(delayS_F = Snowbed - Fellfield) %>% 
+  group_by(species) %>%
+  summarise(t50_Fellfield = mean(Fellfield),
+            t50_Snowbed = mean (Snowbed),
+            delayS_F= mean (delayS_F))-> delaytime # NAs appear when species don't reach 50% germination (t50lm_days =Na)

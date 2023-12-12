@@ -772,7 +772,7 @@ df %>%
   group_by (macroclimate) %>%
   summarise (Delay = delayS_F) %>%
   get_summary_stats(type ="full")
-# delay to reach t50 check days between incubators ####
+# delay to reach t50 from modeling days between incubators ####
 t50model %>%
   ungroup() %>%
   #select(species, code, incubator, t50lm) %>% 
