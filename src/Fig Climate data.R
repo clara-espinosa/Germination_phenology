@@ -28,21 +28,21 @@ read.csv("data/temp_picos_raw.csv", sep = ";") %>%
 ##graph to compare with temperature programs ####
 x11()
 read.csv("data/weekly_picos_graph.csv", sep = ";") %>%
+  mutate(order2 = paste(month, week))%>%
   ggplot(aes ()) +
   geom_line (aes (x=order, y=N, colour = Site), size =1.25) + #order for sort as experiment
   geom_line (aes (x=order, y=X, colour = Site), size =1.25) +
-  geom_ribbon (aes (x=order, ymin =N, ymax=X, colour = Site, fill = Site), alpha =0.3) +
-  scale_color_manual (name = "Field sites", values = c ("Fellfield site"= "darkgoldenrod1" , "Snowbed site" = "forestgreen")) +
-  scale_fill_manual (name = "Field sites", values = c ("Fellfield site"= "darkgoldenrod1" , "Snowbed site" = "forestgreen")) +
+  geom_ribbon (aes (x=order, ymin =N, ymax=X, colour = Site, fill = Site), alpha =0.5) +
+  scale_color_manual (name = "Microsites", values = c ("Fellfield site"= "chocolate2" , "Snowbed site" = "deepskyblue3")) +
+  scale_fill_manual (name = "Microsites", values = c ("Fellfield site"= "chocolate2" , "Snowbed site" = "deepskyblue3")) +
   scale_y_continuous (limits = c(-3,25), breaks = seq (0, 25, by= 5)) +
-  labs (title = "Soil temperature records 2008 - 2019", y= "Temperature ºC", x = "Time (weeks)", tag = "A") + #
-  theme_classic(base_size = 16) +
+  labs (title = "Soil temperature records 2008 - 2019", y= "Temperature (ºC)", x = "Time (weeks)", tag = "C") + #
+  theme_classic(base_size = 20) +
   theme (plot.title = element_text ( size = 24), #hjust = 0.5,
          axis.title.y = element_text (size=20), 
          axis.text.y = element_text (size = 18),
          axis.title.x = element_blank(), 
-         axis.text.x= element_blank(),
-         axis.ticks.x = element_blank(),
+         axis.text.x= element_text (size = 18, color = "black"),
          plot.tag.position = c(0,1),
          legend.title = element_text (size =14),
          legend.text = element_text (size =13),

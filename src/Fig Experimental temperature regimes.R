@@ -27,7 +27,7 @@ ggplot(temp, aes ()) +
   scale_color_manual (name= "Incubator", values =c("chocolate2", "deepskyblue3")) +
   scale_y_continuous (limits = c(-3,25), breaks = seq (0, 25, by= 5)) +
   scale_x_datetime(date_breaks = "2 month", date_labels = "%b %y")+
-  labs (title = "Experimental temperature programs", y= "Temperature ºC", x = "Date", tag= "B") + #
+  labs (title = "Experimental temperature programs", y= "Temperature (ºC)", x = "Date", tag= "D") + #
   theme_classic(base_size = 20) +
   theme (plot.title = element_text ( size = 24), #hjust = 0.5,
          axis.title.y = element_text (size=20), 

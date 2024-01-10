@@ -594,6 +594,219 @@ ggarrange(fig5a_2,fig5b_2, fig5c_2, ncol = 1, nrow = 3, common.legend = TRUE)
       # Label of the line plot
 library(patchwork);library(gapminder)
  fig5 <- fig5a + (fig5b/fig5c)
+ ######## MEDITERRANEAN + FELLFIELD ##########################
+ read.csv("data/traits_inc_sp.csv", sep = ";") %>%
+   mutate(across(c(community, species, family, incubator), as.factor))%>%
+   #merge(seed_mass, by= c("community", "species"))%>%
+   filter (community == "Mediterranean") %>%
+   filter (incubator == "Fellfield") %>%
+   select(community, species, family, incubator, autumn_germ, spring_germ, 
+          summer_germ, winter_germ, EHS ) %>% #, seed_mass    all traits
+   #select(total_germ, autumn_germ, spring_germ, summer_germ, winter_germ, area_curves, seed_mass) %>% 
+   na.omit() -> traits
+ 
+ traits$species <-make.cepnames(traits$species) # USEFUL!!Shorten sp names with 4 letters from genus name and 4 letter from species name 
+ 
+ ### PCA
+ traits[, 5:9] %>%
+   FactoMineR::PCA() -> pca1
+ 
+ cbind((traits %>%  dplyr::select(species, family)), data.frame(pca1$ind$coord[, 1:4]))-> pcaInds
+ 
+ pca1$var$coord[, 1:2] %>%
+   data.frame %>%
+   rownames_to_column(var = "Variable") -> pcaVars
+ 
+ ### Plot PCA
+ #x11()
+ ggplot(pcaInds, aes(x = Dim.1, y = Dim.2)) +
+   coord_fixed() +
+   geom_hline(yintercept = 0, linetype = "dashed") +
+   geom_vline(xintercept = 0, linetype = "dashed") +
+   geom_segment(data = pcaVars, aes(x = 0, y = 0, xend = 3*Dim.1, yend = 3*Dim.2)) +
+   geom_point(aes(fill = species, color= species), size = 3) +
+   geom_label(data= pcaVars, aes(x = 3*Dim.1, y = 3*Dim.2, label = Variable),  show.legend = FALSE, size = 4) +
+   geom_text_repel (data =pcaInds, aes(x=Dim.1, y = Dim.2, label = species, color = species ), show.legend = FALSE, size = 3.5, max.overlaps = 15)+
+   labs (title = "Mediterranean (N = 21)", subtitle = "Fellfield") +
+   ggthemes::theme_tufte() + 
+   theme(plot.title = element_text(family= "sans", face = "bold", size= 20, hjust=0.5), 
+         plot.subtitle = element_text (family= "sans", face = "bold",size= 18, color=  "chocolate2"  ), #  "deepskyblue3"
+         text = element_text(family = "sans"),
+         legend.position = "none", 
+         legend.title = element_blank(),
+         legend.text = element_text(size = 12, color = "black"),
+         panel.background = element_rect(color = "black", fill = NULL),
+         axis.title = element_text(size = 12),
+         axis.text = element_text(size = 12, color = "black"),
+         plot.margin = unit(c(0, 0.1, 0, 0), "cm")) +
+   #guides(fill = guide_legend(override.aes = list(shape = 22))) +
+   scale_x_continuous(name = paste("Axis 1 (", round(pca1$eig[1, 2], 0),
+                                   "% variance explained)", sep = ""), limits = c(-4, 4) ) + #
+   scale_y_continuous(name = paste("Axis 2 (", round(pca1$eig[2, 2], 0), 
+                                   "% variance explained)", sep = ""), limits = c(-3, 3)) #
+ pca1$eig
+ pca1$var
+ 
+ ######## MEDITERRANEAN + SNOWBED ##########################
+ read.csv("data/traits_inc_sp.csv", sep = ";") %>%
+   mutate(across(c(community, species, family, incubator), as.factor))%>%
+   #merge(seed_mass, by= c("community", "species"))%>%
+   filter (community == "Mediterranean") %>%
+   filter (incubator == "Snowbed") %>%
+   select(community, species, family, incubator, autumn_germ, spring_germ, 
+          summer_germ, winter_germ, EHS ) %>% # , seed_mass   all traits
+   #select(total_germ, autumn_germ, spring_germ, summer_germ, winter_germ, area_curves, seed_mass) %>% 
+   na.omit() -> traits
+ 
+ traits$species <-make.cepnames(traits$species) # USEFUL!!Shorten sp names with 4 letters from genus name and 4 letter from species name 
+ 
+ ### PCA
+ traits[, 5:9] %>%
+   FactoMineR::PCA() -> pca1
+ 
+ cbind((traits %>%  dplyr::select(species, family)), data.frame(pca1$ind$coord[, 1:4]))-> pcaInds
+ 
+ pca1$var$coord[, 1:2] %>%
+   data.frame %>%
+   rownames_to_column(var = "Variable") -> pcaVars
+ 
+ ### Plot PCA
+ #x11()
+ ggplot(pcaInds, aes(x = Dim.1, y = Dim.2)) +
+   coord_fixed() +
+   geom_hline(yintercept = 0, linetype = "dashed") +
+   geom_vline(xintercept = 0, linetype = "dashed") +
+   geom_segment(data = pcaVars, aes(x = 0, y = 0, xend = 3*Dim.1, yend = 3*Dim.2)) +
+   geom_point(aes(fill = species, color= species), size = 3) +
+   geom_label(data= pcaVars, aes(x = 3*Dim.1, y = 3*Dim.2, label = Variable),  show.legend = FALSE, size = 4) +
+   geom_text_repel (data =pcaInds, aes(x=Dim.1, y = Dim.2, label = species, color = species ), show.legend = FALSE, size = 3.5, max.overlaps = 15)+
+   labs (title = "", subtitle = "Snowbed") +
+   ggthemes::theme_tufte() + 
+   theme(plot.title = element_text(family= "sans", face = "bold", size= 20, hjust=0.5), 
+         plot.subtitle = element_text (family= "sans", face = "bold",size= 18, color= "deepskyblue3"   ), # "chocolate2"
+         text = element_text(family = "sans"),
+         legend.position = "none", 
+         legend.title = element_blank(),
+         legend.text = element_text(size = 12, color = "black"),
+         panel.background = element_rect(color = "black", fill = NULL),
+         axis.title = element_text(size = 12),
+         axis.text = element_text(size = 12, color = "black"),
+         plot.margin = unit(c(0, 0.1, 0, 0), "cm")) +
+   #guides(fill = guide_legend(override.aes = list(shape = 22))) +
+   scale_x_continuous(name = paste("Axis 1 (", round(pca1$eig[1, 2], 0),
+                                   "% variance explained)", sep = ""), limits = c(-4, 4) ) + #
+   scale_y_continuous(name = paste("Axis 2 (", round(pca1$eig[2, 2], 0), 
+                                   "% variance explained)", sep = ""), limits = c(-3, 3)) #
+ pca1$eig
+ pca1$var
+ 
+ 
+ ######## TEMPERATE + FELLFIELD ##########################
+ read.csv("data/traits_inc_sp.csv", sep = ";") %>%
+   mutate(across(c(community, species, family, incubator), as.factor))%>%
+   #merge(seed_mass, by= c("community", "species"))%>%
+   filter (community == "Temperate") %>%
+   filter (incubator == "Fellfield") %>%
+   select(community, species, family, incubator, autumn_germ, spring_germ, 
+          summer_germ, winter_germ, EHS ) %>% # , seed_mass   all traits
+   #select(total_germ, autumn_germ, spring_germ, summer_germ, winter_germ, area_curves, seed_mass) %>% 
+   na.omit() -> traits
+ 
+ traits$species <-make.cepnames(traits$species) # USEFUL!!Shorten sp names with 4 letters from genus name and 4 letter from species name 
+ 
+ ### PCA
+ traits[, 5:9] %>%
+   FactoMineR::PCA() -> pca1
+ 
+ cbind((traits %>%  dplyr::select(species, family)), data.frame(pca1$ind$coord[, 1:4]))-> pcaInds
+ 
+ pca1$var$coord[, 1:2] %>%
+   data.frame %>%
+   rownames_to_column(var = "Variable") -> pcaVars
+ 
+ ### Plot PCA
+ #x11()
+ ggplot(pcaInds, aes(x = Dim.1, y = Dim.2)) +
+   coord_fixed() +
+   geom_hline(yintercept = 0, linetype = "dashed") +
+   geom_vline(xintercept = 0, linetype = "dashed") +
+   geom_segment(data = pcaVars, aes(x = 0, y = 0, xend = 3*Dim.1, yend = 3*Dim.2)) +
+   geom_point(aes(fill = species, color= species), size = 3) +
+   geom_label(data= pcaVars, aes(x = 3*Dim.1, y = 3*Dim.2, label = Variable),  show.legend = FALSE, size = 4) +
+   geom_text_repel (data =pcaInds, aes(x=Dim.1, y = Dim.2, label = species, color = species ), show.legend = FALSE, size = 3.5, max.overlaps = 15)+
+   labs (title = "Temperate (N = 34)", subtitle = "Fellfield") +
+   ggthemes::theme_tufte() + 
+   theme(plot.title = element_text(family= "sans", face = "bold", size= 20, hjust=0.5), 
+         plot.subtitle = element_text (family= "sans", face = "bold",size= 18, color= "chocolate2"  ), #  "deepskyblue3" 
+         text = element_text(family = "sans"),
+         legend.position = "none", 
+         legend.title = element_blank(),
+         legend.text = element_text(size = 12, color = "black"),
+         panel.background = element_rect(color = "black", fill = NULL),
+         axis.title = element_text(size = 12),
+         axis.text = element_text(size = 12, color = "black"),
+         plot.margin = unit(c(0, 0.1, 0, 0), "cm")) +
+   #guides(fill = guide_legend(override.aes = list(shape = 22))) +
+   scale_x_continuous(name = paste("Axis 1 (", round(pca1$eig[1, 2], 0),
+                                   "% variance explained)", sep = ""), limits = c(-4, 4) ) + #
+   scale_y_continuous(name = paste("Axis 2 (", round(pca1$eig[2, 2], 0), 
+                                   "% variance explained)", sep = ""), limits = c(-3, 3)) #
+ pca1$eig
+ pca1$var
+ 
+ ######## TEMPERATE + SNOWBED ##########################
+ read.csv("data/traits_inc_sp.csv", sep = ";") %>%
+   mutate(across(c(community, species, family, incubator), as.factor))%>%
+   #merge(seed_mass, by= c("community", "species"))%>%
+   filter (community == "Temperate") %>%
+   filter (incubator == "Snowbed") %>%
+   select(community, species, family, incubator, autumn_germ, spring_germ, 
+          summer_germ, winter_germ, EHS  ) %>% # , seed_mass  all traits
+   #select(total_germ, autumn_germ, spring_germ, summer_germ, winter_germ, area_curves, seed_mass) %>% 
+   na.omit() -> traits
+ 
+ traits$species <-make.cepnames(traits$species) # USEFUL!!Shorten sp names with 4 letters from genus name and 4 letter from species name 
+ 
+ ### PCA
+ traits[, 5:9] %>%
+   FactoMineR::PCA() -> pca1
+ 
+ cbind((traits %>%  dplyr::select(species, family)), data.frame(pca1$ind$coord[, 1:4]))-> pcaInds
+ 
+ pca1$var$coord[, 1:2] %>%
+   data.frame %>%
+   rownames_to_column(var = "Variable") -> pcaVars
+ 
+ ### Plot PCA
+ #x11()
+ ggplot(pcaInds, aes(x = Dim.1, y = Dim.2)) +
+   coord_fixed() +
+   geom_hline(yintercept = 0, linetype = "dashed") +
+   geom_vline(xintercept = 0, linetype = "dashed") +
+   geom_segment(data = pcaVars, aes(x = 0, y = 0, xend = 3*Dim.1, yend = 3*Dim.2)) +
+   geom_point(aes(fill = species, color= species), size = 3) +
+   geom_label(data= pcaVars, aes(x = 3*Dim.1, y = 3*Dim.2, label = Variable),  show.legend = FALSE, size = 4) +
+   geom_text_repel (data =pcaInds, aes(x=Dim.1, y = Dim.2, label = species, color = species ), show.legend = FALSE, size = 3.5, max.overlaps = 15)+
+   labs (title = "", subtitle = "Snowbed") +
+   ggthemes::theme_tufte() + 
+   theme(plot.title = element_text(family= "sans", face = "bold", size= 20, hjust=0.5), 
+         plot.subtitle = element_text (family= "sans", face = "bold",size= 18, color= "deepskyblue3"   ), # "chocolate2"
+         text = element_text(family = "sans"),
+         legend.position = "none", 
+         legend.title = element_blank(),
+         legend.text = element_text(size = 12, color = "black"),
+         panel.background = element_rect(color = "black", fill = NULL),
+         axis.title = element_text(size = 12),
+         axis.text = element_text(size = 12, color = "black"),
+         plot.margin = unit(c(0, 0.1, 0, 0), "cm")) +
+   #guides(fill = guide_legend(override.aes = list(shape = 22))) +
+   scale_x_continuous(name = paste("Axis 1 (", round(pca1$eig[1, 2], 0),
+                                   "% variance explained)", sep = ""), limits = c(-4, 4) ) + #
+   scale_y_continuous(name = paste("Axis 2 (", round(pca1$eig[2, 2], 0), 
+                                   "% variance explained)", sep = ""), limits = c(-3, 3)) #
+ pca1$eig
+ pca1$var
+ 
 #### SPECIES GERMINATION CURVES ####
 # tidyverse transformation to account for the number of viable seeds per each specie and incubator
 # summing up petridishes and accesions/populations of the same species (not taking into account weekly germination)
@@ -612,7 +825,7 @@ read.csv("data/extrapoint_visualization.csv", sep = ";") %>%
 x11()
 
 read.csv("data/clean data.csv", sep = ";") %>%
-  rbind(data_vis)%>%
+  #rbind(data_vis)%>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   spread(date, germinated, fill = 0) %>% # wide format for dates, and fill Na with 0
   gather ("date", "germinated", 8: last_col() )%>% # back in long format frrom 8th colum to the last
@@ -632,11 +845,11 @@ read.csv("data/clean data.csv", sep = ";") %>%
   coord_cartesian(ylim = c(0, 1)) +
   labs(title= "Conopodium majus", x = "Time ", y = "Germination proportion") +
   theme_classic(base_size = 14) +
-  theme(plot.title = element_text (size = 30),
-        strip.text = element_text (size = 24, face = "italic"),
-        axis.title.y = element_text (size=24), 
-        axis.title.x = element_text (size=24), 
-        axis.text.x= element_text (size=18, angle = 75, vjust = 0.5),
+  theme(plot.title = element_text (size = 20),
+        strip.text = element_text (size = 14, face = "italic"),
+        axis.title.y = element_text (size=14), 
+        axis.title.x = element_text (size=14), 
+        axis.text.x= element_text (size=12, angle = 75, vjust = 0.5),
         legend.position = "right",
         plot.margin = margin(t=0.5, l =0.5, b = 0.5, r =0.5, unit ="cm")) #-> C
   
@@ -650,18 +863,21 @@ for (var in unique(germination_curves$species)) {
   curve_plot = ggplot(germination_curves[germination_curves$species==var,], aes(x = date,
                                                       y = germination, ymin = 0, ymax = 1,
                                                       color = incubator, fill = incubator)) +
-    geom_line(size = 2) +
+    geom_line(size = 5) +
     scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
     labs(title= var, x = "Time ", y = "Germination proportion") +
     scale_y_continuous(limits = c(0, 1),  breaks = c(0, 0.25, 0.50, 0.75, 1)) +
     facet_wrap(~ code, ncol = 2) +
-    theme_classic(base_size = 14) +
-    theme(plot.title = element_text (size = 30),
-          strip.text = element_text (size = 24, face = "italic"),
-          axis.title.y = element_text (size=24), 
-          axis.title.x = element_text (size=24), 
-          axis.text.x= element_text (size=18, angle = 75, vjust = 0.5),
+    theme_classic(base_size = 10) +
+    theme(plot.title = element_text (size = 40),
+          strip.text = element_text (size = 34, face = "italic"),
+          axis.title.y = element_text (size=34), 
+          axis.text.y = element_text (size=32), 
+          axis.title.x = element_text (size=34), 
+          axis.text.x= element_text (size=32, angle = 75, vjust = 0.5),
           legend.position = "right",
+          legend.title = element_text (size=34), 
+          legend.text = element_text (size=32),
           plot.margin = margin(t=0.5, l =0.5, b = 0.5, r =0.5, unit ="cm"))
   ggsave(curve_plot, file = paste0("Germination ", var,".png"),
          path = NULL, scale = 1, width = 360, height = 250, units = "mm", dpi = 600)

@@ -103,14 +103,15 @@ read.csv("data/all_info.csv", sep = ";") %>%
   group_by (community, species, family, habitat) %>%
   summarise(area_curves = mean(ABC_clean_data))%>%
   filter (! area_curves==0) %>% # remove species with 0 difference meaning they had 0 germ
-  filter (community == "Mediterranean")%>%
+  filter (community == "Temperate")%>%
   ggplot(aes(x= area_curves))+  #
   geom_density(alpha =0.2, fill = "azure4", color="azure4" ) + #, position="stack"
   geom_vline(xintercept = 0, linetype = "dashed", size =1) +
-  scale_y_continuous(labels = percent, limits = c(0,0.0105)) +
+  scale_x_continuous( limits = c(-100, 200), breaks = seq (-100, 200, by= 100)) +
+  scale_y_continuous(labels = percent,limits = c(0,0.0105)) +
   #facet_wrap(~community)+
   theme_classic(base_size = 16) +
-  labs (title= "Area between curves")+
+  labs (title= "Germination shift")+
   theme (plot.title = element_text (face = "bold",size = 16), #hjust = 0.5,
          axis.title.y = element_text (size=14),
          axis.text.y = element_text (size = 13),

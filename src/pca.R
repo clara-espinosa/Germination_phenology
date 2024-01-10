@@ -1,6 +1,6 @@
 #PCA
 library(tidyverse);library(FactoMineR);library(factoextra)
-library(vegan);library(ggrepel)
+library(vegan);library(ggrepel);library(patchwork);library(ggpubr)
 
 # seed mass data ######
 read.csv("data/seed_mass.csv", sep = ";") %>%
@@ -72,46 +72,47 @@ str(sp_traits)
 # first ALL TRAITS  (some NA will be removed)
 # second germination traits, area curves and seed mass
 # first subset data according to  germ traits and t 50 traits
-
-######## MEDITERRANEAN + FELLFIELD ##########################
+###### FELLFIELD #####
 read.csv("data/traits_inc_sp.csv", sep = ";") %>%
   mutate(across(c(community, species, family, incubator), as.factor))%>%
   #merge(seed_mass, by= c("community", "species"))%>%
-  filter (community == "Mediterranean") %>%
+  #filter (community == "Mediterranean") %>%
   filter (incubator == "Fellfield") %>%
   select(community, species, family, incubator, autumn_germ, spring_germ, 
          summer_germ, winter_germ, EHS ) %>% #, seed_mass    all traits
   #select(total_germ, autumn_germ, spring_germ, summer_germ, winter_germ, area_curves, seed_mass) %>% 
-  na.omit() -> traits
+  na.omit() -> traits_PCA_F
 
-traits$species <-make.cepnames(traits$species) # USEFUL!!Shorten sp names with 4 letters from genus name and 4 letter from species name 
+traits_PCA_F$species <-make.cepnames(traits_PCA_F$species) # USEFUL!!Shorten sp names with 4 letters from genus name and 4 letter from species name 
 
 ### PCA
-traits[, 5:9] %>%
-  FactoMineR::PCA() -> pca1
+traits_PCA_F[, 5:9] %>%
+  FactoMineR::PCA() -> pcaF
 
-cbind((traits %>%  dplyr::select(species, family)), data.frame(pca1$ind$coord[, 1:4]))-> pcaInds
-
-pca1$var$coord[, 1:2] %>%
+cbind((traits_PCA_F %>%  dplyr::select(species,community, family)), data.frame(pcaF$ind$coord[, 1:4]))-> pcaIndsF
+pcaIndsF%>%
+  mutate(community = fct_relevel (community, "Temperate","Mediterranean"))->pcaIndsF
+pcaF$var$coord[, 1:2] %>%
   data.frame %>%
-  rownames_to_column(var = "Variable") -> pcaVars
+  rownames_to_column(var = "Variable") -> pcaVarsF
 
 ### Plot PCA
 #x11()
-ggplot(pcaInds, aes(x = Dim.1, y = Dim.2)) +
+ggplot(pcaIndsF, aes(x = Dim.1, y = Dim.2)) +
   coord_fixed() +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_vline(xintercept = 0, linetype = "dashed") +
-  geom_segment(data = pcaVars, aes(x = 0, y = 0, xend = 3*Dim.1, yend = 3*Dim.2)) +
-  geom_point(aes(fill = species, color= species), size = 3) +
-  geom_label(data= pcaVars, aes(x = 3*Dim.1, y = 3*Dim.2, label = Variable),  show.legend = FALSE, size = 4) +
-  geom_text_repel (data =pcaInds, aes(x=Dim.1, y = Dim.2, label = species, color = species ), show.legend = FALSE, size = 3.5, max.overlaps = 15)+
-  labs (title = "Mediterranean (N = 21)", subtitle = "Fellfield") +
+  geom_segment(data = pcaVarsF, aes(x = 0, y = 0, xend = 3*Dim.1, yend = 3*Dim.2)) +
+  geom_point(aes(fill = community), color="black", shape = 21, size = 4) +
+  geom_label(data= pcaVarsF, aes(x = 3*Dim.1, y = 3*Dim.2, label = Variable),  show.legend = FALSE, size = 4) +
+  scale_fill_manual (name= "", values = c ("Mediterranean"= "darkgoldenrod1" , "Temperate" ="forestgreen")) +
+  scale_color_manual (name= "", values = c ("Mediterranean"= "darkgoldenrod1" , "Temperate" ="forestgreen")) +
+  #geom_text_repel (data =pcaInds, aes(x=Dim.1, y = Dim.2, label = species, color = species ), show.legend = FALSE, size = 3.5, max.overlaps = 15)+
+  labs (title = "Fellfield") +
   ggthemes::theme_tufte() + 
-  theme(plot.title = element_text(family= "sans", face = "bold", size= 20, hjust=0.5), 
-        plot.subtitle = element_text (family= "sans", face = "bold",size= 18, color=  "chocolate2"  ), #  "deepskyblue3"
+  theme(plot.title = element_text(family= "sans", face = "bold", size= 20, hjust=0.5, color=  "chocolate2" ), 
         text = element_text(family = "sans"),
-        legend.position = "none", 
+        legend.position = "bottom", 
         legend.title = element_blank(),
         legend.text = element_text(size = 12, color = "black"),
         panel.background = element_rect(color = "black", fill = NULL),
@@ -119,52 +120,55 @@ ggplot(pcaInds, aes(x = Dim.1, y = Dim.2)) +
         axis.text = element_text(size = 12, color = "black"),
         plot.margin = unit(c(0, 0.1, 0, 0), "cm")) +
   #guides(fill = guide_legend(override.aes = list(shape = 22))) +
-  scale_x_continuous(name = paste("Axis 1 (", round(pca1$eig[1, 2], 0),
+  scale_x_continuous(name = paste("Axis 1 (", round(pcaF$eig[1, 2], 0),
                                   "% variance explained)", sep = ""), limits = c(-4, 4) ) + #
-  scale_y_continuous(name = paste("Axis 2 (", round(pca1$eig[2, 2], 0), 
-                                  "% variance explained)", sep = ""), limits = c(-3, 3)) #
-pca1$eig
-pca1$var
+  scale_y_continuous(name = paste("Axis 2 (", round(pcaF$eig[2, 2], 0), 
+                                  "% variance explained)", sep = ""), limits = c(-3, 3)) -> PCA_F;PCA_F
+pcaF$eig
+pcaF$var
 
-######## MEDITERRANEAN + SNOWBED ##########################
+###### SNOWBED #####
 read.csv("data/traits_inc_sp.csv", sep = ";") %>%
   mutate(across(c(community, species, family, incubator), as.factor))%>%
   #merge(seed_mass, by= c("community", "species"))%>%
-  filter (community == "Mediterranean") %>%
+  #filter (community == "Mediterranean") %>%
   filter (incubator == "Snowbed") %>%
   select(community, species, family, incubator, autumn_germ, spring_germ, 
-         summer_germ, winter_germ, EHS ) %>% # , seed_mass   all traits
+         summer_germ, winter_germ, EHS ) %>% #, seed_mass    all traits
   #select(total_germ, autumn_germ, spring_germ, summer_germ, winter_germ, area_curves, seed_mass) %>% 
-  na.omit() -> traits
+  na.omit() -> traits_PCA_S
 
-traits$species <-make.cepnames(traits$species) # USEFUL!!Shorten sp names with 4 letters from genus name and 4 letter from species name 
+
+traits_PCA_S$species <-make.cepnames(traits_PCA_S$species) # USEFUL!!Shorten sp names with 4 letters from genus name and 4 letter from species name 
 
 ### PCA
-traits[, 5:9] %>%
-  FactoMineR::PCA() -> pca1
+traits_PCA_S[, 5:9] %>%
+  FactoMineR::PCA() -> pcaS
 
-cbind((traits %>%  dplyr::select(species, family)), data.frame(pca1$ind$coord[, 1:4]))-> pcaInds
-
-pca1$var$coord[, 1:2] %>%
+cbind((traits_PCA_S %>%  dplyr::select(species,community, family)), data.frame(pcaS$ind$coord[, 1:4]))-> pcaIndsS
+pcaIndsS%>%
+  mutate(community = fct_relevel (community, "Temperate","Mediterranean"))-> pcaIndsS
+pcaS$var$coord[, 1:2] %>%
   data.frame %>%
-  rownames_to_column(var = "Variable") -> pcaVars
+  rownames_to_column(var = "Variable") -> pcaVarsS
 
 ### Plot PCA
 #x11()
-ggplot(pcaInds, aes(x = Dim.1, y = Dim.2)) +
+ggplot(pcaIndsS, aes(x = Dim.1, y = Dim.2)) +
   coord_fixed() +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_vline(xintercept = 0, linetype = "dashed") +
-  geom_segment(data = pcaVars, aes(x = 0, y = 0, xend = 3*Dim.1, yend = 3*Dim.2)) +
-  geom_point(aes(fill = species, color= species), size = 3) +
-  geom_label(data= pcaVars, aes(x = 3*Dim.1, y = 3*Dim.2, label = Variable),  show.legend = FALSE, size = 4) +
-  geom_text_repel (data =pcaInds, aes(x=Dim.1, y = Dim.2, label = species, color = species ), show.legend = FALSE, size = 3.5, max.overlaps = 15)+
-  labs (title = "", subtitle = "Snowbed") +
+  geom_segment(data = pcaVarsS, aes(x = 0, y = 0, xend = 3*Dim.1, yend = 3*Dim.2)) +
+  geom_point(aes(fill = community), color="black", shape = 21, size = 4) +
+  geom_label(data= pcaVarsS, aes(x = 3*Dim.1, y = 3*Dim.2, label = Variable),  show.legend = FALSE, size = 4) +
+  scale_fill_manual (name= "", values = c ("Mediterranean"= "darkgoldenrod1" , "Temperate" ="forestgreen")) +
+  scale_color_manual (name= "", values = c ("Mediterranean"= "darkgoldenrod1" , "Temperate" ="forestgreen")) +
+  #geom_text_repel (data =pcaInds, aes(x=Dim.1, y = Dim.2, label = species, color = species ), show.legend = FALSE, size = 3.5, max.overlaps = 15)+
+  labs (title = "Snowbed") +
   ggthemes::theme_tufte() + 
-  theme(plot.title = element_text(family= "sans", face = "bold", size= 20, hjust=0.5), 
-        plot.subtitle = element_text (family= "sans", face = "bold",size= 18, color= "deepskyblue3"   ), # "chocolate2"
+  theme(plot.title = element_text(family= "sans", face = "bold", size= 20, hjust=0.5, color= "deepskyblue3" ), 
         text = element_text(family = "sans"),
-        legend.position = "none", 
+        legend.position = "bottom", 
         legend.title = element_blank(),
         legend.text = element_text(size = 12, color = "black"),
         panel.background = element_rect(color = "black", fill = NULL),
@@ -172,116 +176,59 @@ ggplot(pcaInds, aes(x = Dim.1, y = Dim.2)) +
         axis.text = element_text(size = 12, color = "black"),
         plot.margin = unit(c(0, 0.1, 0, 0), "cm")) +
   #guides(fill = guide_legend(override.aes = list(shape = 22))) +
-  scale_x_continuous(name = paste("Axis 1 (", round(pca1$eig[1, 2], 0),
+  scale_x_continuous(name = paste("Axis 1 (", round(pcaS$eig[1, 2], 0),
                                   "% variance explained)", sep = ""), limits = c(-4, 4) ) + #
-  scale_y_continuous(name = paste("Axis 2 (", round(pca1$eig[2, 2], 0), 
-                                  "% variance explained)", sep = ""), limits = c(-3, 3)) #
-pca1$eig
-pca1$var
+  scale_y_continuous(name = paste("Axis 2 (", round(pcaS$eig[2, 2], 0), 
+                                  "% variance explained)", sep = ""), limits = c(-3, 3)) -> PCA_S;PCA_S
+pcaS$eig
+pcaS$var
+
+# combine both pca
+x11()
+ggarrange(PCA_F, PCA_S, ncol= 2, common.legend = T, legend="bottom")-> PCA;PCA
+ggsave(filename = "results/Figures/PCA.png", PCA, path = NULL, 
+       scale = 1, width = 400, height = 360, units = "mm", dpi = 600)
+
+#### PERMANOVA not giving P value?? not working properly yet####
+traits_PCA_S %>%
+  mutate(ID = species)%>%
+  select(ID,species,community, family, incubator,
+         autumn_germ, spring_germ, summer_germ, winter_germ, EHS)-> permanovaS
+
+speciesS <- permanovaS$species
+
+permanovaS <- textshape::column_to_rownames(permanovaS, 1)
+
+permanovaS %>%
+  select(autumn_germ, spring_germ, summer_germ, winter_germ, EHS) -> traitsS
 
 
-######## TEMPERATE + FELLFIELD ##########################
-read.csv("data/traits_inc_sp.csv", sep = ";") %>%
-  mutate(across(c(community, species, family, incubator), as.factor))%>%
-  #merge(seed_mass, by= c("community", "species"))%>%
-  filter (community == "Temperate") %>%
-  filter (incubator == "Fellfield") %>%
-  select(community, species, family, incubator, autumn_germ, spring_germ, 
-         summer_germ, winter_germ, EHS ) %>% # , seed_mass   all traits
-  #select(total_germ, autumn_germ, spring_germ, summer_germ, winter_germ, area_curves, seed_mass) %>% 
-  na.omit() -> traits
+#devtools::install_github("igraph/rigraph")
+#install.packages("RVAideMemoire")
+library(RVAideMemoire)
+library(cluster)
 
-traits$species <-make.cepnames(traits$species) # USEFUL!!Shorten sp names with 4 letters from genus name and 4 letter from species name 
+Adonis <- adonis2(traitsS ~ speciesS,
+                  data = permanovaS, perm = 999, 
+                  method = "euclidean",
+                  na.rm = T)
+print(Adonis)
 
-### PCA
-traits[, 5:9] %>%
-  FactoMineR::PCA() -> pca1
 
-cbind((traits %>%  dplyr::select(species, family)), data.frame(pca1$ind$coord[, 1:4]))-> pcaInds
+traits_PCA_F %>%
+  mutate(ID = species)%>%
+  select(ID,species,community, family, incubator,
+         autumn_germ, spring_germ, summer_germ, winter_germ, EHS)-> permanovaF
 
-pca1$var$coord[, 1:2] %>%
-  data.frame %>%
-  rownames_to_column(var = "Variable") -> pcaVars
+speciesF <- permanovaF$species
 
-### Plot PCA
-#x11()
-ggplot(pcaInds, aes(x = Dim.1, y = Dim.2)) +
-  coord_fixed() +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  geom_segment(data = pcaVars, aes(x = 0, y = 0, xend = 3*Dim.1, yend = 3*Dim.2)) +
-  geom_point(aes(fill = species, color= species), size = 3) +
-  geom_label(data= pcaVars, aes(x = 3*Dim.1, y = 3*Dim.2, label = Variable),  show.legend = FALSE, size = 4) +
-  geom_text_repel (data =pcaInds, aes(x=Dim.1, y = Dim.2, label = species, color = species ), show.legend = FALSE, size = 3.5, max.overlaps = 15)+
-  labs (title = "Temperate (N = 34)", subtitle = "Fellfield") +
-  ggthemes::theme_tufte() + 
-  theme(plot.title = element_text(family= "sans", face = "bold", size= 20, hjust=0.5), 
-        plot.subtitle = element_text (family= "sans", face = "bold",size= 18, color= "chocolate2"  ), #  "deepskyblue3" 
-        text = element_text(family = "sans"),
-        legend.position = "none", 
-        legend.title = element_blank(),
-        legend.text = element_text(size = 12, color = "black"),
-        panel.background = element_rect(color = "black", fill = NULL),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 12, color = "black"),
-        plot.margin = unit(c(0, 0.1, 0, 0), "cm")) +
-  #guides(fill = guide_legend(override.aes = list(shape = 22))) +
-  scale_x_continuous(name = paste("Axis 1 (", round(pca1$eig[1, 2], 0),
-                                  "% variance explained)", sep = ""), limits = c(-4, 4) ) + #
-  scale_y_continuous(name = paste("Axis 2 (", round(pca1$eig[2, 2], 0), 
-                                  "% variance explained)", sep = ""), limits = c(-3, 3)) #
-pca1$eig
-pca1$var
+permanovaF <- textshape::column_to_rownames(permanovaF, 1)
 
-######## TEMPERATE + SNOWBED ##########################
-read.csv("data/traits_inc_sp.csv", sep = ";") %>%
-  mutate(across(c(community, species, family, incubator), as.factor))%>%
-  #merge(seed_mass, by= c("community", "species"))%>%
-  filter (community == "Temperate") %>%
-  filter (incubator == "Snowbed") %>%
-  select(community, species, family, incubator, autumn_germ, spring_germ, 
-         summer_germ, winter_germ, EHS  ) %>% # , seed_mass  all traits
-  #select(total_germ, autumn_germ, spring_germ, summer_germ, winter_germ, area_curves, seed_mass) %>% 
-  na.omit() -> traits
+permanovaF %>%
+  select(autumn_germ, spring_germ, summer_germ, winter_germ, EHS) -> traitsF
 
-traits$species <-make.cepnames(traits$species) # USEFUL!!Shorten sp names with 4 letters from genus name and 4 letter from species name 
-
-### PCA
-traits[, 5:9] %>%
-  FactoMineR::PCA() -> pca1
-
-cbind((traits %>%  dplyr::select(species, family)), data.frame(pca1$ind$coord[, 1:4]))-> pcaInds
-
-pca1$var$coord[, 1:2] %>%
-  data.frame %>%
-  rownames_to_column(var = "Variable") -> pcaVars
-
-### Plot PCA
-#x11()
-ggplot(pcaInds, aes(x = Dim.1, y = Dim.2)) +
-  coord_fixed() +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  geom_segment(data = pcaVars, aes(x = 0, y = 0, xend = 3*Dim.1, yend = 3*Dim.2)) +
-  geom_point(aes(fill = species, color= species), size = 3) +
-  geom_label(data= pcaVars, aes(x = 3*Dim.1, y = 3*Dim.2, label = Variable),  show.legend = FALSE, size = 4) +
-  geom_text_repel (data =pcaInds, aes(x=Dim.1, y = Dim.2, label = species, color = species ), show.legend = FALSE, size = 3.5, max.overlaps = 15)+
-  labs (title = "", subtitle = "Snowbed") +
-  ggthemes::theme_tufte() + 
-  theme(plot.title = element_text(family= "sans", face = "bold", size= 20, hjust=0.5), 
-        plot.subtitle = element_text (family= "sans", face = "bold",size= 18, color= "deepskyblue3"   ), # "chocolate2"
-        text = element_text(family = "sans"),
-        legend.position = "none", 
-        legend.title = element_blank(),
-        legend.text = element_text(size = 12, color = "black"),
-        panel.background = element_rect(color = "black", fill = NULL),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 12, color = "black"),
-        plot.margin = unit(c(0, 0.1, 0, 0), "cm")) +
-  #guides(fill = guide_legend(override.aes = list(shape = 22))) +
-  scale_x_continuous(name = paste("Axis 1 (", round(pca1$eig[1, 2], 0),
-                                  "% variance explained)", sep = ""), limits = c(-4, 4) ) + #
-  scale_y_continuous(name = paste("Axis 2 (", round(pca1$eig[2, 2], 0), 
-                                  "% variance explained)", sep = ""), limits = c(-3, 3)) #
-pca1$eig
-pca1$var
+Adonis <- adonis2(traitsF ~ speciesF,
+                  data = permanovaF, perm = 999, 
+                  method = "euclidean",
+                  na.rm = T)
+print(Adonis)
