@@ -36,9 +36,10 @@ read.csv("data/clean data.csv", sep = ";") %>%
   scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
   scale_y_continuous (limits = c(0,1), breaks = seq (0, 1, by= 0.25)) +
   scale_x_datetime(date_breaks = "2 month", date_labels = "%b %y")+
-  labs(title = "A) Cumulative germination curves (all species)", x = "Date", y = "Germination proportion") +
+  labs(title = "Cumulative germination curves (all species)", x = "Date", y = "Germination proportion", tag = "A") +
   theme_classic(base_size = 16) +
   theme (plot.title = element_text (face = "bold",size = 20), #hjust = 0.5,
+         plot.tag.position = c(0,1),
          axis.title.y = element_text (size=14),
          axis.text.y = element_text (size = 13),
          axis.title.x = element_blank(), 
@@ -64,7 +65,7 @@ Scolors <- colorRampPalette(brewer.pal(9, "Blues"))(nb.cols)
 #fellfield
 x11()
 read.csv("data/clean data.csv", sep = ";") %>%
-  rbind(read.csv("data/extrapoint_visualization.csv", sep = ";") )%>%
+  #rbind(read.csv("data/extrapoint_visualization.csv", sep = ";"))%>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   spread(date, germinated, fill = 0) %>% # wide format for dates, and fill Na with 0
   gather ("date", "germinated", 8: last_col() )%>% # back in long format frrom 8th colum to the last
@@ -87,9 +88,10 @@ read.csv("data/clean data.csv", sep = ";") %>%
   scale_x_datetime(date_breaks = "2 month", date_labels = "%b %y")+
   scale_color_manual(values = Fcolors) +
   coord_cartesian(ylim = c(0, 1)) +
-  labs(title= "B) Fellfield cumulative germination curves (individual species)", x = "Time ", y = "Germination proportion") +
+  labs(title= "Fellfield cumulative germination curves (individual species)", x = "Time ", y = "Germination proportion", tag="B") +
   theme_classic(base_size = 16) +
   theme (plot.title = element_text (face = "bold",size = 20), #,hjust = 0.5
+         plot.tag.position = c(0,1),
          axis.title.y = element_text (size=14),
          axis.text.y = element_text (size = 13),
          axis.title.x = element_blank(), 
@@ -107,7 +109,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
 # snowbed
 x11()
 read.csv("data/clean data.csv", sep = ";") %>%
-  rbind(read.csv("data/extrapoint_visualization.csv", sep = ";") )%>%
+  #rbind(read.csv("data/extrapoint_visualization.csv", sep = ";") )%>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   spread(date, germinated, fill = 0) %>% # wide format for dates, and fill Na with 0
   gather ("date", "germinated", 8: last_col() )%>% # back in long format frrom 8th colum to the last
@@ -130,9 +132,10 @@ read.csv("data/clean data.csv", sep = ";") %>%
   scale_x_datetime(date_breaks = "2 month", date_labels = "%b %y")+
   scale_color_manual(values = Scolors) +
   coord_cartesian(ylim = c(0, 1)) +
-  labs(title= "C) Snowbed cumulative germination curves (individual species)", x = "Time ", y = "Germination proportion") +
+  labs(title= "Snowbed cumulative germination curves (individual species)", x = "Time ", y = "Germination proportion", tag = "C") +
   theme_classic(base_size = 16) +
   theme (plot.title = element_text (face = "bold",size = 20), #,hjust = 0.5
+         plot.tag.position = c(0,1),
          axis.title.y = element_text (size=14),
          axis.text.y = element_text (size = 13),
          axis.title.x = element_blank(), 

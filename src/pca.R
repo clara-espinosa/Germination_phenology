@@ -76,17 +76,15 @@ str(sp_traits)
 read.csv("data/traits_inc_sp.csv", sep = ";") %>%
   mutate(across(c(community, species, family, incubator), as.factor))%>%
   #merge(seed_mass, by= c("community", "species"))%>%
-  #filter (community == "Mediterranean") %>%
   filter (incubator == "Fellfield") %>%
   select(community, species, family, incubator, autumn_germ, spring_germ, 
-         summer_germ, winter_germ, EHS ) %>% #, seed_mass    all traits
-  #select(total_germ, autumn_germ, spring_germ, summer_germ, winter_germ, area_curves, seed_mass) %>% 
+         summer_germ, winter_germ, EHS) %>% #, seed_mass   all traits
   na.omit() -> traits_PCA_F
 
 traits_PCA_F$species <-make.cepnames(traits_PCA_F$species) # USEFUL!!Shorten sp names with 4 letters from genus name and 4 letter from species name 
 
 ### PCA
-traits_PCA_F[, 5:9] %>%
+traits_PCA_F[, 5:9] %>% #10
   FactoMineR::PCA() -> pcaF
 
 cbind((traits_PCA_F %>%  dplyr::select(species,community, family)), data.frame(pcaF$ind$coord[, 1:4]))-> pcaIndsF
@@ -131,18 +129,16 @@ pcaF$var
 read.csv("data/traits_inc_sp.csv", sep = ";") %>%
   mutate(across(c(community, species, family, incubator), as.factor))%>%
   #merge(seed_mass, by= c("community", "species"))%>%
-  #filter (community == "Mediterranean") %>%
   filter (incubator == "Snowbed") %>%
   select(community, species, family, incubator, autumn_germ, spring_germ, 
-         summer_germ, winter_germ, EHS ) %>% #, seed_mass    all traits
-  #select(total_germ, autumn_germ, spring_germ, summer_germ, winter_germ, area_curves, seed_mass) %>% 
+         summer_germ, winter_germ, EHS) %>% #, seed_mass   all traits
   na.omit() -> traits_PCA_S
 
 
 traits_PCA_S$species <-make.cepnames(traits_PCA_S$species) # USEFUL!!Shorten sp names with 4 letters from genus name and 4 letter from species name 
 
 ### PCA
-traits_PCA_S[, 5:9] %>%
+traits_PCA_S[, 5:9] %>% #10
   FactoMineR::PCA() -> pcaS
 
 cbind((traits_PCA_S %>%  dplyr::select(species,community, family)), data.frame(pcaS$ind$coord[, 1:4]))-> pcaIndsS

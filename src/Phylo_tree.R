@@ -116,7 +116,7 @@ plot(tree_med$scenario.3)
 
 write.tree(tree_med$scenario.3, file = "results/mediterranean_tree.tree")
 
-#### traits Area between curves /delay to 50% plotted according to phylogeny#####
+#### traits Area between curves plotted according to phylogeny#####
 # temperate #
 ape::read.tree("results/temperate2_tree.tree")-> tree
 x11()

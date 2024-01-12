@@ -5,7 +5,7 @@ library (tidyverse); library(scales)
 #visualization
 x11()
 read.csv("data/clean data.csv", sep = ";") %>%
-  rbind(data_vis)%>%
+  #rbind(data_vis)%>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   spread(date, germinated, fill = 0) %>% # wide format for dates, and fill Na with 0
   gather ("date", "germinated", 8: last_col() )%>% # back in long format frrom 8th colum to the last
@@ -104,15 +104,16 @@ read.csv("data/all_info.csv", sep = ";") %>%
   summarise(area_curves = mean(ABC_clean_data))%>%
   filter (! area_curves==0) %>% # remove species with 0 difference meaning they had 0 germ
   filter (community == "Temperate")%>%
-  ggplot(aes(x= area_curves))+  #
+  ggplot(aes(x= -area_curves))+  #
   geom_density(alpha =0.2, fill = "azure4", color="azure4" ) + #, position="stack"
   geom_vline(xintercept = 0, linetype = "dashed", size =1) +
-  scale_x_continuous( limits = c(-100, 200), breaks = seq (-100, 200, by= 100)) +
+  scale_x_continuous( limits = c(-200, 100), breaks = seq (-200, 100, by= 100)) +
   scale_y_continuous(labels = percent,limits = c(0,0.0105)) +
   #facet_wrap(~community)+
   theme_classic(base_size = 16) +
-  labs (title= "Germination shift")+
-  theme (plot.title = element_text (face = "bold",size = 16), #hjust = 0.5,
+  labs (title= "Temperate", subtitle = "Germination shift")+
+  theme (plot.title = element_text (hjust = 0.5, face = "bold",size = 24), #
+         plot.subtitle = element_text(face = "bold",size = 16),
          axis.title.y = element_text (size=14),
          axis.text.y = element_text (size = 13),
          axis.title.x = element_blank(), 
@@ -126,6 +127,34 @@ read.csv("data/all_info.csv", sep = ";") %>%
          legend.position = "bottom", # legend.position = c(0.85, 0.5),
          legend.box.background = element_rect(color = "black", size = 2))
 
+read.csv("data/all_info.csv", sep = ";") %>%
+  select(community, species, family, habitat, ABC_clean_data) %>%
+  group_by (community, species, family, habitat) %>%
+  summarise(area_curves = mean(ABC_clean_data))%>%
+  filter (! area_curves==0) %>% # remove species with 0 difference meaning they had 0 germ
+  filter (community == "Mediterranean")%>%
+  ggplot(aes(x= -area_curves))+  #
+  geom_density(alpha =0.2, fill = "azure4", color="azure4" ) + #, position="stack"
+  geom_vline(xintercept = 0, linetype = "dashed", size =1) +
+  scale_x_continuous( limits = c(-200, 100), breaks = seq (-200, 100, by= 100)) +
+  scale_y_continuous(labels = percent,limits = c(0,0.0105)) +
+  #facet_wrap(~community)+
+  theme_classic(base_size = 16) +
+  labs (title= "Mediterranean", subtitle = "Germination shift")+
+  theme (plot.title = element_text (hjust = 0.5,face = "bold",size = 24), #hjust = 0.5,
+         plot.subtitle = element_text(face = "bold",size = 16),
+         axis.title.y = element_text (size=14),
+         axis.text.y = element_text (size = 13),
+         axis.title.x = element_blank(), 
+         axis.text.x= element_text (size = 13, color = "black"),
+         #strip.text = element_text( size = 20, hjust = 0),
+         #strip.background = element_blank(), 
+         panel.background = element_blank(), #element_rect(color = "black", fill = NULL), 
+         #panel.grid = element_blank(),
+         legend.title = element_text (size =14),
+         legend.text = element_text (size =14),
+         legend.position = "bottom", # legend.position = c(0.85, 0.5),
+         legend.box.background = element_rect(color = "black", size = 2))
 
 # test if area between curves depends on habitat specialist vs generalist
 read.csv("data/all_info.csv", sep =";") %>%

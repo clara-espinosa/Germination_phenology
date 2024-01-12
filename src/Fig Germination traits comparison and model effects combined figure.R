@@ -266,16 +266,18 @@ mean_values%>%
                                "Summer germination" = "Summer"))%>%
   mutate(grouping_lines = paste(community, incubator))%>%
   ggplot()+
-  geom_point(aes(x= trait, y= mean, fill = community), shape = 21, size = 5) +
-  #geom_jitter(height = 0.1)+
   geom_line (aes(x= trait, y= mean, group = grouping_lines, color = incubator), linewidth = 1.3)+
+  geom_point(aes(x= trait, y= mean, fill = incubator), shape = 21, size = 3) +
+  #geom_jitter(height = 0.1)+
   #geom_errorbar(aes(trait, mean, ymin = lower, ymax = upper),color = "black", width = 0.2, size =1) +
-  scale_fill_manual (name= "", values = c ("Mediterranean"= "darkgoldenrod1" , "Temperate" ="forestgreen")) +
+  scale_fill_manual (name= "", values =c("Fellfield" = "chocolate2", "Snowbed"="deepskyblue3")) + #values = c ("Mediterranean"= "darkgoldenrod1" , "Temperate" ="forestgreen")
   scale_color_manual (name= "", values =c("chocolate2", "deepskyblue3")) +
+  facet_wrap(~community)+
   #scale_y_continuous (limits = c(0,1), breaks = seq (0, 1, by= 0.25)) +
-  labs(title= "Germination phenology",  x = "Germination period", y = "Mean germination proportion") + #tag = "B",
+  labs(title= "Germination phenology",  x = "Germination period", y = "Relative germination") + #tag = "B",
   theme_classic(base_size =12) +
-  theme(plot.title = element_text (size = 22),
+  theme(plot.title = element_text (size = 24),
+        strip.text.x = element_text( size = 20),
         legend.position = "bottom",
         legend.margin = margin(0, 0, 0, 0),
         plot.tag.position = c(0,1),
