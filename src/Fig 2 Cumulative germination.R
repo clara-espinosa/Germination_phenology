@@ -1,11 +1,11 @@
 library(FD); library(vegan); library(FactoMineR); library(emmeans);
 library(tidyverse); library(ggrepel); library(cowplot);library(ggpubr);
 library (binom);library (ggsignif);library (rstatix); library (stringr);
-library(patchwork);library (RColorBrewer)
+library(patchwork);library (RColorBrewer);library(scales);library(plyr)
 theme_set(theme_cowplot(font_size = 10)) 
 Sys.setlocale("LC_ALL","English")
 
-#### cumulative germination ####
+#### Fig 2A cumulative germination ####
 # tidyverse modification to have the accumulated germination along the whole experiment + ggplot
 data.frame(community = c("Mediterranean","Mediterranean","Mediterranean","Temperate", "Temperate" ),
            incubator  = c("Fellfield", "Fellfield","Snowbed", "Fellfield", "Fellfield"),
@@ -29,7 +29,6 @@ read.csv("data/clean data.csv", sep = ";") %>%
   mutate(germination = germinated/viable) %>%
   mutate(community = fct_relevel (community, "Temperate","Mediterranean"))%>%
   mutate (community = recode (community, "Temperate" = "Temperate (N = 38)", "Mediterranean" = "Mediterranean (N = 21)"))%>%
-  #filter (community == "Temperate") %>%
   ggplot(aes(date, germination, color = incubator, fill = incubator)) +
   facet_wrap(~community, ncol = 2) +
   geom_line(size = 2.5) +
@@ -47,13 +46,36 @@ read.csv("data/clean data.csv", sep = ";") %>%
          strip.text = element_text( size = 18, hjust = 0),
          strip.background = element_blank(), 
          panel.background = element_blank(), #element_rect(color = "black", fill = NULL), 
-         #panel.grid = element_blank(),
          legend.title = element_text (size =14),
          legend.text = element_text (size =14),
          legend.position = "none", # legend.position = c(0.85, 0.5),
-         legend.box.background = element_rect(color = "black", size = 2)) -> fig3a;fig3a
+         legend.box.background = element_rect(color = "black", size = 2)) -> fig2a;fig2a
 
-#ggarrange (fig2a, fig2b, fig2c, fig2d,ncol =1, nrow= 4,common.legend = FALSE)
+#stacked bar bottom fig2a
+detach(package:plyr)
+temp %>%
+  group_by(incubator, germination_period) %>%
+  summarise(n= length(date))%>%
+  mutate(incubator = fct_relevel(incubator, "Snowbed", "Fellfield")) %>%
+  mutate(germination_period = fct_relevel(germination_period, "Autumn", "Winter","Spring", "Summer" )) %>%
+  ggplot(aes(x= incubator, y = n, fill = germination_period)) +
+  geom_bar(stat = "identity", width=0.99, color = "black", position = position_stack(reverse= TRUE)) +
+  coord_flip()+
+  #labs (tag = "C") + 
+  scale_fill_manual (name= "Germination phenology periods", 
+                     values =c("brown", "cadetblue3","chartreuse3", "darkgoldenrod1"),
+                     guide = guide_legend (title.position = "top",direction = "horizontal")) +
+  theme_minimal(base_size = 20) +
+  theme (plot.title = element_text (size = 24), #hjust = 0.5,
+         axis.title.y = element_blank (), 
+         axis.text.y = element_text(size= 22, color = c( "deepskyblue3","chocolate2")),
+         axis.title.x = element_blank (), 
+         axis.text.x= element_blank (),
+         plot.tag.position = c(0,1),
+         legend.title = element_text(size =24),
+         legend.text = element_text(size=22),
+         legend.position = "bottom",
+         legend.margin = margin(0, 0, 0, 0)) -> fig2a_b;fig2a_b
 
 ##### individual species curves #####
 
@@ -65,7 +87,6 @@ Scolors <- colorRampPalette(brewer.pal(9, "Blues"))(nb.cols)
 #fellfield
 x11()
 read.csv("data/clean data.csv", sep = ";") %>%
-  #rbind(read.csv("data/extrapoint_visualization.csv", sep = ";"))%>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   spread(date, germinated, fill = 0) %>% # wide format for dates, and fill Na with 0
   gather ("date", "germinated", 8: last_col() )%>% # back in long format frrom 8th colum to the last
@@ -82,7 +103,6 @@ read.csv("data/clean data.csv", sep = ";") %>%
   filter(incubator == "Fellfield") %>% ### change species name
   ggplot(aes(date, germination, group = species, color = species, fill = species)) +
   geom_line(size = 1.2) +
-  #scale_color_manual (name= "Incubator", values = c ("Snowbed" ="deepskyblue3")) + #,"Fellfield"= "chocolate2" 
   facet_wrap(~ community, scales = "free_x", ncol = 2) +
   scale_y_continuous (limits = c(0,1), breaks = seq (0, 1, by= 0.25)) +
   scale_x_datetime(date_breaks = "2 month", date_labels = "%b %y")+
@@ -126,7 +146,6 @@ read.csv("data/clean data.csv", sep = ";") %>%
   filter(incubator == "Snowbed") %>% ### change species name
   ggplot(aes(date, germination, group = species, color = species, fill = species)) +
   geom_line(size = 1.2) +
-  #scale_color_manual (name= "Incubator", values = c ("Snowbed" ="deepskyblue3")) + #,"Fellfield"= "chocolate2" 
   facet_wrap(~ community, scales = "free_x", ncol = 2) +
   scale_y_continuous (limits = c(0,1), breaks = seq (0, 1, by= 0.25)) +
   scale_x_datetime(date_breaks = "2 month", date_labels = "%b %y")+
@@ -147,18 +166,6 @@ read.csv("data/clean data.csv", sep = ";") %>%
          legend.title = element_text (size =14),
          legend.text = element_text (size =14),
          legend.position = "none", # legend.position = c(0.85, 0.5),
-         legend.box.background = element_rect(color = "black", size = 2))-> fig3c;fig3c
-#geom_vline(xintercept = as.POSIXct(as.Date("2021-11-12")), linetype = "dashed", size =1.25) +
-#annotate (geom ="text", x= as.POSIXct(as.Date("2021-10-12")), y = 0.8, label ="Autumn", size = 5, fontface ="bold") +
-#geom_vline(xintercept = as.POSIXct(as.Date("2022-06-15")), linetype = "dashed", size =1.25) +
-#annotate (geom ="text", x= as.POSIXct(as.Date("2022-05-15")), y = 0.8, label ="Spring", size = 5, fontface ="bold") +
-#geom_vline(xintercept = as.POSIXct(as.Date("2022-09-19")), linetype = "dashed", size =1.25) 
-#annotate (geom ="text", x= as.POSIXct(as.Date("2022-08-17")), y = 0.8, label ="Summer", size = 5, fontface ="bold") +
-#geom_segment (aes(x=as.POSIXct(as.Date("2021-11-25")), y =0.05, xend=as.POSIXct(as.Date("2022-04-04")), yend =0.05), color = "chocolate2", size = 1.25) +
-#geom_segment (aes(x=as.POSIXct(as.Date("2021-11-12")), y = 0.03, xend =as.POSIXct(as.Date("2022-05-26")), yend =0.03), color = "deepskyblue3", size = 1.25) + 
-#annotate (geom ="text", x= as.POSIXct(as.Date("2022-01-15")), y = 0, label ="Winter period", colour = "black", size = 5, fontface ="bold") 
+         legend.box.background = element_rect(color = "black", size = 2))-> fig2c;fig2c
 
-x11()
-ggarrange( fig3a, fig3b, fig3c,ncol =1, nrow= 3,common.legend = FALSE)
-
-ggsave(ggarrange( fig2d, fig2e, ncol =1, nrow= 4,common.legend = TRUE, file="fig2.png", width = 210, height = 297, units = "mm")
+ggarrange( fig2a, fig2b, fig2c,ncol =1, nrow= 3,common.legend = FALSE)

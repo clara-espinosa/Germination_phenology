@@ -59,19 +59,11 @@ corrplot (biocor_all, method="number", type = "upper", order = "hclust",
           p.mat = p.biocor_all, sig.level = 0.05)
 
 ########## mean value x species and incubator ####################
-setdiff(sp_traits$species, seed_mass$species)
-
 read.csv("data/traits_inc_sp.csv", sep = ";") -> sp_traits   #%>%
   #merge(seed_mass, by= c("community", "species")) 
 
 summary(sp_traits)
 str(sp_traits)
-
-# problems with NA (mainly from t50/EHS/Delay), 
-# SUBSET DATA x COMMUNITY and INCUBATOR
-# first ALL TRAITS  (some NA will be removed)
-# second germination traits, area curves and seed mass
-# first subset data according to  germ traits and t 50 traits
 ###### FELLFIELD #####
 read.csv("data/traits_inc_sp.csv", sep = ";") %>%
   mutate(across(c(community, species, family, incubator), as.factor))%>%
@@ -184,47 +176,3 @@ x11()
 ggarrange(PCA_F, PCA_S, ncol= 2, common.legend = T, legend="bottom")-> PCA;PCA
 ggsave(filename = "results/Figures/PCA.png", PCA, path = NULL, 
        scale = 1, width = 400, height = 360, units = "mm", dpi = 600)
-
-#### PERMANOVA not giving P value?? not working properly yet####
-traits_PCA_S %>%
-  mutate(ID = species)%>%
-  select(ID,species,community, family, incubator,
-         autumn_germ, spring_germ, summer_germ, winter_germ, EHS)-> permanovaS
-
-speciesS <- permanovaS$species
-
-permanovaS <- textshape::column_to_rownames(permanovaS, 1)
-
-permanovaS %>%
-  select(autumn_germ, spring_germ, summer_germ, winter_germ, EHS) -> traitsS
-
-
-#devtools::install_github("igraph/rigraph")
-#install.packages("RVAideMemoire")
-library(RVAideMemoire)
-library(cluster)
-
-Adonis <- adonis2(traitsS ~ speciesS,
-                  data = permanovaS, perm = 999, 
-                  method = "euclidean",
-                  na.rm = T)
-print(Adonis)
-
-
-traits_PCA_F %>%
-  mutate(ID = species)%>%
-  select(ID,species,community, family, incubator,
-         autumn_germ, spring_germ, summer_germ, winter_germ, EHS)-> permanovaF
-
-speciesF <- permanovaF$species
-
-permanovaF <- textshape::column_to_rownames(permanovaF, 1)
-
-permanovaF %>%
-  select(autumn_germ, spring_germ, summer_germ, winter_germ, EHS) -> traitsF
-
-Adonis <- adonis2(traitsF ~ speciesF,
-                  data = permanovaF, perm = 999, 
-                  method = "euclidean",
-                  na.rm = T)
-print(Adonis)

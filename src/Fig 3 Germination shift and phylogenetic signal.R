@@ -1,40 +1,10 @@
 library (tidyverse); library(scales)
+library(tidyverse);library(V.PhyloMaker)
+library(phylosignal);library(phylobase);library(ape);library(tidytree)
+library (tidyverse); library(scales)
 
-##### Calculate areas between curves (Fellfield-Snowbed) for each species ####
+##### Calculate GERMINATION SHIFT (areas between curves Fellfield-Snowbed) for each species ####
 # CALCULATED INDIVIDUALLY PER EACH SPECIES AND ADDED MANUALLY TO all_info.csv
-#visualization
-x11()
-read.csv("data/clean data.csv", sep = ";") %>%
-  #rbind(data_vis)%>%
-  mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
-  spread(date, germinated, fill = 0) %>% # wide format for dates, and fill Na with 0
-  gather ("date", "germinated", 8: last_col() )%>% # back in long format frrom 8th colum to the last
-  arrange (species, code, incubator, petridish, date)%>% # sort row observations this way
-  mutate(date = as.POSIXct(date))%>%
-  merge (species) %>%
-  dplyr::group_by(community, species, code,  incubator, date) %>%
-  dplyr::summarise(germinated = sum(germinated)) %>%
-  dplyr::mutate(germinated = cumsum(germinated)) %>%
-  merge(viables_pop) %>%
-  mutate(germination = germinated/viable)  %>%
-  mutate(ID = paste(community, code)) %>%
-  filter(species == "Sesleria caerula") %>% ### change species name
-  ggplot(aes(date, germination, color = incubator, fill = incubator)) +
-  geom_line(size = 2) +
-  scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
-  facet_wrap(~ code, scales = "free_x", ncol = 2) +
-  coord_cartesian(ylim = c(0, 1)) +
-  labs(title= "Sesleria caerula", x = "Time ", y = "Germination proportion") +
-  theme_classic(base_size = 14) +
-  theme(plot.title = element_text (size = 30),
-        strip.text = element_text (size = 24, face = "italic"),
-        axis.title.y = element_text (size=24), 
-        axis.title.x = element_text (size=24), 
-        axis.text.x= element_text (size=18, angle = 75, vjust = 0.5),
-        legend.position = "right",
-        plot.margin = margin(t=0.5, l =0.5, b = 0.5, r =0.5, unit ="cm")) #-> C
-
-#example with 1 species (x = time (not dates))
 read.csv("data/clean data.csv", sep = ";") %>%
   #rbind(data_vis)%>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
@@ -97,7 +67,8 @@ area2<-sum( (h2[-1]+h2[-length(h2)]) /2 *diff(i) *(h2[-1]>=0+0))     # for the r
 area_total <- area2 - area1 
 area_total
 
-##### visualization density plots #####
+##### Fig 3A visualization density plots #####
+# temperate
 read.csv("data/all_info.csv", sep = ";") %>%
   select(community, species, family, habitat, ABC_clean_data) %>%
   group_by (community, species, family, habitat) %>%
@@ -127,6 +98,7 @@ read.csv("data/all_info.csv", sep = ";") %>%
          legend.position = "bottom", # legend.position = c(0.85, 0.5),
          legend.box.background = element_rect(color = "black", size = 2))
 
+# mediterranean
 read.csv("data/all_info.csv", sep = ";") %>%
   select(community, species, family, habitat, ABC_clean_data) %>%
   group_by (community, species, family, habitat) %>%
@@ -156,23 +128,135 @@ read.csv("data/all_info.csv", sep = ";") %>%
          legend.position = "bottom", # legend.position = c(0.85, 0.5),
          legend.box.background = element_rect(color = "black", size = 2))
 
-# test if area between curves depends on habitat specialist vs generalist
-read.csv("data/all_info.csv", sep =";") %>%
-  select(species, family, community, habitat, ABC_clean_data, germ_period_F, germ_period_S) %>%
-  group_by (community, habitat) %>%
-  count(germ_period_S)%>%
-  ggplot( aes(x= germ_period_F))+
-  geom_bar(stat= "count", position = "stack") +
+### Phylo tree temperate community #####
+# always check family names with http://www.mobot.org/MOBOT/research/APweb/
+read.csv("data/species.csv", sep =";") %>%
+  mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
+  mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>%
+  filter(community == "Temperate") %>%
+  filter (! species == "Kobresia myosuroides")%>% # germ = 0
+  filter (! species == "Salix breviserrata")%>% # germ = 0
+  filter (! species == "Sedum album")%>% # germ = 0
+  filter (! species == "Gentianella campestris")%>% # germ = 0
+  filter (! species == "Festuca rubra")%>% #only sowed in fellfield
+  select (species, family) %>%
+  unique %>%
+  separate(species, into = c("genus", "species"), sep = " ") %>%
+  mutate(species = paste(genus, species),
+         genus = genus,
+         family = family) %>%
+  arrange(species) %>%
+  na.omit %>%
+  select(species, genus, family)-> 
+  ranks1
 
-#### delay time to reach 50% germ in days between incubators ####
-t50model %>%
-  ungroup() %>%
-  #select(species, code, incubator, t50lm) %>% 
-  group_by (species, code, incubator) %>%# only possible if we join data by species and incubator, adding petridish produce an error
-  summarise(t50lm = mean(t50lm)) %>%
-  spread(incubator, t50lm) %>% 
-  mutate(delayS_F = Snowbed - Fellfield) %>% 
-  group_by(species) %>%
-  summarise(t50_Fellfield = mean(Fellfield),
-            t50_Snowbed = mean (Snowbed),
-            delayS_F= mean (delayS_F))-> delaytime # NAs appear when species don't reach 50% germination (t50lm_days =Na)
+#devtools::install_github("jinyizju/V.PhyloMaker")
+phylo.maker(sp.list = ranks1,
+            tree = GBOTB.extended, 
+            nodes = nodes.info.1, 
+            scenarios = "S3") ->
+  tree_tem2
+
+rm(ranks1)
+x11()
+plot(tree_tem2$scenario.3)
+
+write.tree(tree_tem2$scenario.3, file = "results/temperate2_tree.tree")
+
+### Phylo tree Mediterranean community #####
+# always check family names with http://www.mobot.org/MOBOT/research/APweb/
+read.csv("data/species.csv", sep =";") %>%
+  mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
+  mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>%
+  filter(community == "Mediterranean") %>%
+  select (species, family) %>%
+  unique %>%
+  separate(species, into = c("genus", "species"), sep = " ") %>%
+  mutate(species = paste(genus, species),
+         genus = genus,
+         family = family) %>%
+  arrange(species) %>%
+  na.omit %>%
+  select(species, genus, family)-> 
+  ranks1
+
+#devtools::install_github("jinyizju/V.PhyloMaker")
+phylo.maker(sp.list = ranks1,
+            tree = GBOTB.extended, 
+            nodes = nodes.info.1, 
+            scenarios = "S3") ->
+  tree_med
+
+rm(ranks1)
+x11()
+plot(tree_med$scenario.3)
+
+write.tree(tree_med$scenario.3, file = "results/mediterranean_tree.tree")
+
+#### Fig 3B traits Area between curves plotted according to phylogeny#####
+# temperate #
+ape::read.tree("results/temperate2_tree.tree")-> tree
+x11()
+plot(tree)
+appendix %>%
+  select(community, species, area_curves, delayS_F)%>%
+  group_by(community, species) %>%
+  summarise(area_curves= mean(area_curves), 
+            delay = mean(delayS_F))%>%
+  filter (community == "Temperate") %>%
+  mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
+  mutate(species= str_replace(species, "Sedum album cf", "Sedum album")) %>%
+  filter (! species == "Kobresia myosuroides")%>% # species with 0 germination
+  filter (! species == "Salix breviserrata")%>%# species with 0 germination
+  filter (! species == "Sedum album")%>%# species with 0 germination
+  filter (! species == "Gentianella campestris")%>%# species with 0 germination
+  filter (! species == "Festuca rubra")%>% #only sowed in fellfield
+  select(species,area_curves, delay )%>%
+  mutate(label= gsub(" ","_", species))%>%
+  remove_rownames %>% 
+  column_to_rownames(var="label")  %>% 
+  select(area_curves)%>% 
+  rename(germination_shift =area_curves)%>% 
+  mutate(germination_shift = -germination_shift)-> tem_phylo #,delay
+
+
+obj_tem <- phylo4d(as(tree, "phylo4"), data.frame(tem_phylo), match.data=TRUE)
+mat.col <- ifelse(tdata(obj_tem , "tip") < 0,  "chocolate2","deepskyblue3")
+barplot.phylo4d(obj_tem, tree.ratio = 0.2,bar.col = mat.col, center=F,
+                trait.bg.col = "white", show.box = F, grid.vertical = F,
+                grid.horizontal = F, tip.labels = NULL, tree.ladderize =T) #rainbow(37)
+
+barplot(obj_tem,tree.type = "fan", tip.cex = 0.6, tree.open.angle = 160, trait.cex = 0.6)
+dotplot.phylo4d (obj_tem, tree.type= "cladogram")
+gridplot.phylo4d (obj_tem, tree.type = "fan", tip.cex = 0.6, show.trait = FALSE)
+phyloSignal(obj_tem)
+phyloCorrelogram (obj_tem)
+
+# mediterranean#
+ape::read.tree("results/mediterranean_tree.tree")-> tree
+plot(tree)
+appendix %>%
+  select(community, species, area_curves, delayS_F)%>%
+  group_by(community, species) %>%
+  summarise(area_curves= mean(area_curves), 
+            delay = mean(delayS_F))%>%
+  filter (community == "Mediterranean") %>%
+  select(species,area_curves, delay )%>%
+  mutate(label= gsub(" ","_", species))%>%
+  remove_rownames %>% 
+  column_to_rownames(var="label")  %>% 
+  select(area_curves)%>% 
+  rename(germination_shift =area_curves)%>% 
+  mutate(germination_shift = -germination_shift)-> med_phylo #, delay
+
+
+obj_med <- phylo4d(as(tree, "phylo4"), data.frame(med_phylo), match.data=TRUE)
+mat.col <- ifelse(tdata(obj_med , "tip") < 0,  "chocolate2","deepskyblue3")
+barplot.phylo4d(obj_med, tree.ratio = 0.2,bar.col = mat.col, center=F,
+                trait.bg.col = "white", show.box = F, grid.vertical = F,
+                grid.horizontal = F, tip.labels = NULL, tree.ladderize =T)
+
+barplot.phylo4d(obj_med) 
+dotplot.phylo4d (obj_med)
+gridplot.phylo4d (obj_med)
+phyloSignal(obj_med)

@@ -6,16 +6,6 @@ library(dplyr)
 library(plyr)
 theme_set(theme_cowplot(font_size = 10)) 
 
-#setdiff () interesting function to id missing value between 2 variables
-# unique(df$species) # to check the use of the same names
-# unique(species$species)
-# unique(nnls_orig$tip.label)
-# setdiff(nnls_orig$tip.label,df$animal)
-# df %>% 
-#  filter(! animal %in% nnls_orig$tip.label) %>% 
-    #  select(animal) %>% 
-#  unique
-
 ####dataframe with temperature programs x incubator####
 read.csv("data/date_temp.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y")) %>%
@@ -23,6 +13,7 @@ read.csv("data/date_temp.csv", sep = ";") %>%
   mutate(incubator = as.factor(incubator)) %>% 
   as.data.frame()-> temp
 str(temp)
+
 ### Read species data ####
 read.csv("data/all_info.csv", sep =";") -> species
 # viables + final germ + filtering variables ####
