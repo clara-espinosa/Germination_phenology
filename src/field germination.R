@@ -46,8 +46,8 @@ read.csv ("data/field_germination.csv") %>%
   mutate(Autumn_23 = Autumn_23-Spring_23)%>%
   mutate(Autumn_23 = ifelse(Autumn_23>0,Autumn_23, 0))%>%
   gather(retrieval_season, field_germ, Spring_23:Autumn_23)%>%
-  mutate(retrieval_season = recode_factor (retrieval_season, "Spring_23" = "Spring","Autumn_23"= "Autumn"))%>%
-  mutate(retrieval_season = fct_relevel (retrieval_season, "Spring","Autumn"))%>%
+  mutate(retrieval_season = recode_factor (retrieval_season, "Spring_23" = "Early season","Autumn_23"= "Late season"))%>%
+  #mutate(retrieval_season = fct_relevel (retrieval_season, "Spring","Autumn"))%>%
   #filter(species=="Armeria duriaei")%>%
   ggplot(aes(retrieval_season, field_germ, condition=microhabitat_buried, fill = microhabitat_buried))+
   geom_bar(width = 0.7, position=position_dodge(width = 0.8), stat="identity", color="black")+
@@ -60,9 +60,10 @@ read.csv ("data/field_germination.csv") %>%
         strip.text.x = element_text( size = 12, face = "italic"),# face = "bold",
         strip.text.y = element_text(size = 14, angle = 360),
         legend.position = "bottom", #bottom
+        legend.box.margin=margin(-10,-10,-10,-10),
         plot.tag.position = c(0,1),
         panel.background = element_rect(color = "black", fill = NULL),
-        axis.text.x = element_text(size = 13, color = "black"),
+        axis.text.x = element_text(size = 13, color = "black", angle = 10),
         axis.text.y = element_text(size = 12, color = "black"),
         axis.title.y = element_text (size=15), 
         axis.title.x = element_text (size=15))
