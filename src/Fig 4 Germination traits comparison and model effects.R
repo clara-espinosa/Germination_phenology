@@ -26,18 +26,18 @@ ggplot(effect_size, aes(x= Trait, y =effect_size, ymin = L95, ymax = U95, color 
   scale_y_continuous (limits = c(-4,11), breaks = seq (-6, 10, by = 2)) +
   geom_hline(yintercept = 0, linetype = "dashed", size =1, color = "black") +
   coord_flip() +
-  labs(y = "Effect size", tag = "A") + 
+  labs(y = "Effect size", tag = "(a)") + 
   theme_classic(base_size = 14) +
   theme(plot.title = element_text (size = 20),
         strip.text = element_text( size = 20), #face = "bold",
         strip.text.y = element_text(size = 14),
         legend.position = "none",
         panel.background = element_rect(color = "black", fill = NULL),
-        plot.tag.position = c(0,1),
+        plot.tag.position = c(0.015,1),
         axis.title.y = element_blank(),
         axis.text.x = element_text(size = 16, color = "black"),
         axis.text.y = element_text(size = 16, color = "black"),
-        axis.title.x = element_text (size=18)) -> fig4a
+        axis.title.x = element_text (size=18)) -> fig4a;fig4a
 
 #### mean value table  ####
 # AUTUMN (test representation) 
@@ -219,23 +219,59 @@ read.csv("data/meanvalues_graph.csv", sep = ";")%>%
 
 ggplot(mean_values, aes(incubator, mean, fill=incubator))+
   geom_col(position = position_dodge(0.7), width = 0.75, color = "black") +
+  #facet_grid (trait ~ community, scales = "free_y", labeller = label_value(.multi_line = T, sep= " ")) +
   facet_grid (trait ~ community, scales = "free_y", labeller = label_wrap_gen (width = 13)) +
   geom_errorbar(aes(incubator, mean, ymin = lower, ymax = upper), color = "black",width = 0.2, size =1) +
   scale_fill_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
-  labs(tag = "B", x = "Mean values", y = "Degres (ºC) Time (days)                       Germination proportion                         ") + 
-  theme_classic(base_size = 14) +
+  labs(tag = "(b)", x = "Mean values", y = "Degres (ºC)Time (days)                 Germination proportion                     ") + 
+  theme_classic(base_size = 14) +  
   theme(plot.title = element_text (size = 22),
         strip.text.x = element_text( size = 20),# face = "bold",
         strip.text.y = element_text(size = 14, angle = 360),
         legend.position = "none",
-        plot.tag.position = c(0,1),
+        plot.tag.position = c(0.015,1),
         panel.background = element_rect(color = "black", fill = NULL),
         axis.text.x = element_text(size = 14, color = "black"),
         axis.text.y = element_text(size = 12, color = "black"),
         axis.title.y = element_text (size=15), 
-        axis.title.x = element_text (size=18)) -> fig4b
+        axis.title.x = element_text (size=18)) -> fig4b; fig4b
 
 
 #combine both graphs 
 Fig4 <- fig4a + fig4b
 Fig4
+### Extra plot, effect size complex model with interaction ####
+library(viridis)
+x11()
+read.csv("data/effectsize_interaction.csv", sep=";") %>%
+  convert_as_factor(Trait, Terms) %>%
+  mutate (Trait = fct_relevel(Trait, "Environmental heat sum", "T50","Total germination",
+                              "Summer germination", "Spring germination",
+                              "Winter germination","Autumn germination" ))%>%
+  mutate(Terms = recode_factor(Terms, "Incubator*system" = "Interaction"))%>%
+  mutate (Terms = fct_relevel(Terms, "Incubator", "System","Interaction" ))-> effect_interaction
+
+ggplot(effect_interaction, aes(x= Trait, y =effect_size, ymin = L95, ymax = U95, color = Trait))+
+  #geom_rect(data=NULL,aes(ymin=-Inf,ymax=0,xmin=-Inf,xmax=Inf),
+            #fill="chocolate2", color= "black", alpha=1)+
+  #geom_rect(data=NULL,aes(ymin=0,ymax=Inf,xmin=-Inf,xmax=Inf),
+            #fill="deepskyblue3", color= "black",alpha=1)+
+  geom_point( size = 3, color="black") +
+  geom_errorbar (width = 0.2, size =1.2, color="black") +
+  facet_wrap (~ Terms, ncol = 3, nrow =7, scales = "free_x") +
+  scale_x_discrete(labels = function(Trait) str_wrap(Trait, width = 13)) +
+  scale_y_continuous (limits = c(-6.5,6.5), breaks = seq (-6, 7, by = 2)) +
+  geom_hline(yintercept = 0, linetype = "dashed", size =1, color = "black") +
+  coord_flip() +
+  labs(y = "Effect size", tag = "") + 
+  theme_classic(base_size = 14) +
+  theme(plot.title = element_text (size = 20),
+        strip.text = element_text( size = 20), #face = "bold",
+        strip.text.y = element_text(size = 14),
+        legend.position = "none",
+        panel.background = element_rect(color = "black", fill = NULL),
+        plot.tag.position = c(0,1),
+        axis.title.y = element_blank(),
+        axis.text.x = element_text(size = 16, color = "black"),
+        axis.text.y = element_text(size = 16, color = "black"),
+        axis.title.x = element_text (size=18)) 

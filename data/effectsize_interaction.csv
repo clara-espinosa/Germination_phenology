@@ -1,0 +1,22 @@
+Trait;Terms;effect_size;L95;U95
+Autumn germination;Incubator;-1.3056;-1.68;-0.93
+Autumn germination;System;-3.3769;-5.27;-1.6
+Autumn germination;Incubator*system;-1.5722;-2.18;-0.94
+Environmental heat sum;Incubator;-0.159881;-0.33;0.01
+Environmental heat sum;System;0.399984;-0.02;0.82
+Environmental heat sum;Incubator*system;0.287376;0;0.53
+Spring germination;Incubator;-1.4936;-2.01;-0.96
+Spring germination;System;2.1545;0.72;3.6
+Spring germination;Incubator*system;-1.8345;-2.54;-1.04
+Summer germination;Incubator;1.90418;1.3;2.52
+Summer germination;System;1.09207;-0.09;2.29
+Summer germination;Incubator*system;1.23857;0.47;2.06
+T50;Incubator;0.2975;0.17;0.42
+T50;System;0.7432;0.4;1.08
+T50;Incubator*system;0.3985;0.21;0.59
+Total germination;Incubator;-0.1843;-0.55;0.17
+Total germination;System;-1.6193;-2.81;-0.38
+Total germination;Incubator*system;-0.3644;-0.85;0.13
+Winter germination;Incubator;5.32881;4.36;6.32
+Winter germination;System;-2.32362;-5.43;0.64
+Winter germination;Incubator*system;2.76127;0.02;5.65
