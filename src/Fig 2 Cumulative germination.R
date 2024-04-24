@@ -32,7 +32,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
   mutate (community = recode (community, "Temperate" = "Temperate (N = 38)", "Mediterranean" = "Mediterranean (N = 21)"))%>%
   ggplot(aes(date, germination, color = incubator, fill = incubator)) +
   facet_wrap(~community, ncol = 2) +
-  geom_line(size = 2) +
+  geom_line(linewidth = 2) +
   scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
   scale_y_continuous (limits = c(0,1), breaks = seq (0, 1, by= 0.25)) +
   scale_x_datetime(date_breaks = "2 month", date_labels = "%b %y")+
@@ -52,6 +52,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
          legend.text = element_text (size =11),
          legend.position = c(0.9, 0.25))-> fig2a;fig2a  #legend.position = "none", 
          #legend.box.background = element_rect(color = "black", size = 2)) 
+
 
 #stacked bar bottom fig2a
 detach(package:plyr)
