@@ -5,9 +5,8 @@ library(plyr);library(patchwork)
 Sys.setlocale("LC_ALL","English")
 
 ##### Fig 4A effect size  #####
-library(viridis)
 x11()
-read.csv("data/test_effectsize.csv", sep=";") %>%
+read.csv("data/test_effectsize.csv", sep=";") %>% # table with model results from MCMC_traits scripts
   convert_as_factor(Trait, community, terms) %>%
   mutate (Trait = fct_relevel(Trait, "Environmental heat sum", "T50","Total germination",
                                "Summer germination", "Spring germination",
@@ -39,14 +38,13 @@ ggplot(effect_size, aes(x= Trait, y =effect_size, ymin = L95, ymax = U95, color 
         axis.text.y = element_text(size = 16, color = "black"),
         axis.title.x = element_text (size=18)) -> fig4a;fig4a
 
-#### mean value table  ####
-# AUTUMN (test representation) 
+#### mean value table from germination traits ####
+# AUTUMN (test representation) # same script as in MCMC_traits, more detailed explanation there
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
   group_by (species, code, incubator, petridish, time) %>%
   summarise(seeds_germ = sum(germinated)) %>%
-  mutate(cumulative = cumsum(seeds_germ)) %>%
   filter (between(time, 1, 105)) %>% ## 105 = 12/11 last check before winter
   group_by (species, code, incubator, petridish) %>%
   summarise (seeds_germ = sum(seeds_germ)) %>%
@@ -206,8 +204,6 @@ rbind(t50_graph, heatsum_graph)%>%
  
   
 ### Fig 4B mean values graph #########
-
-
 library("plyr")
 x11()
 read.csv("data/meanvalues_graph.csv", sep = ";")%>%
@@ -240,38 +236,3 @@ ggplot(mean_values, aes(incubator, mean, fill=incubator))+
 #combine both graphs 
 Fig4 <- fig4a + fig4b
 Fig4
-### Extra plot, effect size complex model with interaction ####
-library(viridis)
-x11()
-read.csv("data/effectsize_interaction.csv", sep=";") %>%
-  convert_as_factor(Trait, Terms) %>%
-  mutate (Trait = fct_relevel(Trait, "Environmental heat sum", "T50","Total germination",
-                              "Summer germination", "Spring germination",
-                              "Winter germination","Autumn germination" ))%>%
-  mutate(Terms = recode_factor(Terms, "Incubator*system" = "Interaction"))%>%
-  mutate (Terms = fct_relevel(Terms, "Incubator", "System","Interaction" ))-> effect_interaction
-
-ggplot(effect_interaction, aes(x= Trait, y =effect_size, ymin = L95, ymax = U95, color = Trait))+
-  #geom_rect(data=NULL,aes(ymin=-Inf,ymax=0,xmin=-Inf,xmax=Inf),
-            #fill="chocolate2", color= "black", alpha=1)+
-  #geom_rect(data=NULL,aes(ymin=0,ymax=Inf,xmin=-Inf,xmax=Inf),
-            #fill="deepskyblue3", color= "black",alpha=1)+
-  geom_point( size = 3, color="black") +
-  geom_errorbar (width = 0.2, size =1.2, color="black") +
-  facet_wrap (~ Terms, ncol = 3, nrow =7, scales = "free_x") +
-  scale_x_discrete(labels = function(Trait) str_wrap(Trait, width = 13)) +
-  scale_y_continuous (limits = c(-6.5,6.5), breaks = seq (-6, 7, by = 2)) +
-  geom_hline(yintercept = 0, linetype = "dashed", size =1, color = "black") +
-  coord_flip() +
-  labs(y = "Effect size", tag = "") + 
-  theme_classic(base_size = 14) +
-  theme(plot.title = element_text (size = 20),
-        strip.text = element_text( size = 20), #face = "bold",
-        strip.text.y = element_text(size = 14),
-        legend.position = "none",
-        panel.background = element_rect(color = "black", fill = NULL),
-        plot.tag.position = c(0,1),
-        axis.title.y = element_blank(),
-        axis.text.x = element_text(size = 16, color = "black"),
-        axis.text.y = element_text(size = 16, color = "black"),
-        axis.title.x = element_text (size=18)) 

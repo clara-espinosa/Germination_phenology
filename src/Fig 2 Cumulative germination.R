@@ -1,4 +1,4 @@
-library(FD); library(vegan); library(FactoMineR); library(emmeans);
+library(vegan); 
 library(tidyverse); library(ggrepel); library(cowplot);library(ggpubr);
 library (binom);library (ggsignif);library (rstatix); library (stringr);
 library(patchwork);library (RColorBrewer);library(scales)
@@ -8,22 +8,12 @@ Sys.setlocale("LC_ALL","English")
 
 #### Fig 2A cumulative germination ####
 # tidyverse modification to have the accumulated germination along the whole experiment + ggplot
-data.frame(community = c("Mediterranean","Mediterranean","Mediterranean","Temperate", "Temperate" ),
-           incubator  = c("Fellfield", "Fellfield","Snowbed", "Fellfield", "Fellfield"),
-           date = c("2021-11-12", "2022-04-03", "2021-11-12", "2021-11-12", "2022-04-03"),
-           germinated = c(0,0,0,0,0)) -> data_vis
-data_vis %>%
-  mutate(date = as.POSIXct(date)) -> data_vis
-str(data_vis)
-x11()
-
 #both communities
 read.csv("data/clean data.csv", sep = ";") %>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   mutate(date = as.POSIXct(date))%>%
   merge (species) %>%
   group_by(community, incubator, date) %>%
-  bind_rows (data_vis)%>%
   summarise(germinated = sum(germinated)) %>%
   mutate(germinated = cumsum(germinated)) %>%
   merge(viables_community) %>%
@@ -82,6 +72,15 @@ temp %>%
 
 ##### individual species curves #####
 
+### seeds germ + viables/species and incubator 
+read.csv("data/clean data.csv", sep = ";") %>%
+  group_by(species, code, incubator, petridish) %>% # grouping variables
+  summarise(total_germ = sum(germinated)) %>% # sum total germination
+  merge(viables) %>% # merge viables object created above to filter raw data
+  merge(species) %>% # join species header data
+  group_by (species, incubator) %>% # new grouping variables
+  summarise (viable = sum (viable))-> viables_sp # viables per species and incubator
+
 # create/extent colorpalette (https://www.datanovia.com/en/blog/easy-way-to-expand-color-palettes-in-r/)
 nb.cols <- 59
 Fcolors <- colorRampPalette(brewer.pal(9, "Oranges"))(nb.cols)
@@ -133,7 +132,6 @@ read.csv("data/clean data.csv", sep = ";") %>%
 # snowbed
 x11()
 read.csv("data/clean data.csv", sep = ";") %>%
-  #rbind(read.csv("data/extrapoint_visualization.csv", sep = ";") )%>%
   mutate(date = strptime(as.character(date), "%d/%m/%Y"))%>%
   spread(date, germinated, fill = 0) %>% # wide format for dates, and fill Na with 0
   gather ("date", "germinated", 8: last_col() )%>% # back in long format frrom 8th colum to the last
@@ -173,6 +171,5 @@ read.csv("data/clean data.csv", sep = ";") %>%
          legend.position = "none", # legend.position = c(0.85, 0.5),
          legend.box.background = element_rect(color = "black", size = 2))-> fig2c;fig2c
 
-ggarrange( fig2a, fig2b, fig2c,ncol =1, nrow= 3,common.legend = FALSE)
-
+# partially arrenged with cowplot, final formatting in canva to add fig2a bottom
 fig2a/plot_spacer()/fig2b/fig2c + plot_layout(heights = c(1, 0.25,1,1))

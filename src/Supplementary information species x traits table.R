@@ -1,6 +1,6 @@
 library (tidyverse);library(dplyr)
 library(plyr)
-
+# based on MCMC_traits script, refer there for detailed explanations
 # appendix table with sp data + traits
 read.csv ("data/all_info.csv", sep = ";") -> species
 # viables + final germ + filtering variables ####
@@ -29,7 +29,6 @@ read.csv("data/clean data.csv", sep = ";") %>%
   mutate(time = as.numeric(as.Date(date)) - min(as.numeric(as.Date(date))))%>%
   group_by (species, code, incubator, petridish, time) %>%
   summarise(seeds_germ = sum(germinated)) %>%
-  mutate(cumulative = cumsum(seeds_germ)) %>%
   filter (between(time, 1, 105)) %>% ## 105 = 12/11 last check before winter
   group_by (species,code, incubator) %>%
   summarise (seeds_germ = sum(seeds_germ)) %>%

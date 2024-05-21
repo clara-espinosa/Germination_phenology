@@ -40,8 +40,8 @@ read.csv("data/Bioclim_study_area.csv", sep= ";") %>%
 
 ## Fig 2C graph to compare with temperature programs ####
 x11()
-read.csv("data/weekly_picos_graph.csv", sep = ";") %>%
-  mutate(order2 = paste(month, week))%>%
+read.csv("data/weekly_picos_graph.csv", sep = ",") %>%
+  #mutate(order2 = paste(month, week))%>%
   ggplot(aes ()) +
   geom_line (aes (x=order, y=N, colour = Site), linewidth =1.25) + #order for sort as experiment
   geom_line (aes (x=order, y=X, colour = Site), linewidth =1.25) +
@@ -50,7 +50,7 @@ read.csv("data/weekly_picos_graph.csv", sep = ";") %>%
   scale_fill_manual (name = "Microsites", values = c ("Fellfield site"= "chocolate2" , "Snowbed site" = "deepskyblue3")) +
   scale_y_continuous (limits = c(-3,25), breaks = seq (0, 25, by= 5)) +
   labs (title = "Soil temperature records 2008 - 2019", y= "Temperature (ºC)", x = "Time (weeks)", tag = "(c)") + #
-  theme_classic(base_size = 20) +
+  theme_classic() +
   theme (plot.title = element_text ( size = 24), #hjust = 0.5,
          axis.title.y = element_text (size=20), 
          axis.text.y = element_text (size = 18),
@@ -86,7 +86,7 @@ ggplot(temp, aes ()) +
   scale_y_continuous (limits = c(-3,25), breaks = seq (0, 25, by= 5)) +
   scale_x_datetime(date_breaks = "2 month", date_labels = "%b %y")+
   labs (title = "Experimental temperature programs", y= "Temperature (ºC)", x = "Date", tag= "(d)") + #
-  theme_classic(base_size = 20) +
+  theme_classic() +
   theme (plot.title = element_text ( size = 24), #hjust = 0.5,
          axis.title.y = element_text (size=20), 
          axis.title.x = element_blank(), 
@@ -98,3 +98,5 @@ ggplot(temp, aes ()) +
          legend.background = element_rect(fill="transparent"),
          legend.position = c(0.9, 0.28)) + 
   geom_hline(yintercept=0, linetype ="dashed", size =1, colour = "red") -> fig1d; fig1d
+ 
+# Ensamble of all panels with an extra map in canva

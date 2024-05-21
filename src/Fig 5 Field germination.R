@@ -1,35 +1,6 @@
 library(tidyverse);library (rstatix);library (stringr); library (vegan)
 
-##### Field germination for move-along graph + glms ####
-#dataframe for testing field differences
-read.csv("data/field_germination.csv") %>%
-  select(retrieval_season, community, site_buried,microhabitat_buried, species, seeds_initial, bag1:bag3)%>%
-  convert_as_factor(retrieval_season, community, site_buried, microhabitat_buried, species) %>%
-  gather(bag, germ, bag1:bag3)%>%
-  mutate(seeds_initial = 10) %>%
-  #filter(retrieval_season == "Spring_23" ) -> spring_df
-  filter(retrieval_season == "Autumn_23")-> autumn_df
-
-
-
-### Get GLM coefficients
-
-glms <- function(x) {
-  glm(cbind(germ, seeds_initial - germ) ~ microhabitat_buried, family = "binomial", data = x) -> m1 # site_buried only 2 levels, 
-  broom::tidy(m1)
-}
-
-spring_df%>%
-  group_by(species) %>%
-  do(glms(.))%>%
-  print(n=36)
-
-autumn_df%>%
-  group_by(species) %>%
-  do(glms(.))%>%
-  print(n=36)
-
-#bar plot
+#bar plot for visualization
 read.csv ("data/field_germination.csv") %>%
   select(retrieval_season, community, microhabitat_buried, species, seeds_initial, bag1:bag3)%>%
   convert_as_factor(retrieval_season, community, microhabitat_buried, species) %>%
@@ -38,10 +9,8 @@ read.csv ("data/field_germination.csv") %>%
                                 "Androsace villosa",  "Carex sempervirens","Gypsophila repens", 
                                 "Armeria cantabrica","Festuca glacialis","Jasione cavanillesii"))%>%
   gather(bag, germ, bag1:bag3)%>%
-  #mutate(germ_per=germ/10)%>%
   group_by(retrieval_season, microhabitat_buried, species)%>%
-  summarise(germ=sum(germ))%>%
-  #print(n=48)
+  dplyr::summarise(germ=sum(germ))%>%
   spread(retrieval_season, germ)%>%
   mutate(Autumn_23 = Autumn_23-Spring_23)%>%
   mutate(Autumn_23 = ifelse(Autumn_23>0,Autumn_23, 0))%>%
@@ -67,4 +36,4 @@ read.csv ("data/field_germination.csv") %>%
         axis.text.y = element_text(size = 12, color = "black"),
         axis.title.y = element_text (size=15), 
         axis.title.x = element_text (size=15))
-
+# significances of glm added posteriorly with canva based on glms model results
