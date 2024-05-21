@@ -1,6 +1,6 @@
 library(tidyverse);library(ggpubr);library (lubridate)
 
-## WEEKLY MEANS (2009-2018) FOR PICOS ####
+## WEEKLY MEANS (2009-2018) for temperate system ####
 read.csv("data/temp_picos_raw.csv", sep = ";") %>% # raw field temperature data from 2008 to 2019 in four sampling site from temperate system 
   mutate(Time = strptime(as.character(Time), "%d/%m/%Y %H:%M"))%>% #specify format of TIME variable
   mutate(Time = as.POSIXct(Time, tz = "UTC")) %>%
@@ -16,7 +16,9 @@ read.csv("data/temp_picos_raw.csv", sep = ";") %>% # raw field temperature data 
   mutate(week = as.numeric(week)) %>%
   filter(!Site== "Hou Sin Tierri")%>%
   filter(!Site== "Los Cazadores")%>%
-  as.data.frame() -> weekly_picos
+  mutate (Site = recode (Site, "Hoyo Sin Tierra" = "Fellfield site", "Los Boches" = "Snowbed site"))%>%
+  select(Site, week, T, X, N)%>%
+  as.data.frame() -> weekly_picos_graph
 
-write.csv(weekly_picos, "data/weekly_picos.csv") 
+#write.csv(weekly_picos_graph, "data/weekly_picos_graph.csv") 
 #modification in excel to add week order to match experimental sequence, referred to as weekly_picos_graph for fig 1
