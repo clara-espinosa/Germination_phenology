@@ -7,8 +7,7 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Modify doi once gitHub repository is made public and linked to Zenodo
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6077618.svg)](https://doi.org/10.5281/zenodo.6077618)
+[![DOI](https://zenodo.org/badge/440159075.svg)](https://zenodo.org/doi/10.5281/zenodo.11242675)
 
 ![Fellfield and snowbed microsites from the Cantabrian Mountains](microsites.png)
 
@@ -31,7 +30,7 @@ The following materials are available in the folders of this repository:
 [Temperatures programs used in growth chambers](https://github.com/clara-espinosa/Germination_phenology/blob/main/data/date_temp.csv) for figure 1d.
 It also includes the [Mean germination trait values table ](https://github.com/clara-espinosa/Germination_phenology/blob/main/data/meanvalues_graph.csv) and the [Efects sizes from MCMC-GLMM models](https://github.com/clara-espinosa/Germination_phenology/blob/main/data/test_effectsize.csv) for figure 4.
 Finally a [Metadata file](https://github.com/clara-espinosa/Germination_phenology/blob/main/data/metadata.csv) explaining each csv variables. 
-* `doc` Files required for the submission??,
+* `doc` Files required for the submission at Ecology Letters,
 * `results` Output of the `R` scripts, including figures,models and phylogenetic trees.
 * `src` Scripts in `R` language used to clean the raw data, perform the analyses of the manuscript and create the figures.
 
@@ -44,4 +43,4 @@ Finally a [Metadata file](https://github.com/clara-espinosa/Germination_phenolog
 
 ## Citation
 
-Please cite the repository, datasets and article as (to complete once manuscript has been accepted): 
+Please cite the repository, datasets and article as (to complete once manuscript has been accepted for publication): 
