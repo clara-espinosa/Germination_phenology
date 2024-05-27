@@ -1,6 +1,6 @@
-library(tidyverse);library(V.PhyloMaker)
+library(tidyverse);library(V.PhyloMaker); library(scales)
 library(phylosignal);library(phylobase);library(ape);library(tidytree)
-library (tidyverse); library(scales)
+
 
 ### Phylo tree both communitites #####
 # always check family names with http://www.mobot.org/MOBOT/research/APweb/
