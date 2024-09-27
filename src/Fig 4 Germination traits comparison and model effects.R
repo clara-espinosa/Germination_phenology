@@ -28,15 +28,16 @@ ggplot(effect_size, aes(x= Trait, y =effect_size, ymin = L95, ymax = U95, color 
   labs(y = "Effect size", tag = "(a)") + 
   theme_classic(base_size = 14) +
   theme(plot.title = element_text (size = 20),
-        strip.text = element_text( size = 20), #face = "bold",
+        strip.text = element_text( size = 16), #face = "bold",
         strip.text.y = element_text(size = 14),
         legend.position = "none",
         panel.background = element_rect(color = "black", fill = NULL),
         plot.tag.position = c(0.015,1),
         axis.title.y = element_blank(),
-        axis.text.x = element_text(size = 16, color = "black"),
+        axis.text.x = element_text(size = 13, color = "black"),
         axis.text.y = element_text(size = 16, color = "black"),
-        axis.title.x = element_text (size=18)) -> fig4a;fig4a
+        axis.title.x = element_text (size=14)) -> fig4a;fig4a
+
 
 #### mean value table from germination traits ####
 # AUTUMN (test representation) # same script as in MCMC_traits, more detailed explanation there
@@ -222,17 +223,19 @@ ggplot(mean_values, aes(incubator, mean, fill=incubator))+
   labs(tag = "(b)", x = "Mean values", y = "Degres (ºC)Time (days)                 Germination proportion                     ") + 
   theme_classic(base_size = 14) +  
   theme(plot.title = element_text (size = 22),
-        strip.text.x = element_text( size = 20),# face = "bold",
+        strip.text.x = element_text( size = 16),# face = "bold",
         strip.text.y = element_text(size = 14, angle = 360),
         legend.position = "none",
         plot.tag.position = c(0.015,1),
         panel.background = element_rect(color = "black", fill = NULL),
-        axis.text.x = element_text(size = 14, color = "black"),
+        axis.text.x = element_text(size = 13, color = "black"),
         axis.text.y = element_text(size = 12, color = "black"),
         axis.title.y = element_text (size=15), 
-        axis.title.x = element_text (size=18)) -> fig4b; fig4b
+        axis.title.x = element_text (size=14)) -> fig4b; fig4b
 
 
 #combine both graphs 
 Fig4 <- fig4a + fig4b
 Fig4
+ggsave(filename = "Fig4", plot =Fig4, path = "results/Figures/", 
+       device = "png", dpi = 600)

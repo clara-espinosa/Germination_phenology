@@ -23,23 +23,23 @@ read.csv("data/clean data.csv", sep = ";") %>%
   ggplot(aes(date, germination, color = incubator, fill = incubator)) +
   facet_wrap(~community, ncol = 2) +
   geom_line(linewidth = 2) +
-  scale_color_manual (name= "Incubator", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
+  scale_color_manual (name= "Climate regime", values = c ("Fellfield"= "chocolate2", "Snowbed" ="deepskyblue3")) +
   scale_y_continuous (limits = c(0,1), breaks = seq (0, 1, by= 0.25)) +
   scale_x_datetime(date_breaks = "2 month", date_labels = "%b %y")+
   labs(title = "Cumulative germination curves (all species)", x = "Date", y = "Germination proportion", tag = "(a)") +
-  theme_classic(base_size = 12) +
+  theme_classic(base_size = 16) +
   theme(plot.margin = unit(c(0.25, 0,0,0.1), "cm"))+
-  theme (plot.title = element_text (face = "bold",size = 14, margin=margin(0,0,0,0)), #hjust = 0.5,
+  theme (plot.title = element_text (face = "bold",size = 16, margin=margin(0,0,0,0)), #hjust = 0.5,
          plot.tag.position = c(0.015,1),
-         axis.title.y = element_text (size=12),
-         axis.text.y = element_text (size = 10),
+         axis.title.y = element_text (size=14),
+         axis.text.y = element_text (size = 12),
          axis.title.x = element_blank(), 
-         axis.text.x= element_text (size = 10, color = "black", angle= 20),
-         strip.text = element_text( size = 13, hjust = 0),
+         axis.text.x= element_text (size = 12, color = "black", angle= 20),
+         strip.text = element_text( size = 14, hjust = 0),
          strip.background = element_blank(), 
          panel.background = element_blank(), #element_rect(color = "black", fill = NULL), 
-         legend.title = element_text (size =12),
-         legend.text = element_text (size =11),
+         legend.title = element_text (size =13),
+         legend.text = element_text (size =12),
          legend.position = c(0.9, 0.25))-> fig2a;fig2a  #legend.position = "none", 
          #legend.box.background = element_rect(color = "black", size = 2)) 
 
@@ -111,15 +111,15 @@ read.csv("data/clean data.csv", sep = ";") %>%
   scale_color_manual(values = Fcolors) +
   coord_cartesian(ylim = c(0, 1)) +
   labs(title= "Fellfield cumulative germination curves (individual species)", x = "Time ", y = "Germination proportion", tag="(b)") +
-  theme_classic(base_size = 12) +
+  theme_classic(base_size = 16) +
   theme(plot.margin = unit(c(0.25, 0,0,0.1), "cm"))+
-  theme (plot.title = element_text (face = "bold",size = 14, margin=margin(0,0,0,0)), #,hjust = 0.5
+  theme (plot.title = element_text (face = "bold",size = 16, margin=margin(0,0,0,0)), #,hjust = 0.5
          plot.tag.position = c(0.015,1),
-         axis.title.y = element_text (size=12),
-         axis.text.y = element_text (size = 10),
+         axis.title.y = element_text (size=14),
+         axis.text.y = element_text (size = 12),
          axis.title.x = element_blank(), 
-         axis.text.x= element_text (size = 10, color = "black", angle= 20),
-         strip.text = element_text( size = 13, hjust = 0),
+         axis.text.x= element_text (size = 12, color = "black", angle= 20),
+         strip.text = element_text( size = 14, hjust = 0),
          strip.background = element_blank(), 
          panel.background = element_blank(), #element_rect(color = "black", fill = NULL), 
          #panel.grid = element_blank(),
@@ -154,15 +154,15 @@ read.csv("data/clean data.csv", sep = ";") %>%
   scale_color_manual(values = Scolors) +
   coord_cartesian(ylim = c(0, 1)) +
   labs(title= "Snowbed cumulative germination curves (individual species)", x = "Time ", y = "Germination proportion", tag = "(c)") +
-  theme_classic(base_size = 12) +
+  theme_classic(base_size = 16) +
   theme(plot.margin = unit(c(0.25, 0,0,0.1), "cm"))+
-  theme (plot.title = element_text (face = "bold",size = 14, margin=margin(0,0,0,0)), #,hjust = 0.5
+  theme (plot.title = element_text (face = "bold",size = 16, margin=margin(0,0,0,0)), #,hjust = 0.5
          plot.tag.position = c(0.015,1),
-         axis.title.y = element_text (size=12),
-         axis.text.y = element_text (size = 10),
+         axis.title.y = element_text (size=14),
+         axis.text.y = element_text (size = 12),
          axis.title.x = element_blank(), 
-         axis.text.x= element_text (size = 10, color = "black", angle= 20),
-         strip.text = element_text( size = 13, hjust = 0),
+         axis.text.x= element_text (size = 12, color = "black", angle= 20),
+         strip.text = element_text( size = 14, hjust = 0),
          strip.background = element_blank(), 
          panel.background = element_blank(), #element_rect(color = "black", fill = NULL), 
          #panel.grid = element_blank(),
@@ -172,4 +172,7 @@ read.csv("data/clean data.csv", sep = ";") %>%
          legend.box.background = element_rect(color = "black", size = 2))-> fig2c;fig2c
 
 # partially arrenged with cowplot, final formatting in canva to add fig2a bottom
-fig2a/plot_spacer()/fig2b/fig2c + plot_layout(heights = c(1, 0.25,1,1))
+x11() # rearange size 
+fig2a/plot_spacer()/fig2b/fig2c + plot_layout(heights = c(1, 0.25,1,1))-> fig2_incom
+ggsave(filename = "fig2_incom", plot =fig2_incom, path = "results/Figures/", 
+       device = "png", dpi = 600)
