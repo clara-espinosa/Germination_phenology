@@ -93,7 +93,7 @@ read.csv("data/all_info.csv", sep = ",") %>%
   scale_x_continuous( limits = c(-200, 100), breaks = seq (-200, 100, by= 100)) +
   scale_y_continuous(labels = percent,limits = c(0,0.0105)) +
   facet_wrap(~community)+
-  theme_classic(base_size = 16) +
+  theme_classic() +
   labs ( x = "Germination shift", y = "Values density")+
   theme (plot.title = element_text (hjust = 0.5,face = "bold",size = 24), #hjust = 0.5,
          plot.subtitle = element_text(face = "bold",size = 16),
@@ -110,7 +110,7 @@ read.csv("data/all_info.csv", sep = ",") %>%
          legend.position = "bottom", # legend.position = c(0.85, 0.5),
          legend.box.background = element_rect(color = "black", size = 2))-> fig3a;fig3a
 
-ggsave(filename = "fig3a", plot =fig3a, path = "results/Figures/", 
+ggsave(filename = "fig3a.png", plot =fig3a, path = "results/Figures/",
        device = "png", dpi = 600)
 ### Phylo tree temperate community #####
 # always check family names with http://www.mobot.org/MOBOT/research/APweb/
