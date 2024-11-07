@@ -13,10 +13,10 @@ Cantabrian Mountains</figcaption>
 # Microclimate regulates germination phenology in alpine plant communities
 
 This repository stores all the information related to the manuscript
-[*Microclimatic variation regulates seed germination phenology in alpine
-plant communities*](add%20doi%20once%20manuscript%20is%20accepted),
-including the raw datasets, the scripts to perform data cleaning,
-analysis and figures.
+[*Microclimatic regulation of germination phenology in alpine
+plants*](add%20doi%20once%20manuscript%20is%20accepted), including the
+raw datasets, the scripts to perform data cleaning, analysis and
+figures.
 
 ## Contents
 
@@ -48,7 +48,7 @@ The following materials are available in the folders of this repository:
   for figure 4. Finally a [Metadata
   file](https://github.com/clara-espinosa/Germination_phenology/blob/main/data/metadata.csv)
   explaining each csv variables.
-- `doc` Files required for the submission at Ecology Letters,
+- `doc` Preprint of the manuscript,
 - `results` Output of the `R` scripts, including figures,models and
   phylogenetic trees.
 - `src` Scripts in `R` language used to clean the raw data, perform the
@@ -56,26 +56,45 @@ The following materials are available in the folders of this repository:
 
 ## Abstract
 
-- **Background** Understanding seed germination phenology is crucial for
-  predicting plant responses to environmental changes. However, a
+- **Background** . In most terrestrial plants, regeneration depends on
+  the ability of seeds to germinate at the most favourable climatic
+  conditions. Understanding seed germination phenology is thus crucial
+  for predicting plant responses to environmental changes. However, a
   substantial gap persists regarding how microclimatic conditions
   influence germination in seasonal ecosystems.  
-- **Methods** We conducted a continuous seasonal experiment with fresh
-  seeds to investigate germination phenology in 54 species from
-  temperate and Mediterranean alpine communities. Using field
-  microclimatic data series, we mimicked fellfield and snowbed
-  conditions in growth chambers and we carried out field sowing
-  experiments.  
-- **Key Results** Both communities showed similar phenology responses to
-  microclimatic variation, finding a consistent germination delay in
-  snowbed compared to fellfield conditions. This effect was complemented
-  by reduced dormancy and increased autumn germination in Mediterranean
-  seeds.
-- **Conclusions** Our results suggest a predictable phenological shift
-  in the germination of alpine plants along microclimatic gradients. In
+- **Methods** Here, we investigate the germination phenology of alpine
+  plants in snow-related microclimates as a tool for predicting the
+  resilience of plant communities to climate change. We conducted a
+  continuous seasonal experiment with fresh seeds to investigate
+  germination phenology in 54 co-occurring species from temperate and
+  Mediterranean alpine communities. Using long-term field microclimatic
+  data series, we precisely mimicked two contrasting microclimatic
+  conditions: (1) windy exposed edges with snow-free period in winter
+  and warmer temperatures in summer (“fellfield”) and (2) sheltered
+  areas with lengthy snow cover and cooler temperatures (“snowbed”) in
+  growth chambers. We validated the laboratory results with field sowing
+  experiments to provide a complete picture of germination phenology.  
+- **Key Results** The analysis of phenology traits demonstrated that
+  both communities displayed similar responses to microclimatic
+  variation. Accumulated microclimatic differences of 2-3 degrees
+  Celsius a week, across a whole year in the laboratory, resulted in a
+  quantifiable germination phenology delay, with an average of 60 and 45
+  days in snowbed conditions. The results from climatic chambers under
+  realistic microclimatic conditions were consistent with the
+  germination phenology registered from field experiments. We also
+  observed macroclimatic effects resulting in reduced dormancy and
+  increased autumn germination in Mediterranean alpine species.
+- **Synthesis** This study combines novel laboratory and field
+  experimentation to tackle the understudied topic of germination
+  phenology in habitats with sharp microclimatic gradients.
+  Specifically, our findings suggest a predictable phenological shift in
+  the germination of alpine plants along microclimatic gradients. In
   warmer conditions with reduced snow cover, alpine species are expected
-  to anticipate germination 52 days on average, with potential
-  disrupting effects on cold-adapted plant communities.
+  to advance germination 52 days on average, with potential disrupting
+  effects on cold-adapted plant communities. This highlights the role of
+  germination phenology to determine plant-environmental relationships
+  in mid-latitude ecosystems, with strong impact on plant establishment
+  and extinction risks under local microclimatic gradients.
 
 ## Citation
 
