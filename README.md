@@ -48,7 +48,7 @@ The following materials are available in the folders of this repository:
   for figure 4. Finally a [Metadata
   file](https://github.com/clara-espinosa/Germination_phenology/blob/main/data/metadata.csv)
   explaining each csv variables.
-- `doc` Preprint of the manuscript,
+- `doc` Manuscript submitted to Journal of Ecology.
 - `results` Output of the `R` scripts, including figures,models and
   phylogenetic trees.
 - `src` Scripts in `R` language used to clean the raw data, perform the
@@ -56,8 +56,8 @@ The following materials are available in the folders of this repository:
 
 ## Abstract
 
-- **Background** . In most terrestrial plants, regeneration depends on
-  the ability of seeds to germinate at the most favourable climatic
+- **Background** . For most terrestrial plants, regeneration depends on
+  the ability of seeds to germinate in the most favourable climatic
   conditions. Understanding seed germination phenology is thus crucial
   for predicting plant responses to environmental changes. However, a
   substantial gap persists regarding how microclimatic conditions
@@ -69,21 +69,23 @@ The following materials are available in the folders of this repository:
   germination phenology in 54 co-occurring species from temperate and
   Mediterranean alpine communities. Using long-term field microclimatic
   data series, we precisely mimicked two contrasting microclimatic
-  conditions: (1) windy exposed edges with snow-free period in winter
-  and warmer temperatures in summer (“fellfield”) and (2) sheltered
-  areas with lengthy snow cover and cooler temperatures (“snowbed”) in
-  growth chambers. We validated the laboratory results with field sowing
-  experiments to provide a complete picture of germination phenology.  
+  conditions in growth chambers: (1) windy exposed edges with a
+  snow-free period in winter and warmer temperatures in summer
+  (“fellfield”) and (2) sheltered areas with lengthy snow cover and
+  cooler temperatures (“snowbed”). We validated the laboratory results
+  with field sowing experiments to provide a complete picture of
+  germination phenology.  
 - **Key Results** The analysis of phenology traits demonstrated that
   both communities displayed similar responses to microclimatic
   variation. Accumulated microclimatic differences of 2-3 degrees
   Celsius a week, across a whole year in the laboratory, resulted in a
-  quantifiable germination phenology delay, with an average of 60 and 45
-  days in snowbed conditions. The results from climatic chambers under
-  realistic microclimatic conditions were consistent with the
-  germination phenology registered from field experiments. We also
-  observed macroclimatic effects resulting in reduced dormancy and
-  increased autumn germination in Mediterranean alpine species.
+  quantifiable germination phenology delay, in snowbed conditions with
+  an average of 60 and 45 days for temperate and Mediterranean alpine
+  respectively. The results from climatic chambers under realistic
+  microclimatic conditions were consistent with the germination
+  phenology registered from field experiments. We also observed
+  macroclimatic effects manifested as reduced dormancy and increased
+  autumn germination in Mediterranean alpine species.
 - **Synthesis** This study combines novel laboratory and field
   experimentation to tackle the understudied topic of germination
   phenology in habitats with sharp microclimatic gradients.
@@ -91,10 +93,11 @@ The following materials are available in the folders of this repository:
   the germination of alpine plants along microclimatic gradients. In
   warmer conditions with reduced snow cover, alpine species are expected
   to advance germination 52 days on average, with potential disrupting
-  effects on cold-adapted plant communities. This highlights the role of
-  germination phenology to determine plant-environmental relationships
-  in mid-latitude ecosystems, with strong impact on plant establishment
-  and extinction risks under local microclimatic gradients.
+  effects on cold-adapted species with strict germination requirements.
+  This highlights the role of germination phenology to determine
+  plant-environmental relationships in mid-latitude ecosystems, with
+  strong impact on plant establishment and extinction risks under local
+  microclimatic gradients.
 
 ## Citation
 
