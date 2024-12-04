@@ -1,0 +1,25 @@
+species;microhabitat_buried;retrieval_season;x;y;label
+Androsace villosa;Fellfield;Spring;;;
+Armeria cantabrica;Fellfield;Spring;;;
+Armeria duriaei;Fellfield;Spring;;;
+Carex sempervirens;Fellfield;Spring;1;40;***
+Dianthus langeanus;Fellfield;Spring;1;58;*
+Festuca glacialis;Fellfield;Spring;1;37;***
+Gypsophila repens;Fellfield;Spring;;;
+Jasione cavanillesii;Fellfield;Spring;1;22;**
+Luzula caespitosa;Fellfield;Spring;;;
+Phyteuma hemisphaericum;Fellfield;Spring;;;
+Plantago holosteum;Fellfield;Spring;1;37;*
+Silene ciliata;Fellfield;Spring;1;47;*
+Androsace villosa;Fellfield;2nd Autumn;;;
+Armeria cantabrica;Fellfield;2nd Autumn;;;
+Armeria duriaei;Fellfield;2nd Autumn;;;
+Carex sempervirens;Fellfield;2nd Autumn;;;
+Dianthus langeanus;Fellfield;2nd Autumn;;;
+Festuca glacialis;Fellfield;2nd Autumn;2;48;***
+Gypsophila repens;Fellfield;2nd Autumn;;;
+Jasione cavanillesii;Fellfield;2nd Autumn;;;
+Luzula caespitosa;Fellfield;2nd Autumn;;;
+Phyteuma hemisphaericum;Fellfield;2nd Autumn;2;22;****
+Plantago holosteum;Fellfield;2nd Autumn;;;
+Silene ciliata;Fellfield;2nd Autumn;2;27;*

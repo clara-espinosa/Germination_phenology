@@ -77,7 +77,7 @@ area_total <- area2 - area1
 area_total
 
 ##### Fig 3A visualization density plots #####
-
+x11()
 read.csv("data/all_info.csv", sep = ",") %>%
   select(community, species, family, ABC_clean_data) %>%
   group_by (community, species, family) %>%
@@ -95,13 +95,13 @@ read.csv("data/all_info.csv", sep = ",") %>%
   facet_wrap(~community)+
   theme_classic() +
   labs ( x = "Germination shift", y = "Values density")+
-  theme (plot.title = element_text (hjust = 0.5,face = "bold",size = 24), #hjust = 0.5,
-         plot.subtitle = element_text(face = "bold",size = 16),
-         axis.title.y = element_text (size=14),
-         axis.text.y = element_text (size = 13),
-         axis.title.x = element_text (size=14),
-         axis.text.x= element_text (size = 13, color = "black"),
-         strip.text = element_text( size = 18, hjust = 0),
+  theme (plot.title = element_text (hjust = 0.5,face = "bold",size = 20), #hjust = 0.5,
+         plot.subtitle = element_text(face = "bold",size = 14),
+         axis.title.y = element_text (size=12),
+         axis.text.y = element_text (size = 10),
+         axis.title.x = element_text (size=12),
+         axis.text.x= element_text (size = 10, color = "black"),
+         strip.text = element_text( size = 14, hjust = 0),
          strip.background = element_blank(), 
          panel.background = element_blank(), #element_rect(color = "black", fill = NULL), 
          #panel.grid = element_blank(),
@@ -114,7 +114,7 @@ ggsave(filename = "fig3a.png", plot =fig3a, path = "results/Figures/",
        device = "png", dpi = 600)
 ### Phylo tree temperate community #####
 # always check family names with http://www.mobot.org/MOBOT/research/APweb/
-read.csv("data/all_info.csv", sep =";") %>% # read species header data
+read.csv("data/all_info.csv", sep =",") %>% # read species header data
   select(community, species, family)%>%
   unique()%>%
   mutate(species= str_replace(species, "Minuartia CF", "Minuartia arctica"))%>%
@@ -210,7 +210,7 @@ appendix %>%
 
 obj_tem <- phylo4d(as(tree, "phylo4"), data.frame(tem_phylo), match.data=TRUE)
 mat.col <- ifelse(tdata(obj_tem , "tip") < 0,  "chocolate2","deepskyblue3")
-barplot.phylo4d(obj_tem, tree.ratio = 0.2,bar.col = mat.col, center=F,tip.cex = 1.5,
+barplot.phylo4d(obj_tem, tree.ratio = 0.15,bar.col = mat.col, center=F,tip.cex = 1,
                 trait.bg.col = "white", show.box = F, grid.vertical = F,
                 grid.horizontal = F, tip.labels = NULL, tree.ladderize =T) #rainbow(37)
 
@@ -234,7 +234,7 @@ appendix %>%
 
 obj_med <- phylo4d(as(tree, "phylo4"), data.frame(med_phylo), match.data=TRUE)
 mat.col <- ifelse(tdata(obj_med , "tip") < 0,  "chocolate2","deepskyblue3")
-barplot.phylo4d(obj_med, tree.ratio = 0.2,bar.col = mat.col, center=F,
+barplot.phylo4d(obj_med, tree.ratio = 0.15,bar.col = mat.col, center=F,tip.cex = 1,
                 trait.bg.col = "white", show.box = F, grid.vertical = F,
                 grid.horizontal = F, tip.labels = NULL, tree.ladderize =T)
 

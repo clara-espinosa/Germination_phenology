@@ -59,15 +59,50 @@ temp %>%
   scale_fill_manual (name= "Germination phenology periods", 
                      values =c("brown", "cadetblue3","chartreuse3", "darkgoldenrod1"),
                      guide = guide_legend (title.position = "top",direction = "horizontal")) +
-  theme_minimal(base_size = 20) +
-  theme (plot.title = element_text (size = 24), #hjust = 0.5,
+  theme_minimal(base_size = 10) +
+  theme (plot.title = element_text (size = 14), #hjust = 0.5,
          axis.title.y = element_blank (), 
-         axis.text.y = element_text(size= 22, color = c( "deepskyblue3","chocolate2")),
+         axis.text.y = element_text(size= 12, color = c( "deepskyblue3","chocolate2")),
          axis.title.x = element_blank (), 
          axis.text.x= element_blank (),
          plot.tag.position = c(0,1),
-         legend.title = element_text(size =24),
-         legend.text = element_text(size=22),
+         legend.key.size = unit(0.35, "cm"),
+         legend.title = element_text(size =12),
+         legend.text = element_text(size=10),
          legend.position = "bottom",
-         legend.margin = margin(0, 0, 0, 0)) -> fig2a_b;fig2a_b
-# figures joined in canva
+         legend.margin = margin(0, 0, 0, 0)) -> fig2a_b1;fig2a_b1
+
+temp %>%
+  group_by(incubator, germination_period) %>%
+  summarise(n= length(date))%>%
+  mutate(incubator = fct_relevel(incubator, "Snowbed", "Fellfield")) %>%
+  mutate(germination_period = fct_relevel(germination_period, "Autumn", "Winter","Spring", "Summer" )) %>%
+  ggplot(aes(x= incubator, y = n, fill = germination_period)) +
+  geom_bar(stat = "identity", width=0.99, color = "black", position = position_stack(reverse= TRUE)) +
+  coord_flip()+
+  #labs (tag = "C") + 
+  scale_fill_manual (name= "Germination phenology periods", 
+                     values =c("brown", "cadetblue3","chartreuse3", "darkgoldenrod1"),
+                     guide = guide_legend (title.position = "top",direction = "horizontal")) +
+  theme_minimal(base_size = 10) +
+  theme (plot.title = element_text (size = 14), #hjust = 0.5,
+         axis.title.y = element_blank (), 
+         axis.text.y = element_blank (),
+         axis.title.x = element_blank (), 
+         axis.text.x= element_blank (),
+         plot.tag.position = c(0,1),
+         legend.key.size = unit(0.35, "cm"),
+         legend.title = element_text(size =12),
+         legend.text = element_text(size=10),
+         legend.position = "bottom",
+         legend.margin = margin(0, 0, 0, 0)) -> fig2a_b2;fig2a_b2
+
+# combine figures
+fig2a_b1+fig2a_b2 + plot_layout(guides= "auto", axis_titles= "collect", widths=c(1, 1)) &theme (legend.position = "bottom")->fig2_bottom;fig2_bottom
+
+# combine figures# combine figuresaxis_titles = 
+library(patchwork)
+fig2a /fig2_bottom + plot_layout(heights = c(3,0.4))-> fig2;fig2
+
+ggsave(filename = "fig2.png", plot =fig2 , path = "results/Figures/",
+       scale=1, width =180, height = 120, units = "mm", device = "png", dpi = 600)
