@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Microclimate regulates germination phenology in alpine plant communities
 
-This repository stores all the information related to the manuscript [*Microclimatic regulation of germination phenology in alpine plants*](add doi once manuscript is accepted), including the raw datasets, the scripts to perform data cleaning, analysis and figures. 
+This repository stores all the information related to the manuscript [*Microclimatic regulation of germination phenology in alpine plants*](doi:10.1111/1365-2745.14461), including the raw datasets, the scripts to perform data cleaning, analysis and figures. 
 
 ## Contents
 
@@ -43,4 +43,5 @@ Finally a [Metadata file](https://github.com/clara-espinosa/Germination_phenolog
 
 ## Citation
 
-Please cite the repository, datasets and article as (to complete once manuscript has been accepted for publication): 
+Please cite the repository, datasets and article as: 
+Espinosa del Alba, C., Fernández-Pascual, E. & Jiménez-Alfaro, B. (2024). Microclimatic variation regulates germination phenology in alpine plant communities. Journal of Ecology. doi:10.1111/1365-2745.14461
