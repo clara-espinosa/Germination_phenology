@@ -14,7 +14,7 @@ Cantabrian Mountains</figcaption>
 
 This repository stores all the information related to the manuscript
 [*Microclimatic regulation of germination phenology in alpine
-plants*](add%20doi%20once%20manuscript%20is%20accepted), including the
+plants*](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/1365-2745.14461), including the
 raw datasets, the scripts to perform data cleaning, analysis and
 figures.
 
