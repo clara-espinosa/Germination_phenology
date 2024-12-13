@@ -101,5 +101,4 @@ The following materials are available in the folders of this repository:
 
 ## Citation
 
-Please cite the repository, datasets and article as (to complete once
-manuscript has been accepted for publication):
+Please cite the repository, datasets and article as: Espinosa del Alba, C., Fernández-Pascual, E. and Jiménez-Alfaro, B. (2024) ‘Microclimatic variation regulates seed germination phenology in alpine plant communities’, Journal of Ecology. doi: 10.1111/1365-2745.14461.
